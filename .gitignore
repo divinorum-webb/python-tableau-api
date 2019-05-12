@@ -1,2 +1,4 @@
 ### Tableau Config File ###
 /config.py
+/.ipynb_checkpoints
+/.idea
