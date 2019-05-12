@@ -1,6 +1,6 @@
 class SchedulesEndpoint(BaseEndpoint):
     """
-    User endpoint for Tableau Server API requests.
+    Schedules endpoint for Tableau Server API requests.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class

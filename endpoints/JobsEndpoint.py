@@ -1,6 +1,6 @@
 class JobsEndpoint(BaseEndpoint):
     """
-    User endpoint for Tableau Server API requests.
+    Jobs endpoint for Tableau Server API requests.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
