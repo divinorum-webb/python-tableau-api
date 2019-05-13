@@ -12,8 +12,6 @@ class FileUploadEndpoint(BaseEndpoint):
     :type upload_session_id:
     :param parameter_dict:
     :type parameter_dict:
-    :param parameter_dict:
-    :type parameter_dict:
     """
     def __init__(self,
                  ts_connection,
