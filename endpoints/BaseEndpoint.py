@@ -5,8 +5,10 @@ class BaseEndpoint:
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
     """
-    def __init__(self, ts_connection):
+    def __init__(self,
+                 ts_connection):
         self._connection = ts_connection
+        self._parameter_dict = {}
         
     @property
     def _params_exist(self):
