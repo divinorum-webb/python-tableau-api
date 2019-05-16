@@ -1,4 +1,16 @@
 class SignInRequest(BaseRequest):
+    """
+    Empty request for generating API request URLs to Tableau Server.
+
+    :param ts_connection:       The Tableau Server connection object.
+    :type ts_connection:        class
+    :param username:
+    :type username:
+    :param password:
+    :type password:
+    :param user_to_impersonate:
+    :type user_to_impersonate:
+    """
     def __init__(self,
                  ts_connection,
                  username,

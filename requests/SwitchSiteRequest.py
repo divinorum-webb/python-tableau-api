@@ -1,4 +1,4 @@
-class EmptyRequest(BaseRequest):
+class SwitchSiteRequest(BaseRequest):
     """
     Empty request for generating API request URLs to Tableau Server.
 
@@ -10,5 +10,14 @@ class EmptyRequest(BaseRequest):
 
         super().__init__(ts_connection)
 
-    def get_request(self):
+    @property
+    def base_switch_site_request(self):
+        self._request_body.update({
+            'site': {
+                'contentUrl': self._connection.site_url
+            }
+        })
         return self._request_body
+
+    def get_request(self):
+        return self.base_switch_site_request
