@@ -43,7 +43,7 @@ class ProjectEndpoint(BaseEndpoint):
         return "{0}/{1}".format(self.base_project_url, 
                                 self._project_id)
         
-    def get_project_endpoint(self):
+    def get_endpoint(self):
         if self._project_id:
             url = self.base_project_id_url
         else:

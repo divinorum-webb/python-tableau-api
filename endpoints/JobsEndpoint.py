@@ -41,7 +41,7 @@ class JobsEndpoint(BaseEndpoint):
         return "{0}/{1}".format(self.base_job_url,
                                 self._job_id)
 
-    def get_job_endpoint(self):
+    def get_endpoint(self):
         if self._job_id:
             if self._query_job and not self._cancel_job:
                 url = self.base_job_id_url

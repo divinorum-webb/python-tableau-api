@@ -68,7 +68,7 @@ class TasksEndpoint(BaseEndpoint):
         return "{0}/{1}/extracts".format(self.base_schedules_url,
                                          self._schedule_id)
 
-    def get_task_endpoint(self):
+    def get_endpoint(self):
         if self._get_refresh_tasks:
             url = self.base_extract_refresh_url
         elif self._get_refresh_task or self._run_refresh_task:

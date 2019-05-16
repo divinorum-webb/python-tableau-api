@@ -60,7 +60,7 @@ class SchedulesEndpoint(BaseEndpoint):
     def base_schedule_workbook_url(self):
         return "{0}/workbooks".format(self.base_schedule_id_url)
 
-    def get_schedule_endpoint(self):
+    def get_endpoint(self):
         if self._schedule_id:
             if self._add_datasource and not self._add_workbook:
                 url = self.base_schedule_datasource_url

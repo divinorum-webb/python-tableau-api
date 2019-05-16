@@ -100,7 +100,7 @@ class SiteEndpoint(BaseEndpoint):
         return "{0}/{1}".format(self.base_site_group_url,
                                 self._group_id)
     
-    def get_site_endpoint(self):
+    def get_endpoint(self):
         if self._site_id or self._user_id or self._group_id:
             if self._update_site and not self._delete_site:
                 url = self.base_site_id_url

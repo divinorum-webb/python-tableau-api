@@ -50,7 +50,7 @@ class DataAlertEndpoint(BaseEndpoint):
         return "{0}/{1}".format(self.base_data_alert_user_url, 
                                 self._user_id)
     
-    def get_data_alert_endpoint(self):
+    def get_endpoint(self):
         if not (self._data_alert_id or self._user_id or self._add_user or self._remove_user):
             url = self.base_data_alert_url
         elif self._data_alert_id and not (self._user_id or self._add_user or self._remove_user):

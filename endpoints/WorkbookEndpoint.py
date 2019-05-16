@@ -109,7 +109,7 @@ class WorkbookEndpoint(BaseEndpoint):
     def base_workbook_refresh_url(self):
         return "{0}/refresh".format(self.base_workbook_id_url)
 
-    def get_workbook_endpoint(self):
+    def get_endpoint(self):
         if self._workbook_id:
             if self._query_workbook:
                 url = self.base_workbook_id_url

@@ -125,7 +125,7 @@ class DatasourceEndpoint(BaseEndpoint):
     def base_refresh_datasource_url(self):
         return "{0}/refresh".format(self.base_datasource_id_url)
 
-    def get_datasource_endpoint(self):
+    def get_endpoint(self):
         if self._datasource_id:
             if self._query_datasource:
                 url = self.base_datasource_id_url

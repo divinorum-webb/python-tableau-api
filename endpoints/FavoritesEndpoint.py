@@ -55,7 +55,7 @@ class FavoritesEndpoint(BaseEndpoint):
                                      self._object_type,
                                      self._object_id)
 
-    def get_favorites_endpoint(self):
+    def get_endpoint(self):
         if self._add_to_favorites and self._user_id:
             url = self.base_favorites_user_id_url
         elif self._delete_from_favorites and self._user_id:

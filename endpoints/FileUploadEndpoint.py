@@ -37,7 +37,7 @@ class FileUploadEndpoint(BaseEndpoint):
         return "{0}/{1}".format(self.base_file_upload_url,
                                 self._upload_session_id)
 
-    def get_file_upload_endpoint(self):
+    def get_endpoint(self):
         if self._initiate_file_upload:
             url = self.base_file_upload_url
         elif self._append_to_file_upload and self._upload_session_id:

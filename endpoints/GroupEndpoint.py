@@ -61,7 +61,7 @@ class GroupEndpoint(BaseEndpoint):
         return "{0}/{1}".format(self.base_group_user_url,
                                 self._user_id)
 
-    def get_group_endpoint(self):
+    def get_endpoint(self):
         if self._group_id:
             if self._update_group:
                 url = self.base_group_id_url

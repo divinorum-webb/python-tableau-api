@@ -49,13 +49,13 @@ class SubscriptionsEndpoint(BaseEndpoint):
         return "{0}/{1}".format(self.base_subscription_url,
                                 self._subscription_id)
 
-    def get_subscription_endpoint(self):
+    def get_endpoint(self):
         if self._create_subscription:
             url = self.base_subscription_url
         elif self._query_subscriptions and not self._subscription_id:
             url = self.base_subscription_url
         elif self._subscription_id:
-            if (self._query_subscription or self._update_subscription or self._delete_subscription):
+            if self._query_subscription or self._update_subscription or self._delete_subscription:
                 url = self.base_subscription_id_url
             else:
                 self._invalid_parameter_exception()
