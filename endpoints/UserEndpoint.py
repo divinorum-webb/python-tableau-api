@@ -37,7 +37,7 @@ class UserEndpoint(BaseEndpoint):
         return "{0}/{1}".format(self.base_user_url,
                                 self._user_id)
 
-    def get_user_endpoint(self):
+    def get_endpoint(self):
         if self._user_id:
             if self._query_user and not self._update_user:
                 url = self.base_user_id_url

@@ -60,7 +60,7 @@ class PermissionsEndpoint(BaseEndpoint):
                                                                  self._project_id,
                                                                  self._project_permissions_object)
 
-    def get_permissions_endpoint(self):
+    def get_endpoint(self):
         if self._add_object_permissions and not self._query_object_permissions:
             url = self.base_object_permissions_url
         elif self._query_object_permissions and not self._add_object_permissions:

@@ -75,7 +75,7 @@ class ViewEndpoint(BaseEndpoint):
     def base_query_view_data_url(self):
         return "{0}/data".format(self.base_view_id_url)
 
-    def get_view_endpoint(self):
+    def get_endpoint(self):
         if self._view_id:
             if self._query_view:
                 url = self.base_view_id_url

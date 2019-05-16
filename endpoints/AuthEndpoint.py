@@ -52,7 +52,7 @@ class AuthEndpoint(BaseEndpoint):
         return "{0}/api/{1}/serverinfo".format(self._connection.server,
                                                self._connection.api_version)
     
-    def get_auth_endpoint(self):
+    def get_endpoint(self):
         if self._sign_in and not (self._sign_out or self._switch_site):
             url = self.base_sign_in_url
         elif self._sign_out and not (self._sign_in or self._switch_site):
