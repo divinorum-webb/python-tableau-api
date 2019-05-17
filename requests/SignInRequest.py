@@ -1,6 +1,6 @@
 class SignInRequest(BaseRequest):
     """
-    Empty request for generating API request URLs to Tableau Server.
+    Sign in request for generating API request URLs to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
