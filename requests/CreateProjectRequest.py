@@ -28,7 +28,7 @@ class CreateProjectRequest(BaseRequest):
     def optional_project_param_keys(self):
         return [
             'parentProjectId',
-            'projectDescription',
+            'description',
             'contentPermissions'
         ]
 
