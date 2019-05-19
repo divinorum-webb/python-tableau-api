@@ -1,6 +1,6 @@
 class UpdateDatasourceConnectionRequest(BaseRequest):
     """
-    Update site request for generating API request URLs to Tableau Server.
+    Update datasource connection request for generating API request URLs to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
