@@ -31,7 +31,7 @@ class UpdateProjectRequest(BaseRequest):
         return [
             'name',
             'parentProjectId',
-            'projectDescription',
+            'description',
             'contentPermissions'
         ]
 
