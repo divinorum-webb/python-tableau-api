@@ -1,6 +1,6 @@
 class AddWorkbookToScheduleRequest(BaseRequest):
     """
-    Update site request for generating API request URLs to Tableau Server.
+    Add workbook to schedule request for generating API request URLs to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class

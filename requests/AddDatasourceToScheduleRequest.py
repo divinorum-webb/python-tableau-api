@@ -1,6 +1,6 @@
 class AddDatasourceToScheduleRequest(BaseRequest):
     """
-    Update site request for generating API request URLs to Tableau Server.
+    Add datasource to schedule request for generating API request URLs to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
