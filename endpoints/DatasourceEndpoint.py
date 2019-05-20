@@ -6,12 +6,12 @@ class DatasourceEndpoint(BaseEndpoint):
     :type ts_connection:                    class
     :param query_datasources:               Boolean flag; True if querying all datasources, False otherwise.
     :type query_datasources:                boolean
-    :param query_datasource:                Boolean flag; True if querying a specific datasource, False otherwise
+    :param query_datasource:                Boolean flag; True if querying a specific datasource, False otherwise.
     :type query_datasource:                 boolean
     :param datasource_id:                   The datasource ID.
     :type datasource_id:                    string
     :param query_datasource_connections:    Boolean flag; True if querying a specific datasource's connections,
-                                            False otherwise
+                                            False otherwise.
     :type query_datasource_connections:     boolean
     :param connection_id:                   The datasource connection id.
     :type connection_id:                    string
