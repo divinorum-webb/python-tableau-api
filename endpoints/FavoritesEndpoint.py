@@ -2,22 +2,23 @@ class FavoritesEndpoint(BaseEndpoint):
     """
     Favorites endpoint for Tableau Server API requests.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param add_to_favorites:
-    :type add_to_favorites:
-    :param delete_from_favorites:
-    :type delete_from_favorites:
-    :param object_type:
-    :type object_type:
-    :param object_id:
-    :type object_id:
-    :param get_user_favorites:
-    :type get_user_favorites:
-    :param user_id:
-    :type user_id:
-    :param parameter_dict:
-    :type parameter_dict:
+    :param ts_connection:           The Tableau Server connection object.
+    :type ts_connection:            class
+    :param add_to_favorites:        Boolean flag; True if adding item to favorites, False otherwise.
+    :type add_to_favorites:         boolean
+    :param delete_from_favorites:   Boolean flag; True if deleting item from favorites, False otherwise.
+    :type delete_from_favorites:    boolean
+    :param object_type:             The Tableau object type being considered.
+    :type object_type:              string
+    :param object_id:               The ID of the specific Tableau object being considered.
+    :type object_id:                string
+    :param get_user_favorites:      Boolean flag; True if getting the user's favorite items, False otherwise.
+    :type get_user_favorites:       boolean
+    :param user_id:                 The user ID.
+    :type user_id:                  string
+    :param parameter_dict:          Dictionary of URL parameters to append. The value in each key-value pair
+                                    is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:           dict
     """
     def __init__(self,
                  ts_connection,

@@ -2,40 +2,45 @@ class DatasourceEndpoint(BaseEndpoint):
     """
     Datasource endpoint for Tableau Server API requests.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param query_datasources:
-    :type query_datasources:
-    :param query_datasource:
-    :type query_datasource:
-    :param datasource_id:
-    :type datasource_id:
-    :param query_datasource_connections:
-    :type query_datasource_connections:
-    :param connection_id:
-    :type connection_id:
-    :param add_tags:
-    :type add_tags:
-    :param delete_tag:
-    :type delete_tag:
-    :param refresh_datasource:
-    :type refresh_datasource:
-    :param update_datasource_connection:
-    :type update_datasource_connection:
-    :type tag_name:
-    :param tag_name:
-    :type download_datasource:
-    :param download_datasource:
-    :type get_datasource_revisions:
-    :param get_datasource_revisions:
-    :type download_datasource_revision:
-    :param download_datasource_revision:
-    :type remove_datasource_revision:
-    :param remove_datasource_revision:
-    :type revision_number:
-    :param revision_number:
-    :type parameter_dict:
-    :param parameter_dict:
+    :param ts_connection:                   The Tableau Server connection object.
+    :type ts_connection:                    class
+    :param query_datasources:               Boolean flag; True if querying all datasources, False otherwise.
+    :type query_datasources:                boolean
+    :param query_datasource:                Boolean flag; True if querying a specific datasource, False otherwise
+    :type query_datasource:                 boolean
+    :param datasource_id:                   The datasource ID.
+    :type datasource_id:                    string
+    :param query_datasource_connections:    Boolean flag; True if querying a specific datasource's connections,
+                                            False otherwise
+    :type query_datasource_connections:     boolean
+    :param connection_id:                   The datasource connection id.
+    :type connection_id:                    string
+    :param add_tags:                        Boolean flag; True if adding tags to the datasource, False otherwise.
+    :type add_tags:                         boolean
+    :param delete_tag:                      Boolean flag; True if deleting a datasource tag, False otherwise.
+    :type delete_tag:                       boolean
+    :param refresh_datasource:              Boolean flag; True if refreshing the datasource, False otherwise.
+    :type refresh_datasource:               boolean
+    :param update_datasource_connection:    Boolean flag; True if updating a datasource connection's information;
+                                            False otherwise.
+    :type update_datasource_connection:     boolean
+    :type tag_name:                         The name / label for the datasource tag being added.
+    :param tag_name:                        string
+    :type download_datasource:              Boolean flag; True if downloading the datasource, False otherwise.
+    :param download_datasource:             boolean
+    :type get_datasource_revisions:         Boolean flag; True if getting datasource revisions, False otherwise.
+    :param get_datasource_revisions:        boolean
+    :type download_datasource_revision:     Boolean flag; True if downloading a specific datasource revision,
+                                            False otherwise.
+    :param download_datasource_revision:    boolean
+    :type remove_datasource_revision:       Boolean flag; True if removing a specific datasource revision,
+                                            False otherwise.
+    :param remove_datasource_revision:      boolean
+    :type revision_number:                  The datasource revision number.
+    :param revision_number:                 string
+    :type parameter_dict:                   Dictionary of URL parameters to append. The value in each key-value pair
+                                            is the literal text that will be appended to the URL endpoint.
+    :param parameter_dict:                  dict
     """
     def __init__(self,
                  ts_connection,
