@@ -2,16 +2,17 @@ class FileUploadEndpoint(BaseEndpoint):
     """
     FileUploadEndpoint endpoint for Tableau Server API requests.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param initiate_file_upload:
-    :type initiate_file_upload:
-    :param append_to_file_upload:
-    :type append_to_file_upload:
-    :param upload_session_id:
-    :type upload_session_id:
-    :param parameter_dict:
-    :type parameter_dict:
+    :param ts_connection:           The Tableau Server connection object.
+    :type ts_connection:            class
+    :param initiate_file_upload:    Boolean flag; True if initiating a file upload, False otherwise.
+    :type initiate_file_upload:     boolean
+    :param append_to_file_upload:   Boolean flag; True if appending to a file upload, False otherwise.
+    :type append_to_file_upload:    boolean
+    :param upload_session_id:       The upload session ID.
+    :type upload_session_id:        string
+    :param parameter_dict:          Dictionary of URL parameters to append. The value in each key-value pair
+                                    is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:           dict
     """
     def __init__(self,
                  ts_connection,
