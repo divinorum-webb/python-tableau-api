@@ -4,16 +4,17 @@ class DataAlertEndpoint(BaseEndpoint):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param data_alert_id:             
-    :type data_alert_id:              
-    :param user_id:            
-    :type user_id:             
-    :param add_user:         
-    :type add_user:          
-    :param remove_user:     
-    :type remove_user:      
-    :param parameter_dict:      
-    :type parameter_dict:       
+    :param data_alert_id:       The data alert ID.
+    :type data_alert_id:        string
+    :param user_id:             The user ID.
+    :type user_id:              string
+    :param add_user:            Boolean flag; True if adding a user to the alert, False otherwise.
+    :type add_user:             boolean
+    :param remove_user:         Boolean flag; True if removing a user from the alert; False otherwise.
+    :type remove_user:          boolean
+    :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
+                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:       dict
     """
     def __init__(self, 
                  ts_connection, 
