@@ -4,22 +4,23 @@ class GroupEndpoint(BaseEndpoint):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param query_groups:
-    :type query_groups:
-    :param group_id:
-    :type group_id:
-    :param update_group:
-    :type update_group:
-    :param get_users:
-    :type get_users:
-    :param add_user:
-    :type add_user:
-    :param remove_user:
-    :type remove_user:
-    :param user_id:
-    :type user_id:
-    :param parameter_dict:
-    :type parameter_dict:
+    :param query_groups:        Boolean flag; True if querying all groups on a specific site, False otherwise.
+    :type query_groups:         boolean
+    :param group_id:            The group ID.
+    :type group_id:             string
+    :param update_group:        Boolean flag; True if updating a specific group's information, False otherwise.
+    :type update_group:         boolean
+    :param get_users:           Boolean flag; True if querying all users in a specific group, False otherwise.
+    :type get_users:            boolean
+    :param add_user:            Boolean flag; True if adding a user to a specific group, False otherwise.
+    :type add_user:             boolean
+    :param remove_user:         Boolean flag; True if removing a user from a specific group, False otherwise.
+    :type remove_user:          boolean
+    :param user_id:             The user ID.
+    :type user_id:              string
+    :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
+                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:       dict
     """
     def __init__(self,
                  ts_connection,
