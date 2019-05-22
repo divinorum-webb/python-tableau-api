@@ -2,24 +2,26 @@ class PermissionsEndpoint(BaseEndpoint):
     """
     User endpoint for Tableau Server API requests.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param add_object_permissions:
-    :type add_object_permissions:
-    :param query_object_permissions:
-    :type query_object_permissions:
-    :param object_type:
-    :type object_type:
-    :param object_id:
-    :type object_id:
-    :param query_default_project_permissions:
-    :type query_default_project_permissions:
-    :param project_permissions_object:
-    :type project_permissions_object:
-    :param project_id:
-    :type project_id:
-    :param parameter_dict:
-    :type parameter_dict:
+    :param ts_connection:                       The Tableau Server connection object.
+    :type ts_connection:                        class
+    :param add_object_permissions:              Boolean flag; True if adding object permissions, False otherwise.
+    :type add_object_permissions:               boolean
+    :param query_object_permissions:            Boolean flag; True if querying object permissions, False otherwise.
+    :type query_object_permissions:             boolean
+    :param object_type:                         The Tableau object type (workbook, etc.).
+    :type object_type:                          string
+    :param object_id:                           The Tableau object ID.
+    :type object_id:                            string
+    :param query_default_project_permissions:   Boolean flag; True if querying default project permissions,
+                                                False otherwise.
+    :type query_default_project_permissions:    boolean
+    :param project_permissions_object:          The project permissions object (workbook, etc.).
+    :type project_permissions_object:           string
+    :param project_id:                          The project ID.
+    :type project_id:                           string
+    :param parameter_dict:                      Dictionary of URL parameters to append. The value in each key-value pair
+                                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:                       dict
     """
     def __init__(self,
                  ts_connection,

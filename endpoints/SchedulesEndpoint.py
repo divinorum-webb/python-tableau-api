@@ -4,22 +4,23 @@ class SchedulesEndpoint(BaseEndpoint):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param schedule_id:
-    :type schedule_id:
-    :param create_schedule:
-    :type create_schedule:
-    :param query_schedules:
-    :type query_schedules:
-    :param update_schedule:
-    :type update_schedule:
-    :param delete_schedule:
-    :type delete_schedule:
-    :param add_datasource:
-    :type add_datasource:
-    :param add_workbook:
-    :type add_workbook:
-    :param parameter_dict:
-    :type parameter_dict:
+    :param schedule_id:         The schedule ID.
+    :type schedule_id:          string
+    :param create_schedule:     Boolean flag; True if creating a schedule, False otherwise.
+    :type create_schedule:      boolean
+    :param query_schedules:     Boolean flag; True if querying all schedules, False otherwise.
+    :type query_schedules:      boolean
+    :param update_schedule:     Boolean flag; True if updating a specific schedule, False otherwise.
+    :type update_schedule:      boolean
+    :param delete_schedule:     Boolean flag; True if deleting a specific schedule, False otherwise.
+    :type delete_schedule:      boolean
+    :param add_datasource:      Boolean flag; True if adding a datasource, False otherwise.
+    :type add_datasource:       boolean
+    :param add_workbook:        Boolean flag; True if adding a workbook, False otherwise.
+    :type add_workbook:         boolean
+    :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
+                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:       dict
     """
     def __init__(self,
                  ts_connection,

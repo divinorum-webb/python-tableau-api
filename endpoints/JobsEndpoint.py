@@ -4,16 +4,17 @@ class JobsEndpoint(BaseEndpoint):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param query_jobs:
-    :type query_jobs:
-    :param query_job:
-    :type query_job:
-    :param cancel_job:
-    :type cancel_job:
-    :param job_id:
-    :type job_id:
-    :param parameter_dict:
-    :type parameter_dict:
+    :param query_jobs:          Boolean flag; True if querying all jobs, False otherwise.
+    :type query_jobs:           boolean
+    :param query_job:           Boolean flag; True if querying a specific job, False otherwise.
+    :type query_job:            boolean
+    :param cancel_job:          Boolean flag; True if canceling a specific job, False otherwise.
+    :type cancel_job:           boolean
+    :param job_id:              The job ID.
+    :type job_id:               string
+    :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
+                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:       dict
     """
     def __init__(self,
                  ts_connection,
