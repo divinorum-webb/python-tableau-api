@@ -4,20 +4,21 @@ class SubscriptionsEndpoint(BaseEndpoint):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param create_subscription:
-    :type create_subscription:
-    :param query_subscriptions:
-    :type query_subscriptions:
-    :param query_subscription:
-    :type query_subscription:
-    :param update_subscription:
-    :type update_subscription:
-    :param delete_subscription:
-    :type delete_subscription:
-    :param subscription_id:
-    :type subscription_id:
-    :param parameter_dict:
-    :type parameter_dict:
+    :param create_subscription: Boolean flag; True if creating a subscription, False otherwise.
+    :type create_subscription:  boolean
+    :param query_subscriptions: Boolean flag; True if querying all subscriptions, False otherwise.
+    :type query_subscriptions:  boolean
+    :param query_subscription:  Boolean flag; True if querying a specific subscription, False otherwise.
+    :type query_subscription:   boolean
+    :param update_subscription: Boolean flag; True if updating a specific subscription, False otherwise.
+    :type update_subscription:  boolean
+    :param delete_subscription: Boolean flag; True if deleting a specific subscription, False otherwise.
+    :type delete_subscription:  boolean
+    :param subscription_id:     The subscription ID.
+    :type subscription_id:      string
+    :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
+                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:       dict
     """
     def __init__(self,
                  ts_connection,
