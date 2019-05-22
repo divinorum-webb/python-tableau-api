@@ -4,7 +4,7 @@ class AddDatasourceToFavoritesRequest(BaseRequest):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param favorite_label:      The text label to assign the favorited item.
+    :param favorite_label:      The text label to assign to the favorite item.
     :type favorite_label:       string
     :param datasource_id:       The datasource ID.
     :type datasource_id:        string

@@ -4,10 +4,10 @@ class AddProjectToFavoritesRequest(BaseRequest):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param favorite_label:
-    :type favorite_label:
-    :param project_id:
-    :type project_id:
+    :param favorite_label:      The text label to assign to the favorite item.
+    :type favorite_label:       string
+    :param project_id:          The project ID.
+    :type project_id:           string
     """
     def __init__(self,
                  ts_connection,
