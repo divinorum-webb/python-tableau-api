@@ -4,14 +4,15 @@ class UserEndpoint(BaseEndpoint):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param query_user:
-    :type query_user:
-    :param user_id:
-    :type user_id:
-    :param update_user:
-    :type update_user:
-    :param parameter_dict:
-    :type parameter_dict:
+    :param query_user:          Boolean flag; True if querying a specific user, False otherwise.
+    :type query_user:           boolean
+    :param user_id:             The user ID.
+    :type user_id:              string
+    :param update_user:         Boolean flag; True if updating a specific user, False otherwise.
+    :type update_user:          boolean
+    :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
+                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:       dict
     """
     def __init__(self,
                  ts_connection,

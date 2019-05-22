@@ -4,34 +4,35 @@ class SiteEndpoint(BaseEndpoint):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param site_id:             
-    :type site_id:              
-    :param create_site:         
-    :type create_site:          
-    :param update_site:         
-    :type update_site:          
-    :param delete_site:         
-    :type delete_site:          
-    :param query_site:          
-    :type query_site:           
-    :param get_users:           
-    :type get_users:            
-    :param get_groups:          
-    :type get_groups:           
-    :param add_user:            
-    :type add_user:             
-    :param add_group:           
-    :type add_group:            
-    :param remove_user:         
-    :type remove_user:          
-    :param remove_group:        
-    :type remove_group:         
-    :param user_id:             
-    :type user_id:              
-    :param group_id:            
-    :type group_id:             
-    :param parameter_dict:      
-    :type parameter_dict:       
+    :param site_id:             The site ID.
+    :type site_id:              string
+    :param create_site:         Boolean flag; True if creating a site, False otherwise.
+    :type create_site:          boolean
+    :param update_site:         Boolean flag; True if updating a specific site, False otherwise.
+    :type update_site:          boolean
+    :param delete_site:         Boolean flag; True if deleting a specific site, False otherwise.
+    :type delete_site:          boolean
+    :param query_site:          Boolean flag; True if querying a specific site, False otherwise.
+    :type query_site:           boolean
+    :param get_users:           Boolean flag; True if getting all users, False otherwise.
+    :type get_users:            boolean
+    :param get_groups:          Boolean flag; True if getting all groups, False otherwise.
+    :type get_groups:           boolean
+    :param add_user:            Boolean flag; True if adding a user, False otherwise.
+    :type add_user:             boolean
+    :param add_group:           Boolean flag; True if adding a group, False otherwise.
+    :type add_group:            boolean
+    :param remove_user:         Boolean flag; True if removing a specific user, False otherwise.
+    :type remove_user:          boolean
+    :param remove_group:        Boolean flag; True if removing a specific group, False otherwise.
+    :type remove_group:         boolean
+    :param user_id:             The user ID.
+    :type user_id:              string
+    :param group_id:            The group ID.
+    :type group_id:             string
+    :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
+                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:       dict
     """
     def __init__(self, 
                  ts_connection, 
