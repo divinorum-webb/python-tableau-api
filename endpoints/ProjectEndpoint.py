@@ -4,21 +4,23 @@ class ProjectEndpoint(BaseEndpoint):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param create_project:             
-    :type create_project:              
-    :param query_projects:            
-    :type query_projects:             
-    :param update_project:         
-    :type update_project:          
-    :param delete_project:     
-    :type delete_project:      
-    :param project_id:     
-    :type project_id:      
-    :param parameter_dict:      
-    :type parameter_dict:       
+    :param create_project:      Boolean flag; True if creating a project, False otherwise.
+    :type create_project:       boolean
+    :param query_projects:      Boolean flag; True if querying all projects, False otherwise.
+    :type query_projects:       boolean
+    :param update_project:      Boolean flag; True if updating a specific project, False otherwise.
+    :type update_project:       boolean
+    :param delete_project:      Boolean flag; True if deleting a specific project, False otherwise.
+    :type delete_project:       boolean
+    :param project_id:          The project ID.
+    :type project_id:           string
+    :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
+                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:       dict
     """
     def __init__(self, 
-                 ts_connection, 
+                 ts_connection,
+                 create_project=False,
                  query_projects=False,
                  update_project=False,
                  delete_project=False,
@@ -26,6 +28,7 @@ class ProjectEndpoint(BaseEndpoint):
                  parameter_dict=None):
         
         super().__init__(ts_connection)
+        self._create_project = create_project
         self._query_projects = query_projects
         self._update_project = update_project
         self._delete_project = delete_project
