@@ -4,24 +4,25 @@ class ViewEndpoint(BaseEndpoint):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param query_views:
-    :type query_views:
-    :param query_view:
-    :type query_view:
-    :param view_id:
-    :type view_id:
-    :param add_tags:
-    :type add_tags:
-    :param delete_tag:
-    :type delete_tag:
-    :param tag_name:
-    :type tag_name:
-    :param query_view_pdf:
-    :type query_view_pdf:
-    :param query_view_data:
-    :type query_view_data:
-    :param parameter_dict:
-    :type parameter_dict:
+    :param query_views:         Boolean flag; True if querying all views, False otherwise.
+    :type query_views:          boolean
+    :param query_view:          Boolean flag; True if querying a specific view, False otherwise.
+    :type query_view:           boolean
+    :param view_id:             The view ID.
+    :type view_id:              string
+    :param add_tags:            Boolean flag; True if adding tags, False otherwise.
+    :type add_tags:             boolean
+    :param delete_tag:          Boolean flag; True if deleting a specific tag, False otherwise.
+    :type delete_tag:           boolean
+    :param tag_name:            The name of the tag.
+    :type tag_name:             string
+    :param query_view_pdf:      Boolean flag; True if querying a specific view's PDF, False otherwise.
+    :type query_view_pdf:       boolean
+    :param query_view_data:     Boolean flag; True if querying a specific view's data, False otherwise.
+    :type query_view_data:      boolean
+    :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
+                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:       dict
     """
     def __init__(self,
                  ts_connection,
