@@ -2,22 +2,23 @@ class TasksEndpoint(BaseEndpoint):
     """
     Tasks endpoint for Tableau Server API requests.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param get_refresh_tasks:
-    :type get_refresh_tasks:
-    :param get_refresh_task:
-    :type get_refresh_task:
-    :param run_refresh_task:
-    :type run_refresh_task:
-    :param task_id:
-    :type task_id:
-    :param query_schedule_refresh_tasks:
-    :type query_schedule_refresh_tasks:
-    :param schedule_id:
-    :type schedule_id:
-    :param parameter_dict:
-    :type parameter_dict:
+    :param ts_connection:                   The Tableau Server connection object.
+    :type ts_connection:                    class
+    :param get_refresh_tasks:               Boolean flag; True if getting all refresh tasks, False otherwise.
+    :type get_refresh_tasks:                boolean
+    :param get_refresh_task:                Boolean flag; True if getting a specific refresh task, False otherwise.
+    :type get_refresh_task:                 boolean
+    :param run_refresh_task:                Boolean flag; True if running a specific refresh task, False otherwise.
+    :type run_refresh_task:                 boolean
+    :param task_id:                         The task ID.
+    :type task_id:                          string
+    :param query_schedule_refresh_tasks:    Boolean flag; True if querying all refresh tasks, False otherwise.
+    :type query_schedule_refresh_tasks:     boolean
+    :param schedule_id:                     The schedule ID.
+    :type schedule_id:                      string
+    :param parameter_dict:                  Dictionary of URL parameters to append. The value in each key-value pair
+                                            is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:                   dict
     """
     def __init__(self,
                  ts_connection,
