@@ -1,13 +1,13 @@
 class AddDatasourceToFavoritesRequest(BaseRequest):
     """
-    Add datasource to favorites request for generating API request URLs to Tableau Server.
+    Add datasource to favorites request for generating API requests to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param favorite_label:
-    :type favorite_label:
-    :param datasource_id:
-    :type datasource_id:
+    :param favorite_label:      The text label to assign the favorited item.
+    :type favorite_label:       string
+    :param datasource_id:       The datasource ID.
+    :type datasource_id:        string
     """
     def __init__(self,
                  ts_connection,
