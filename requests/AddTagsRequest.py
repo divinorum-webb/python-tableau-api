@@ -1,11 +1,11 @@
 class AddTagsRequest(BaseRequest):
     """
-    Add tags request for generating API request URLs to Tableau Server.
+    Add tags request for generating API requests to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param tags:
-    :type tags:
+    :param tags:                A list of tag names to add.
+    :type tags:                 list
     """
     def __init__(self,
                  ts_connection,
