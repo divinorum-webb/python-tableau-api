@@ -1,15 +1,15 @@
 class AddUserToSiteRequest(BaseRequest):
     """
-    Add user to site request for generating API request URLs to Tableau Server.
+    Add user to site request for generating API requests to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param user_name:
-    :type user_name:
-    :param site_role:
-    :type site_role:
-    :param auth_setting:
-    :type auth_setting:
+    :param user_name:           The username for the user being added.
+    :type user_name:            string
+    :param site_role:           The site role to assign to the added user.
+    :type site_role:            string
+    :param auth_setting:        The auth setting to assign to the added user.
+    :type auth_setting:         string
     """
     def __init__(self,
                  ts_connection,
