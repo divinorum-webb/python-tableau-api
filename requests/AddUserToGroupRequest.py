@@ -1,11 +1,11 @@
 class AddUserToGroupRequest(BaseRequest):
     """
-    Add user to group request for generating API request URLs to Tableau Server.
+    Add user to group request for generating API requests to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param user_id:
-    :type user_id:
+    :param user_id:             The user ID.
+    :type user_id:              string
     """
     def __init__(self,
                  ts_connection,
