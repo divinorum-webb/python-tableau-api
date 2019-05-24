@@ -2,16 +2,16 @@ class CreateGroupRequest(BaseRequest):
     """
     Create group request for generating API request URLs to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param new_group_name:
-    :type new_group_name:
-    :param active_directory_group_name:
-    :type active_directory_group_name:
-    :param active_directory_domain_name:
-    :type active_directory_domain_name:
-    :param default_site_role:
-    :type default_site_role:
+    :param ts_connection:                   The Tableau Server connection object.
+    :type ts_connection:                    class
+    :param new_group_name:                  The name of the group being created.
+    :type new_group_name:                   string
+    :param active_directory_group_name:     The active directory group name.
+    :type active_directory_group_name:      string
+    :param active_directory_domain_name:    The active directory domain name.
+    :type active_directory_domain_name:     string
+    :param default_site_role:               The default site role for the created group.
+    :type default_site_role:                string
     """
     def __init__(self,
                  ts_connection,

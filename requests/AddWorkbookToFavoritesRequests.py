@@ -4,10 +4,10 @@ class AddWorkbookToFavoritesRequest(BaseRequest):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param favorite_label:
-    :type favorite_label:
-    :param workbook_id:
-    :type workbook_id:
+    :param favorite_label:      The text label to assign to the favorite item.
+    :type favorite_label:       string
+    :param workbook_id:         The workbook ID.
+    :type workbook_id:          string
     """
     def __init__(self,
                  ts_connection,

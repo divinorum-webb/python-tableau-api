@@ -2,18 +2,18 @@ class AddWorkbookPermissionsRequest(BaseRequest):
     """
     Add workbook permissions request for generating API request URLs to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param user_capability_dict:
-    :type user_capability_dict:
-    :param group_capability_dict:
-    :type group_capability_dict:
-    :param workbook_id:
-    :type workbook_id:
-    :param user_id:
-    :type user_id:
-    :param group_id:
-    :type group_id:
+    :param ts_connection:               The Tableau Server connection object.
+    :type ts_connection:                class
+    :param user_capability_dict:        The dict defining user capabilities / permissions.
+    :type user_capability_dict:         dict
+    :param group_capability_dict:       The dict defining group capabilities / permissions.
+    :type group_capability_dict:        dict
+    :param workbook_id:                 The workbook ID.
+    :type workbook_id:                  string
+    :param user_id:                     The user ID being assigned permissions.
+    :type user_id:                      string
+    :param group_id:                    The group ID being assigned permissions.
+    :type group_id:                     string
     """
     def __init__(self,
                  ts_connection,

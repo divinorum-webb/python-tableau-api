@@ -4,8 +4,8 @@ class AddWorkbookToScheduleRequest(BaseRequest):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param workbook_id:
-    :type workbook_id:
+    :param workbook_id:         The workbook ID.
+    :type workbook_id:          string
     """
     def __init__(self,
                  ts_connection,

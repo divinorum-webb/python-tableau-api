@@ -10,9 +10,9 @@ class AddViewPermissionsRequest(BaseRequest):
     :type group_capability_dict:    dict
     :param view_id:                 The view ID.
     :type view_id:                  string
-    :param user_id:                 The user ID.
+    :param user_id:                 The user ID being assigned permissions.
     :type user_id:                  string
-    :param group_id:                The group ID.
+    :param group_id:                The group ID being assigned permissions.
     :type group_id:                 string
     """
     def __init__(self,
