@@ -2,32 +2,37 @@ class CreateSiteRequest(BaseRequest):
     """
     Create site request for generating API request URLs to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param site_name:
-    :type site_name:
-    :param admin_mode:
-    :type admin_mode:
-    :param user_quota:
-    :type user_quota:
-    :param storage_quota:
-    :type storage_quota:
-    :param disable_subscriptions:
-    :type disable_subscriptions:
-    :param flows_enabled_flag:
-    :type flows_enabled_flag:
-    :param guest_access_enabled_flag:
-    :type guest_access_enabled_flag:
-    :param cache_warmup_enabled_flag:
-    :type cache_warmup_enabled_flag:
-    :param commenting_enabled_flag:
-    :type commenting_enabled_flag:
-    :param revision_history_enabled:
-    :type revision_history_enabled:
-    :param revision_limit:
-    :type revision_limit:
-    :param subscribe_others_enabled_flag:
-    :type subscribe_others_enabled_flag:
+    :param ts_connection:                   The Tableau Server connection object.
+    :type ts_connection:                    class
+    :param site_name:                       The name for the site being created.
+    :type site_name:                        string
+    :param admin_mode:                      Set this to 'ContentAndUsers' to allow site administrators to use the
+                                            server interface and tabcmd commands to add and remove users.
+                                            Set this to 'ContentOnly' to prevent site administrators from adding or
+                                            removing users.
+    :type admin_mode:                       string
+    :param user_quota:                      The maximum number of users for the site in each of the user-based license
+                                            types (Creator, Explorer, Viewer).
+    :type user_quota:                       string
+    :param storage_quota:                   The maximum amount of space for storage.
+    :type storage_quota:                    string
+    :param disable_subscriptions:           Boolean flag; True if disabling subscriptions, False otherwise.
+    :type disable_subscriptions:            boolean
+    :param flows_enabled_flag:              Boolean flag; True if flows are enabled, False otherwise.
+    :type flows_enabled_flag:               boolean
+    :param guest_access_enabled_flag:       Boolean flag; True if guest access is enabled, False otherwise.
+    :type guest_access_enabled_flag:        boolean
+    :param cache_warmup_enabled_flag:       Boolean flag; True if cache warmup is enabled, False otherwise.
+    :type cache_warmup_enabled_flag:        boolean
+    :param commenting_enabled_flag:         Boolean flag; True if commenting is enabled, False otherwise.
+    :type commenting_enabled_flag:          boolean
+    :param revision_history_enabled:        Boolean flag; True if revision history is enabled, False otherwise.
+    :type revision_history_enabled:         boolean
+    :param revision_limit:                  The maximum number of revisions stored on the server. The number can be
+                                            between 2 and 10,000, or set to -1 in order to remove the limit entirely.
+    :type revision_limit:                   string
+    :param subscribe_others_enabled_flag:   Boolean flag; True if owners can subscribe other users, False otherwise.
+    :type subscribe_others_enabled_flag:    boolean
     """
     def __init__(self,
                  ts_connection,
