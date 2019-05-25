@@ -2,14 +2,14 @@ class CreateProjectRequest(BaseRequest):
     """
     Update site request for generating API request URLs to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param project_name:
-    :type project_name:
-    :param project_description:
-    :type project_description:
-    :param parent_project_id:
-    :type parent_project_id:
+    :param ts_connection:           The Tableau Server connection object.
+    :type ts_connection:            class
+    :param project_name:            The name of the project being created.
+    :type project_name:             string
+    :param project_description:     The description of the project being created.
+    :type project_description:      string
+    :param parent_project_id:       The project ID for the parent project, if creating a child project.
+    :type parent_project_id:        string
     """
     def __init__(self,
                  ts_connection,

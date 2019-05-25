@@ -2,24 +2,37 @@ class CreateScheduleRequest(BaseRequest):
     """
     Create schedule request for generating API request URLs to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param schedule_name:
-    :type schedule_name:
-    :param schedule_priority:
-    :type schedule_priority:
-    :param schedule_type:
-    :type schedule_type:
-    :param schedule_execution_order:
-    :type schedule_execution_order:
-    :param schedule_frequency:
-    :type schedule_frequency:
-    :param start_time:
-    :type start_time:
-    :param end_time:
-    :type end_time:
-    :param interval_expression:
-    :type interval_expression:
+    :param ts_connection:               The Tableau Server connection object.
+    :type ts_connection:                class
+    :param schedule_name:               The name of the schedule being created.
+    :type schedule_name:                string
+    :param schedule_priority:           The priority value (1-100) for the schedule
+    :type schedule_priority:            string
+    :param schedule_type:               The schedule type (Flow, Extract, or Subscription)
+    :type schedule_type:                string
+    :param schedule_execution_order:    Set this value to 'Parallel' to allow jobs associated with this schedule to
+                                        run in parallel; set the value to 'Serial' to require the jobs to run one at
+                                        a time.
+    :type schedule_execution_order:     string
+    :param schedule_frequency:          The granularity of the schedule (Hourly, Daily, Weekly, or Monthly).
+    :type schedule_frequency:           string
+    :param start_time:                  The time of day when the schedule should run (HH:MM:SS). If the frequency is
+                                        set to 'Hourly', this value indicates the hour the schedule starts running.
+    :type start_time:                   string
+    :param end_time:                    Only set this value if the schedule frequency has been set to 'Hourly'. This
+                                        value indicates the hour the schedule will stop running (HH:MM:SS).
+    :type end_time:                     string
+    :param interval_expression:         This value specifies the time interval between jobs associated with the
+                                        schedule. The value required here depends on the 'schedule_frequency' value.
+                                        If 'schedule_frequency' = 'Hourly', the interval expression should be either
+                                        hours="interval" (where "interval" is a number [1, 2, 4, 6, 8, 12] in quotes).
+                                        If 'schedule_frequency' = 'Daily', no interval needs to be specified.
+                                        If 'schedule_frequency' = 'Weekly, the interval is weekDay="weekday", where
+                                        weekday is one of ['Sunday', 'Monday', 'Tuesday', etc.] wrapped in quotes.
+                                        If 'schedule_frequency' = 'Monthly', the interval expression is monthDay="day",
+                                        where day is either the day of the month (1-31), or 'LastDay'. In both cases
+                                        the value is wrapped in quotes.
+    :type interval_expression:          string
     """
     def __init__(self,
                  ts_connection,
