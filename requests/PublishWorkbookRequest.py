@@ -1,41 +1,50 @@
 class PublishWorkbookRequest(BaseRequest):
     """
-    Create site request for generating API request URLs to Tableau Server.
+    Publish workbook request for API requests to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param workbook_name:
-    :type workbook_name:
-    :param project_id:
-    :type project_id:
-    :param boundary_string:
-    :type boundary_string:
-    :param show_tabs_flag:
-    :type show_tabs_flag:
-    :param user_id:
-    :type user_id:
-    :param server_address:
-    :type server_address:
-    :param port_number:
-    :type port_number:
-    :param connection_username:
-    :type connection_username:
-    :param connection_password:
-    :type connection_password:
-    :param embed_credentials_flag:
-    :type embed_credentials_flag:
-    :param oauth_flag:
-    :type oauth_flag:
-    :param workbook_views_to_hide:
-    :type workbook_views_to_hide:
-    :param hide_view_flag:
-    :type hide_view_flag:
+    :param ts_connection:               The Tableau Server connection object.
+    :type ts_connection:                class
+    :param workbook_name:               The name the published workbook will have on Tableau Server.
+    :type workbook_name:                string
+    :param project_id:                  The project ID of the project the workbook is being published to.
+    :type project_id:                   string
+    :param show_tabs_flag:              Boolean flag; True if the workbook will show views as tabs, false otherwise.
+    :type show_tabs_flag:               boolean
+    :param user_id:                     If generating thumbnails as a specific user, specify the user ID here.
+    :type user_id:                      string
+    :param server_address:              Specify the server address for a data source connection if that data source
+                                        does not use OAuth.
+    :type server_address:               string
+    :param port_number:                 Specify the port number for a data source connection if that data source does
+                                        not use OAuth.
+    :type port_number:                  string
+    :param connection_username:         (Optional) If the workbook's data source connections require credentials, the
+                                        <connectionCredentials> elements are included and this attribute specifies the
+                                        connection username. If the element is included but is not required
+                                        (for example, if the data source uses OAuth), the server ignores the
+                                        element and its attributes.
+    :type connection_username:          string
+    :param connection_password:         (Optional) If the workbook's data source connections require credentials, the
+                                        <connectionCredentials> elements are included and this attribute specifies the
+                                        connection password. If the element is included but is not required (for
+                                        example, if the data source uses OAuth), the server ignores the element
+                                        and its attributes.
+    :type connection_password:          string
+    :param embed_credentials_flag:      Boolean flag; True if embedding credentials in the published workbook,
+                                        False otherwise.
+    :type embed_credentials_flag:       boolean
+    :param oauth_flag:                  Boolean flag; True if OAuth is used for the credentials, False otherwise.
+    :type oauth_flag:                   boolean
+    :param workbook_views_to_hide:      A list of the views to hide for the workbook being published. The list should
+                                        contain the view names, not view IDs.
+    :type workbook_views_to_hide:       list
+    :param hide_view_flag:              Boolean flag; True if the published workbook will hide any of its views,
+                                        False otherwise.
+    :type hide_view_flag:               boolean
     """
     def __init__(self,
                  ts_connection,
                  workbook_name,
-                 # workbook_file_name,
-                 # content_of_workbook_file,
                  project_id,
                  boundary_string,
                  show_tabs_flag=False,
@@ -51,8 +60,6 @@ class PublishWorkbookRequest(BaseRequest):
 
         super().__init__(ts_connection)
         self._workbook_name = workbook_name
-        # self._workbook_file_name = workbook_file_name
-        # self._content_of_workbook_file = content_of_workbook_file
         self._project_id = project_id
         self._boundary_string = boundary_string
         self._show_tabs_flag = show_tabs_flag
