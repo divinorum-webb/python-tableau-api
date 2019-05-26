@@ -1,6 +1,6 @@
 class SwitchSiteRequest(BaseRequest):
     """
-    Switch site request for generating API request URLs to Tableau Server.
+    Switch site request for generating API requests to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
