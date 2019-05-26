@@ -4,16 +4,16 @@ class UpdateDatasourceConnectionRequest(BaseRequest):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param server_address:
-    :type server_address:
-    :param port:
-    :type port:
-    :param connection_username:
-    :type connection_username:
-    :param connection_password:
-    :type connection_password:
-    :param embed_password:
-    :type embed_password:
+    :param server_address:      The new server address for the connection.
+    :type server_address:       string
+    :param port:                The new port for the connection.
+    :type port:                 string
+    :param connection_username: The new username for the connection.
+    :type connection_username:  string
+    :param connection_password: The new password for the connection.
+    :type connection_password:  string
+    :param embed_password_flag: Boolean flag; True if embedding password in the datasource connection, False otherwise.
+    :type embed_password_flag:  boolean
     """
     def __init__(self,
                  ts_connection,
@@ -21,14 +21,14 @@ class UpdateDatasourceConnectionRequest(BaseRequest):
                  port,
                  connection_username,
                  connection_password,
-                 embed_password=False):
+                 embed_password_flag=False):
 
         super().__init__(ts_connection)
         self._server_address = server_address
         self._port = port
         self._connection_username = connection_username
         self._connection_password = connection_password
-        self._embed_password = embed_password
+        self._embed_password_flag = embed_password_flag
 
     @property
     def required_connection_param_keys(self):
@@ -47,7 +47,7 @@ class UpdateDatasourceConnectionRequest(BaseRequest):
             self._port,
             self._connection_username,
             self._connection_password,
-            'true' if self._embed_password == True else 'false' if self._embed_password == False else None
+            'true' if self._embed_password_flag is True else 'false' if self._embed_password_flag is False else None
         ]
 
     @property
