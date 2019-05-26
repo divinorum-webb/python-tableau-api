@@ -4,12 +4,12 @@ class SignInRequest(BaseRequest):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param username:
-    :type username:
-    :param password:
-    :type password:
-    :param user_to_impersonate:
-    :type user_to_impersonate:
+    :param username:            The username credentials for signing in to Tableau Server.
+    :type username:             string
+    :param password:            The password credentials for signing in to Tableau Server.
+    :type password:             string
+    :param user_to_impersonate: If impersonating another user, set this value with their user ID.
+    :type user_to_impersonate:  string
     """
     def __init__(self,
                  ts_connection,
