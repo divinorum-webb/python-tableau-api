@@ -1,17 +1,22 @@
 class UpdateDataAlertRequest(BaseRequest):
     """
-    Update site request for generating API request URLs to Tableau Server.
+    Update site request for generating API requests to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param subject:
-    :type subject:
-    :param frequency:
-    :type frequency:
-    :param alert_owner_id:
-    :type alert_owner_id:
-    :param is_public_flag:
-    :type is_public_flag:
+    :param subject:             (Optional) The string to set as the new subject of the alert.
+    :type subject:              string
+    :param frequency:           (Optional) The frequency of the data-driven alert: once, frequently, hourly,
+                                daily, or weekly.
+    :type frequency:            string
+    :param alert_owner_id:      (Optional) The ID of the user to assign as owner of the data-driven alert.
+    :type alert_owner_id:       string
+    :param is_public_flag:      (Optional) Boolean flag.
+                                Determines the visibility of the data-driven alert. If the flag is True,
+                                users with access to the view containing the alert can see the alert and add
+                                themselves as recipients. If the flag is False, then the alert is only visible
+                                to the owner, site or server administrators, and specific users they add as recipients.
+    :type is_public_flag:       boolean
     """
     def __init__(self,
                  ts_connection,
