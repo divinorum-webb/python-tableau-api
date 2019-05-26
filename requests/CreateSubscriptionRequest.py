@@ -2,18 +2,20 @@ class CreateSubscriptionRequest(BaseRequest):
     """
     Create subscription request for generating API request URLs to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param subscription_subject:
-    :type subscription_subject:
-    :param content_type:
-    :type content_type:
-    :param content_id:
-    :type content_id:
-    :param schedule_id:
-    :type schedule_id:
-    :param user_id:
-    :type user_id:
+    :param ts_connection:           The Tableau Server connection object.
+    :type ts_connection:            class
+    :param subscription_subject:    The subject to display to users receiving the subscription.
+    :type subscription_subject:     string
+    :param content_type:            Set this value to 'Workbook' if the subscription is for a workbook;
+                                    set this value to 'View' if the subscription is for a view.
+    :type content_type:             string
+    :param content_id:              The ID of the workbook or view the subscription is sourced from.
+    :type content_id:               string
+    :param schedule_id:             The ID of the schedule the subscription runs on.
+    :type schedule_id:              string
+    :param user_id:                 The user ID for the user who is being subscribed to the view or workbook.
+                                    This user must have an email address defined on Tableau Server.
+    :type user_id:                  string
     """
     def __init__(self,
                  ts_connection,

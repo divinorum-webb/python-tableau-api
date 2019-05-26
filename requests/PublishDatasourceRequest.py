@@ -4,18 +4,20 @@ class PublishDatasourceRequest(BaseRequest):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param datasource_name:
-    :type datasource_name:
-    :param project_id:
-    :type project_id:
-    :param connection_username:
-    :type connection_username:
-    :param connection_password:
-    :type connection_password:
-    :param embed_flag:
-    :type embed_flag:
-    :param oauth_flag:
-    :type oauth_flag:
+    :param datasource_name:     The name for the datasource being published.
+    :type datasource_name:      string
+    :param project_id:          The project ID for the project the datasource belongs to.
+    :type project_id:           string
+    :param connection_username: If the datasource requires credentials, this value specifies the connection username.
+    :type connection_username:  string
+    :param connection_password: If the datasource requires credentials, this value specifies the connection password.
+    :type connection_password:  string
+    :param embed_flag:          Boolean flag; True if credentials are to be stored for when the connection is used,
+                                False otherwise.
+    :type embed_flag:           boolean
+    :param oauth_flag:          Boolean flag; True if the data connection username is an OAuth username,
+                                False otherwise.
+    :type oauth_flag:           boolean
     """
     def __init__(self,
                  ts_connection,
@@ -31,10 +33,7 @@ class PublishDatasourceRequest(BaseRequest):
                  ):
         super().__init__(ts_connection)
         self._datasource_name = datasource_name
-        #         self._datasource_file_name = datasource_file_name
-        #         self._content_of_datasource_file = content_of_datasource_file
         self._project_id = project_id
-        #         self._boundary_string = boundary_string
         self._connection_username = connection_username
         self._connection_password = connection_password
         self._embed_flag = embed_flag

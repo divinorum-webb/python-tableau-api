@@ -4,7 +4,7 @@ class AddUserToAlertRequest(BaseRequest):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param user_id:             The user ID.
+    :param user_id:             The user ID for the user being added to the alert.
     :type user_id:              string
     """
     def __init__(self,
