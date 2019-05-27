@@ -4,26 +4,27 @@ class UpdateDatasourceRequest(BaseRequest):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param new_project_id:
-    :type new_project_id:
-    :param new_owner_id:
-    :type new_owner_id:
-    :param is_certified:
-    :type is_certified:
-    :param certification_note:
-    :type certification_note:
+    :param new_project_id:      (Optional) The ID of the project to add the data source to.
+    :type new_project_id:       string
+    :param new_owner_id:        (Optional) The ID of the user who will own the datasource.
+    :type new_owner_id:         string
+    :param is_certified_flag:   (Optional) Boolean flag; True if the datasource is certified, False otherwise.
+    :type is_certified_flag:    boolean
+    :param certification_note:  (Optional) A note that provides more information on the certification of
+                                the datasource, if applicable.
+    :type certification_note:   string
     """
     def __init__(self,
                  ts_connection,
                  new_project_id=None,
                  new_owner_id=None,
-                 is_certified=None,
+                 is_certified_flag=None,
                  certification_note=None):
 
         super().__init__(ts_connection)
         self._new_project_id = new_project_id
         self._new_owner_id = new_owner_id
-        self._is_certified = is_certified
+        self._is_certified_flag = is_certified_flag
         self._certification_note = certification_note
         self.base_update_datasource_request
 
@@ -45,7 +46,7 @@ class UpdateDatasourceRequest(BaseRequest):
     @property
     def optional_datasource_param_values(self):
         return [
-            'true' if self._is_certified == True else 'false' if self._is_certified == False else None,
+            'true' if self._is_certified_flag is True else 'false' if self._is_certified_flag is False else None,
             self._certification_note
         ]
 

@@ -1,17 +1,26 @@
 class UpdateProjectRequest(BaseRequest):
     """
-    Update site request for generating API request URLs to Tableau Server.
+    Update project request for API requests to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param project_name:
-    :type project_name:
-    :param project_description:
-    :type project_description:
-    :param content_permissions:
-    :type content_permissions:
-    :param parent_project_id:
-    :type parent_project_id:
+    :param ts_connection:           The Tableau Server connection object.
+    :type ts_connection:            class
+    :param project_name:            (Optional) The new name for the project.
+    :type project_name:             string
+    :param project_description:     (Optional) The new description for the project.
+    :type project_description:      string
+    :param content_permissions:     (Optional) The new permissions setting for the project.
+                                    Specify LockedToProject to lock permissions so that users cannot overwrite the
+                                    default permissions set for the project, or specify ManagedByOwner to allow users
+                                    to manage permissions for content that they own.
+                                    For more information, see Lock Content Permissions to the Project.
+                                    The default value is ManagedByOwner.
+    :type content_permissions:      string
+    :param parent_project_id:       (Optional) The identifier of the parent project. Use this option to
+                                    create project hierarchies.
+                                    Note: To update a project without changing its placement in the project hierarchy,
+                                    omit the parentProjectId attribute. To move a project to the top of the project
+                                    hierarchy, provide an empty string ("") for the parentProjectId attribute.
+    :type parent_project_id:        string
     """
     def __init__(self,
                  ts_connection,

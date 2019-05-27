@@ -2,12 +2,12 @@ class UpdateSubscriptionRequest(BaseRequest):
     """
     Update subscription request for generating API request URLs to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param new_subscription_subject:
-    :type new_subscription_subject:
-    :param new_schedule_id:
-    :type new_schedule_id:
+    :param ts_connection:               The Tableau Server connection object.
+    :type ts_connection:                class
+    :param new_subscription_subject:    (Optional) A new subject for the subscription.
+    :type new_subscription_subject:     string
+    :param new_schedule_id:             (Optional) The ID of a schedule to associate this subscription with.
+    :type new_schedule_id:              string
     """
     def __init__(self,
                  ts_connection,

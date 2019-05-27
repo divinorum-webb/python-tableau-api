@@ -1,29 +1,32 @@
 class UpdateGroupRequest(BaseRequest):
     """
-    Update group request for generating API request URLs to Tableau Server.
+    Update group request for API requests to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param new_group_name:
-    :type new_group_name:
-    :param active_directory_group_name:
-    :type active_directory_group_name:
-    :param active_directory_domain:
-    :type active_directory_domain:
-    :param site_role:
-    :type site_role:
+    :param ts_connection:                   The Tableau Server connection object.
+    :type ts_connection:                    class
+    :param new_group_name:                  The new name for the group.
+    :type new_group_name:                   string
+    :param active_directory_group_name:     The name of the Active Directory group to synchronize with.
+    :type active_directory_group_name:      string
+    :param active_directory_domain:         The domain for the Active Directory group.
+    :type active_directory_domain:          string
+    :param default_site_role:               The site role to assign to users that are synchronized with
+                                            Active Directory. You can assign the following roles:
+                                            Creator, Explorer, ExplorerCanPublish, SiteAdministratorExplorer,
+                                            SiteAdministratorCreator, Unlicensed, or Viewer.
+    :type default_site_role:                string
     """
     def __init__(self,
                  ts_connection,
                  new_group_name,
                  active_directory_group_name=None,
                  active_directory_domain=None,
-                 site_role=None):
+                 default_site_role=None):
         super().__init__(ts_connection)
         self._new_group_name = new_group_name
         self._active_directory_group_name = active_directory_group_name
         self._active_directory_domain = active_directory_domain
-        self._site_role = site_role
+        self._default_site_role = default_site_role
         self.base_update_group_request
 
     @property
@@ -47,7 +50,7 @@ class UpdateGroupRequest(BaseRequest):
         return [
             self._active_directory_group_name,
             self._active_directory_domain,
-            self._site_role
+            self._default_site_role
         ]
 
     @property
