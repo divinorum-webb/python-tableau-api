@@ -1,6 +1,6 @@
 class UpdateWorkbookNowRequest(BaseRequest):
     """
-    Update workbook now request for generating API request URLs to Tableau Server.
+    Update workbook now request for sending API requests to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class

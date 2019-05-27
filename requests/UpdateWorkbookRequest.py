@@ -1,15 +1,16 @@
 class UpdateWorkbookRequest(BaseRequest):
     """
-    Update workbook request for generating API request URLs to Tableau Server.
+    Update workbook request for sending API requests to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param show_tabs_flag:
-    :type show_tabs_flag:
-    :param project_id:
-    :type project_id:
-    :param owner_id:
-    :type owner_id:
+    :param show_tabs_flag:      (Optional) Boolean flag; True if the workbook will show views as tabs, False otherwise.
+                                Default value is False.
+    :type show_tabs_flag:       boolean
+    :param project_id:          (Optional) The ID of a project to assign the workbook to.
+    :type project_id:           string
+    :param owner_id:            (Optional) The ID of the user who will own the workbook.
+    :type owner_id:             string
     """
     def __init__(self,
                  ts_connection,
