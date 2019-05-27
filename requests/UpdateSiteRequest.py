@@ -1,35 +1,55 @@
 class UpdateSiteRequest(BaseRequest):
     """
-    Update site request for generating API request URLs to Tableau Server.
+    Update site request for API requests to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param site_name:
-    :type site_name:
-    :param content_url:
-    :type content_url:
-    :param admin_mode:
-    :type admin_mode:
-    :param user_quota:
-    :type user_quota:
-    :param storage_quota:
-    :type storage_quota:
-    :param disable_subscriptions:
-    :type disable_subscriptions:
-    :param flows_enabled_flag:
-    :type flows_enabled_flag:
-    :param guest_access_enabled_flag:
-    :type guest_access_enabled_flag:
-    :param cache_warmup_enabled_flag:
-    :type cache_warmup_enabled_flag:
-    :param commenting_enabled_flag:
-    :type commenting_enabled_flag:
-    :param revision_history_enabled:
-    :type revision_history_enabled:
-    :param revision_limit:
-    :type revision_limit:
-    :param subscribe_others_enabled_flag:
-    :type subscribe_others_enabled_flag:
+    :param ts_connection:                   The Tableau Server connection object.
+    :type ts_connection:                    class
+    :param site_name:                       (Optional) The new name of the site.
+    :type site_name:                        string
+    :param content_url:                     (Optional) The new site URL. This value can contain only characters that
+                                            are valid in a URL.
+    :type content_url:                      string
+    :param admin_mode:                      (Optional) Specify ContentAndUsers to allow site administrators to use
+                                            the server interface and tabcmd commands to add and remove users.
+                                            (Specifying this option does not give site administrators permissions to
+                                            manage users using the REST API.)
+                                            Specify ContentOnly to prevent site administrators from adding or
+                                            removing users.
+                                            (Server administrators can always add or remove users.)
+    :type admin_mode:                       string
+    :param user_quota:                      (Optional) The maximum number of users for the site in each of the
+                                            user-based license types (Creator, Explorer and Viewer). Only licensed
+                                            users are counted and server administrators are excluded.
+                                            Setting this value to -1 removes any value that was set previously.
+                                            In that case, the limit depends on the type of licensing configured for
+                                            the server. For user-based license types, the maximum number of users is
+                                            set by the licenses activated on that server. For core-based licensing,
+                                            there is no limit to the number of users.
+    :type user_quota:                       string
+    :param storage_quota:                   (Optional) The new maximum amount of space for the new site, in megabytes.
+                                            If you set a quota and the site exceeds it, publishers will be prevented
+                                            from uploading new content until the site is under the limit again.
+    :type storage_quota:                    string
+    :param disable_subscriptions_flag:      Boolean flag; True if users can subscribe to workbooks or views on the
+                                            site, False otherwise.
+    :type disable_subscriptions_flag:       boolean
+    :param flows_enabled_flag:              Boolean flag; True if flows are enabled on the site, False otherwise.
+    :type flows_enabled_flag:               boolean
+    :param guest_access_enabled_flag:       Boolean flag; True if guest access is enabled on the site, False otherwise.
+    :type guest_access_enabled_flag:        boolean
+    :param cache_warmup_enabled_flag:       Boolean flag; True if cache warmup is enabled on the site, False otherwise.
+    :type cache_warmup_enabled_flag:        boolean
+    :param commenting_enabled_flag:         Boolean flag; True if commenting is enabled on the site, False otherwise.
+    :type commenting_enabled_flag:          boolean
+    :param revision_history_enabled:        Boolean flag; True if the site maintains revisions for changes made to
+                                            workbooks and datasources, False otherwise.
+    :type revision_history_enabled:         boolean
+    :param revision_limit:                  (Optional) An integer (entered here as a string) between 2 and 10000 to
+                                            indicate a limited number of revisions for content.
+    :type revision_limit:                   string
+    :param subscribe_others_enabled_flag:   Boolean; True if users should not be able to subscribe others to
+                                            workbooks or views on the site, False otherwise.
+    :type subscribe_others_enabled_flag:    boolean
     """
     def __init__(self,
                  ts_connection,
@@ -39,7 +59,7 @@ class UpdateSiteRequest(BaseRequest):
                  user_quota=None,
                  state='Active',
                  storage_quota=None,
-                 disable_subscriptions=None,
+                 disable_subscriptions_flag=None,
                  flows_enabled_flag=None,
                  guest_access_enabled_flag=False,
                  cache_warmup_enabled_flag=False,
@@ -56,7 +76,7 @@ class UpdateSiteRequest(BaseRequest):
         self._user_quota = user_quota
         self._state = state
         self._storage_quota = storage_quota
-        self._disable_subscriptions = disable_subscriptions
+        self._disable_subscriptions_flag = disable_subscriptions_flag
         self._flows_enabled_flag = flows_enabled_flag
         self._guest_access_enabled_flag = guest_access_enabled_flag
         self._cache_warmup_enabled_flag = cache_warmup_enabled_flag
@@ -92,14 +112,14 @@ class UpdateSiteRequest(BaseRequest):
             self._admin_mode,
             self._state,
             self._storage_quota,
-            'true' if self._disable_subscriptions == True else 'false' if self._disable_subscriptions == False else None,
-            'true' if self._flows_enabled_flag == True else 'false' if self._flows_enabled_flag == False else None,
-            'true' if self._guest_access_enabled_flag == True else 'false' if self._guest_access_enabled_flag == False else None,
-            'true' if self._cache_warmup_enabled_flag == True else 'false' if self._cache_warmup_enabled_flag == False else None,
-            'true' if self._commenting_enabled_flag == True else 'false' if self._commenting_enabled_flag == False else None,
-            'true' if self._revision_history_enabled == True else 'false' if self._revision_history_enabled == False else None,
+            'true' if self._disable_subscriptions_flag is True else 'false' if self._disable_subscriptions_flag is False else None,
+            'true' if self._flows_enabled_flag is True else 'false' if self._flows_enabled_flag is False else None,
+            'true' if self._guest_access_enabled_flag is True else 'false' if self._guest_access_enabled_flag is False else None,
+            'true' if self._cache_warmup_enabled_flag is True else 'false' if self._cache_warmup_enabled_flag is False else None,
+            'true' if self._commenting_enabled_flag is True else 'false' if self._commenting_enabled_flag is False else None,
+            'true' if self._revision_history_enabled is True else 'false' if self._revision_history_enabled is False else None,
             self._revision_limit,
-            'true' if self._subscribe_others_enabled_flag == True else 'false' if self._subscribe_others_enabled_flag == False else None
+            'true' if self._subscribe_others_enabled_flag is True else 'false' if self._subscribe_others_enabled_flag is False else None
         ]
 
     @property

@@ -1,25 +1,36 @@
 class UpdateScheduleRequest(BaseRequest):
     """
-    Update schedule request for generating API request URLs to Tableau Server.
+    Update schedule request for API requests to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param schedule_name:
-    :type schedule_name:
-    :param schedule_priority:
-    :type schedule_priority:
-    :param schedule_type:
-    :type schedule_type:
-    :param schedule_execution_order:
-    :type schedule_execution_order:
-    :param schedule_frequency:
-    :type schedule_frequency:
-    :param start_time:
-    :type start_time:
-    :param end_time:
-    :type end_time:
-    :param interval_expression:
-    :type interval_expression:
+    :param ts_connection:               The Tableau Server connection object.
+    :type ts_connection:                class
+    :param schedule_name:               The new name to give to the schedule.
+    :type schedule_name:                string
+    :param schedule_priority:           An integer value (entered here as a string) between 1 and 100 that determines
+                                        the default priority of the schedule if multiple tasks are pending in the queue.
+                                        Higher numbers have higher priority.
+    :type schedule_priority:            string
+    :param schedule_type:               This value (Extract or Subscription) indicates whether the schedule type is
+                                        an extract or a subscription schedule.
+    :type schedule_type:                string
+    :param schedule_execution_order:    Parallel to allow jobs associated with this schedule to run at the same time,
+                                        or Serial to require the jobs to run one after the other.
+    :type schedule_execution_order:     string
+    :param schedule_frequency:          The granularity of the schedule. Valid values are:
+                                        Hourly, Daily, Weekly, Monthly.
+    :type schedule_frequency:           string
+    :param start_time:                  The time of day on which scheduled jobs should run (or if the frequency is
+                                        hourly, on which they should start being run), in the format HH:MM:SS
+                                        (for example, 18:30:00). This value is required for all schedule frequencies.
+    :type start_time:                   string
+    :param end_time:                    If the schedule frequency is Hourly, the time of day on which scheduled jobs
+                                        should stop being run, in the format HH:MM:SS (for example, 23:30:00).
+                                        Hourly jobs will occur at the specified intervals between the start time and
+                                        the end time. For other schedule frequencies, this value is not required and
+                                        if the attribute is included, it is ignored.
+    :type end_time:                     string
+    :param interval_expression:         See the Tableau Server REST API documentation for details of this parameter.
+    :type interval_expression:          string
     """
     def __init__(self,
                  ts_connection,
