@@ -1,19 +1,28 @@
 class UpdateUserRequest(BaseRequest):
     """
-    Update site request for generating API request URLs to Tableau Server.
+    Update user request for sending API requests to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
-    :param new_full_name:
-    :type new_full_name:
-    :param new_email:
-    :type new_email:
-    :param new_password:
-    :type new_password:
-    :param new_site_role:
-    :type new_site_role:
-    :param new_auth_setting:
-    :type new_auth_setting:
+    :param new_full_name:       (Optional) The new name for the user. Users can change names without affecting the
+                                groups they belong to. Tableau Server only.
+                                Not available in Tableau Online.
+    :type new_full_name:        string
+    :param new_email:           (Optional) The new email address for the user. Tableau Server only.
+                                Not available in Tableau Online.
+    :type new_email:            string
+    :param new_password:        (Optional) The new password for the user. Tableau Server only.
+                                Not available in Tableau Online.
+    :type new_password:         string
+    :param new_site_role:       (Optional) The new site role. Valid role names are ServerAdministratorExplorer,
+                                ExplorerCanPublish, SiteAdministrator, and Unlicensed.
+                                See the Tableau Server REST API documentation for further details.
+    :type new_site_role:        string
+    :param new_auth_setting:    (Optional) The new authentication type for the user. You can assign the following
+                                values for this attribute: SAML (the user signs in using SAML) or ServerDefault
+                                (the user signs in using the authentication method that's set for the server).
+                                See the Tableau Server REST API documentation for further details.
+    :type new_auth_setting:     string
     """
     def __init__(self,
                  ts_connection,
