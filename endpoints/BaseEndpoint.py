@@ -1,6 +1,6 @@
 class BaseEndpoint:
     """
-    Base endpoint for generating API request URLs to Tableau Server.
+    Base endpoint for sending API request URLs to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
