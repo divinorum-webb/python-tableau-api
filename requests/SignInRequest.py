@@ -26,12 +26,10 @@ class SignInRequest(BaseRequest):
     @property
     def base_signin_request(self):
         self._request_body.update({
-            'credentials': {
-                'name': self._username,
-                'password': self._password
-            },
-            'site': {
-                'contentUrl': self._connection.site_url
+            "credentials": {
+                "name": self._username,
+                "password": self._password,
+                "site": {"contentUrl": self._connection.site_url}
             }
         })
         return self._request_body
@@ -39,8 +37,8 @@ class SignInRequest(BaseRequest):
     @property
     def modified_signin_request(self):
         self._request_body.update({
-            'user': {
-                'id': self._user_to_impersonate
+            "user": {
+                "id": self._user_to_impersonate
             }
         })
         return self._request_body
