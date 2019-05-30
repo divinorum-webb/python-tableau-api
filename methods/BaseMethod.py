@@ -18,9 +18,8 @@ class BaseMethod:
         self._request_type = request_type
 
     def get_request_headers(self):
+        request_headers = self._connection.default_headers.copy()
         if self._request_type in ['post', 'put']:
-            headers = self._connection.default_headers.copy()
             request_content_length = len(str(self._request))
-            headers.update({'Content-Length': str(request_content_length)})
-        else:
-            headers = self._connection.default_headers.copy()
+            request_headers.update({'Content-Length': str(request_content_length)})
+        return request_headers
