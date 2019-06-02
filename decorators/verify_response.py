@@ -12,9 +12,10 @@ def verify_response(success_code):
         def wrapper(self, *args, **kwargs):
             response = requests.get(self.request_url)
             if response.status_code != success_code:
-                raise Exception('The request to Tableau Server returned code {} instead of {} in function {}'.format(response.status_code,
-                                                                                                                     success_code,
-                                                                                                                     func.__name__))
+                raise Exception('The request to Tableau Server returned code \n'
+                                ' {} instead of {} in function {}'.format(response.status_code,
+                                                                          success_code,
+                                                                          func.__name__))
             return func(self, *args, **kwargs)
         return wrapper
     return decorator
