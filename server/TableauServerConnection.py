@@ -17,6 +17,9 @@ class TableauServerConnection:
         self.__auth_token = None
         self.__site_id = None
         self.__user_id = None
+        self.active_endpoint = None
+        self.active_request = None
+        self.active_headers = None
 
     @property
     def server(self):
@@ -51,9 +54,17 @@ class TableauServerConnection:
 
     @property
     def sign_out_headers(self):
-        return sign_in_headers.copy().update({
-            "X-Tableau-Auth": self.auth_token,
+        return {
+            "X-Tableau-Auth": self.auth_token
+        }
+
+    @property
+    def default_headers(self):
+        headers = self.sign_in_headers.copy()
+        headers.update({
+            "X-Tableau-Auth": self.auth_token
         })
+        return headers
 
     @property
     def auth_token(self):
@@ -61,7 +72,7 @@ class TableauServerConnection:
 
     @auth_token.setter
     def auth_token(self, token_value):
-        if not self.__auth_token or token_value is None:
+        if token_value != self.__auth_token or token_value is None:
             self.__auth_token = token_value
         else:
             raise Exception('You are already signed in with a valid auth token.')
@@ -72,11 +83,11 @@ class TableauServerConnection:
 
     @site_id.setter
     def site_id(self, site_id_value):
-        if not self.__site_id or site_id_value is None:
+        if self.site_id != site_id_value:
             self.__site_id = site_id_value
         else:
             raise Exception(
-                'This Tableau Server connection is already connected to a specific site. Log out to reconnect.')
+                'This Tableau Server connection is already connected the specified site.')
 
     @property
     def user_id(self):
@@ -86,20 +97,36 @@ class TableauServerConnection:
     def user_id(self, user_id_value):
         self.__user_id = user_id_value
 
-    @verify_response(200)
+    #     @verify_response(200)
     def sign_in(self):
         request = SignInRequest(ts_connection=self, username=self.username, password=self.password).get_request()
         endpoint = AuthEndpoint(ts_connection=self, sign_in=True).get_endpoint()
         response = requests.post(url=endpoint, json=request, headers=self.sign_in_headers)
-        self.auth_token = response.json()['credentials']['token']
-        self.site_id = response.json()['credentials']['site']['id']
-        self.user_id = response.json()['credentials']['user']['id']
+        if response.status_code == 200:
+            self.auth_token = response.json()['credentials']['token']
+            self.site_id = response.json()['credentials']['site']['id']
+            self.user_id = response.json()['credentials']['user']['id']
 
     @verify_signed_in
-    @verify_response(200)
+    #     @verify_response(200)
     def sign_out(self):
         endpoint = AuthEndpoint(ts_connection=self, sign_out=True).get_endpoint()
-        response = requests.post(url=sign_out_endpoint, headers=default_headers)
-        self.auth_token = None
-        self.site_id = None
-        self.user_id = None
+        response = requests.post(url=endpoint, headers=self.sign_out_headers)
+        if response.status_code == 204:
+            self.auth_token = None
+            self.site_id = None
+            self.user_id = None
+        return response
+
+    @verify_signed_in
+    #     @verify_response(200)
+    def switch_site(self, site_name):
+        self.active_request = SwitchSiteRequest(ts_connection=self, site_name=site_name).get_request()
+        self.active_endpoint = AuthEndpoint(ts_connection=self, switch_site=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        if response.status_code == 200:
+            self.auth_token = response.json()['credentials']['token']
+            self.site_id = response.json()['credentials']['site']['id']
+            self.user_id = response.json()['credentials']['user']['id']
+        return response
