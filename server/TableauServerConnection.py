@@ -3,13 +3,14 @@ class TableauServerConnection:
                  config_json,
                  env='tableau_prod'):
         """
-        Initialize the TableauServer object.
-        The config_json parameter requires a valid config file.
+        Used to create a Tableau Server connection.
+        The config_json parameter requires a valid config file describing the Tableau Server configurations.
         The env parameter is a string that indicates which environment to reference from the config file.
+
         :param config_json:     The configuration object. This should be a dict / JSON object that defines the
                                 Tableau Server configuration.
         :type config_json:      JSON or dict
-        :param env:             The environment from the configuration file to use.
+        :param env:             The environment from the configuration file to use. Defaults to 'tableau_prod'.
         :type env:              string
         """
         self._config = config_json
@@ -53,7 +54,7 @@ class TableauServerConnection:
         }
 
     @property
-    def sign_out_headers(self):
+    def x_auth_header(self):
         return {
             "X-Tableau-Auth": self.auth_token
         }
@@ -108,7 +109,7 @@ class TableauServerConnection:
     #     @verify_response(200)
     def sign_out(self):
         endpoint = AuthEndpoint(ts_connection=self, sign_out=True).get_endpoint()
-        response = requests.post(url=endpoint, headers=self.sign_out_headers)
+        response = requests.post(url=endpoint, headers=self.x_auth_header)
         if response.status_code == 204:
             self.auth_token = None
             self.site_id = None
@@ -129,8 +130,8 @@ class TableauServerConnection:
         return response
 
     def create_site(self):
-        # requires admin privileges to test
-        print("Requires admin privileges for testing.")
+        # This method can only be called by server administrators.
+        print("This method can only be called by server administrators.")
         pass
 
     def query_site(self, parameter_dict=None):
@@ -151,8 +152,41 @@ class TableauServerConnection:
         return response
 
     def query_views_for_site(self, parameter_dict=None):
-        self.active_endpoint = SiteEndpoint(ts_connection=self, query_views=True,
+        self.active_endpoint = SiteEndpoint(ts_connection=self,
+                                            query_views=True,
                                             parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def update_site(self):
+        # This method can only be called by server administrators.
+        print("This method can only be called by server administrators.")
+        pass
+
+    def delete_site(self):
+        # This method can only be called by server administrators.
+        print("This method can only be called by server administrators.")
+        pass
+
+    def delete_data_driven_alert(self, data_alert_id):
+        self.active_endpoint = DataAlertEndpoint(ts_connection=self,
+                                                 data_alert_id=data_alert_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_data_driven_alert_details(self, data_alert_id):
+        self.active_endpoint = DataAlertEndpoint(ts_connection=self,
+                                                 query_data_alert=True,
+                                                 data_alert_id=data_alert_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_data_driven_alerts(self, parameter_dict=None):
+        self.active_endpoint = DataAlertEndpoint(ts_connection=self,
+                                                 query_data_alerts=True).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
