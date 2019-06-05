@@ -4,6 +4,10 @@ class DataAlertEndpoint(BaseEndpoint):
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
+    :param query_data_alerts:   Boolean flag; True if querying all data alerts, False otherwise.
+    :type query_data_alerts:    boolean
+    :param query_data_alert:    Boolean flag; True if querying a specific data alert, False otherwise.
+    :type query_data_alert:     boolean
     :param data_alert_id:       The data alert ID.
     :type data_alert_id:        string
     :param user_id:             The user ID.
@@ -17,7 +21,9 @@ class DataAlertEndpoint(BaseEndpoint):
     :type parameter_dict:       dict
     """
     def __init__(self, 
-                 ts_connection, 
+                 ts_connection,
+                 query_data_alerts=False,
+                 query_data_alert=False,
                  data_alert_id=None, 
                  user_id=None, 
                  add_user=False, 
@@ -25,6 +31,8 @@ class DataAlertEndpoint(BaseEndpoint):
                  parameter_dict=None):
         
         super().__init__(ts_connection)
+        self._query_data_alerts = query_data_alerts
+        self._query_data_alert = query_data_alert
         self._data_alert_id = data_alert_id
         self._user_id = user_id
         self._add_user = add_user

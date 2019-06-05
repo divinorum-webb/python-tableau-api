@@ -14,6 +14,8 @@ class SiteEndpoint(BaseEndpoint):
     :type delete_site:          boolean
     :param query_site:          Boolean flag; True if querying a specific site, False otherwise.
     :type query_site:           boolean
+    :param query_sites:         Boolean flag; True if querying all sites on the site, False otherwise.
+    :type query_sites:          boolean
     :param get_users:           Boolean flag; True if getting all users, False otherwise.
     :type get_users:            boolean
     :param get_groups:          Boolean flag; True if getting all groups, False otherwise.
@@ -41,6 +43,7 @@ class SiteEndpoint(BaseEndpoint):
                  update_site=False,
                  delete_site=False,
                  query_site=False,
+                 query_sites=False,
                  query_views=False,
                  get_users=False,
                  get_groups=False,
@@ -58,6 +61,7 @@ class SiteEndpoint(BaseEndpoint):
         self._update_site = update_site
         self._delete_site = delete_site
         self._query_site = query_site
+        self._query_sites = query_sites
         self._query_views = query_views
         self._get_users = get_users
         self._get_groups = get_groups
