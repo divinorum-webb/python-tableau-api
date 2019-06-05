@@ -8,9 +8,9 @@ def verify_signed_in(func):
     :return:        Returns the results of the function this decorates.
     """
     @wraps(func)
-    def wrapper(self):
+    def wrapper(self, *args, **kwargs):
         if self.auth_token:
-            return func(self)
+            return func(self, *args, **kwargs)
         else:
             raise Exception('The Tableau Server connection is not logged in.')
     return wrapper
