@@ -1,7 +1,3 @@
-from requests.packages.urllib3.fields import RequestField
-from requests.packages.urllib3.filepost import encode_multipart_formdata
-
-
 class BaseMethod:
     """
     Base method for building the methods listed on the Tableau Server API reference.
@@ -41,14 +37,3 @@ class BaseMethod:
         post_body, content_type = encode_multipart_formdata(mime_multipart_parts)
         content_type = ''.join(('multipart/mixed',) + content_type.partition(';')[1:])
         return post_body, content_type
-
-    @verify_response(self._success_code)
-    def send_request(self, headers=None):
-        pass
-
-    # def get_request_headers(self):
-    #     #     request_headers = self._connection.default_headers.copy()
-    #     #     if self._request_type in ['post', 'put']:
-    #     #         request_content_length = len(str(self._request))
-    #     #         request_headers.update({'Content-Length': str(request_content_length)})
-    #     #     return request_headers
