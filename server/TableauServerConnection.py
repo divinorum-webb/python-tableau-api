@@ -61,9 +61,7 @@ class TableauServerConnection:
     @property
     def default_headers(self):
         headers = self.sign_in_headers.copy()
-        headers.update({
-            "X-Tableau-Auth": self.auth_token
-        })
+        headers.update({"X-Tableau-Auth": self.auth_token})
         return headers
 
     @property
@@ -86,8 +84,7 @@ class TableauServerConnection:
         if self.site_id != site_id_value:
             self.__site_id = site_id_value
         else:
-            raise Exception(
-                'This Tableau Server connection is already connected the specified site.')
+            raise Exception('This Tableau Server connection is already connected the specified site.')
 
     @property
     def user_id(self):
@@ -129,4 +126,33 @@ class TableauServerConnection:
             self.auth_token = response.json()['credentials']['token']
             self.site_id = response.json()['credentials']['site']['id']
             self.user_id = response.json()['credentials']['user']['id']
+        return response
+
+    def create_site(self):
+        # requires admin privileges to test
+        print("Requires admin privileges for testing.")
+        pass
+
+    def query_site(self, parameter_dict=None):
+        self.active_endpoint = SiteEndpoint(ts_connection=self,
+                                            query_site=True,
+                                            site_id=self.site_id,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_sites(self, parameter_dict=None):
+        self.active_endpoint = SiteEndpoint(ts_connection=self,
+                                            query_sites=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_views_for_site(self, parameter_dict=None):
+        self.active_endpoint = SiteEndpoint(ts_connection=self, query_views=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
