@@ -1,6 +1,6 @@
 class BaseRequest:
     """
-    Base request for generating API request URLs to Tableau Server.
+    Base request for issuing API requests to Tableau Server.
 
     :param ts_connection:       The Tableau Server connection object.
     :type ts_connection:        class
