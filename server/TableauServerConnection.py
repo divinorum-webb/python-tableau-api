@@ -191,11 +191,21 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def add_user_to_data_driven_alert(self):
-        pass
+    def add_user_to_data_driven_alert(self, user_id, data_alert_id):
+        # this appears to be broken on Tableau's side, always returning an internal server error
+        self.active_request = AddUserToAlertRequest(ts_connection=self, user_id=user_id).get_request()
+        self.active_endpoint = DataAlertEndpoint(ts_connection=self, add_user=True, user_id=user_id,
+                                                 data_alert_id=data_alert_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def delete_user_from_data_driven_alert(self):
-        pass
+    def delete_user_from_data_driven_alert(self, user_id, data_alert_id):
+        self.active_endpoint = DataAlertEndpoint(ts_connection=self, remove_user=True, user_id=user_id,
+                                                 data_alert_id=data_alert_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def update_data_driven_alert(self, data_alert_id, subject=None, frequency=None, alert_owner_id=None,
                                  is_public_flag=None):
