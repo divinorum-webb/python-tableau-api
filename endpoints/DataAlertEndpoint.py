@@ -64,7 +64,7 @@ class DataAlertEndpoint(BaseEndpoint):
             url = self.base_data_alert_url
         elif self._data_alert_id and not (self._user_id or self._add_user or self._remove_user):
             url = self.base_data_alert_id_url
-        elif self._data_alert_id and self._add_user and not (self._user_id or self._remove_user):
+        elif self._data_alert_id and self._add_user and self._user_id and not self._remove_user:
             url = self.base_data_alert_user_url
         elif self._data_alert_id and self._remove_user and self._user_id and not self._add_user:
             url = self.base_data_alert_user_id_url
