@@ -185,7 +185,8 @@ class TableauServerConnection:
 
     def query_data_driven_alerts(self, parameter_dict=None):
         self.active_endpoint = DataAlertEndpoint(ts_connection=self,
-                                                 query_data_alerts=True).get_endpoint()
+                                                 query_data_alerts=True,
+                                                 parameter_dict=parameter_dict).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
@@ -208,15 +209,39 @@ class TableauServerConnection:
 
     # Add flow functions here eventually
 
-    def create_project(self):
-        pass
+    def create_project(self, project_name, project_description=None, content_permissions='ManagedByOwner',
+                       parent_project_id=None, parameter_dict=None):
+        self.active_request = CreateProjectRequest(ts_connection=self, project_name=project_name,
+                                                   project_description=project_description,
+                                                   content_permissions=content_permissions,
+                                                   parent_project_id=parent_project_id).get_request()
+        self.active_endpoint = ProjectEndpoint(ts_connection=self, create_project=True,
+                                               parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def query_projects(self):
-        pass
+    def query_projects(self, parameter_dict=None):
+        self.active_endpoint = ProjectEndpoint(ts_connection=self, query_projects=True,
+                                               parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def update_project(self):
-        pass
+    def update_project(self, project_id, project_name=None, project_description=None, content_permissions=None,
+                       parent_project_id=None):
+        self.active_request = UpdateProjectRequest(ts_connection=self, project_name=project_name,
+                                                   project_description=project_description,
+                                                   content_permissions=content_permissions,
+                                                   parent_project_id=parent_project_id).get_request()
+        self.active_endpoint = ProjectEndpoint(ts_connection=self, update_project=True,
+                                               project_id=project_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def delete_project(self):
-        pass
-
+    def delete_project(self, project_id):
+        self.active_endpoint = ProjectEndpoint(ts_connection=self, project_id=project_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
