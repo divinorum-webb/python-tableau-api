@@ -64,6 +64,8 @@ class UpdateProjectRequest(BaseRequest):
             self._get_parameters_dict(
                 self.optional_project_param_keys,
                 self.optional_project_param_values))
+        if self._parent_project_id == "":
+            self._request_body['project'].update({'parentProjectId': ''})
         return self._request_body
 
     def get_request(self):
