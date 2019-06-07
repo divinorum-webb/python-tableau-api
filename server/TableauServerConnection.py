@@ -205,3 +205,18 @@ class TableauServerConnection:
         self.active_headers = self.default_headers
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
+
+    # Add flow functions here eventually
+
+    def create_project(self):
+        pass
+
+    def query_projects(self):
+        pass
+
+    def update_project(self):
+        pass
+
+    def delete_project(self):
+        pass
+
