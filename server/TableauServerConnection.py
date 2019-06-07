@@ -3,14 +3,13 @@ class TableauServerConnection:
                  config_json,
                  env='tableau_prod'):
         """
-        Used to create a Tableau Server connection.
-        The config_json parameter requires a valid config file describing the Tableau Server configurations.
+        Initialize the TableauServer object.
+        The config_json parameter requires a valid config file.
         The env parameter is a string that indicates which environment to reference from the config file.
-
         :param config_json:     The configuration object. This should be a dict / JSON object that defines the
                                 Tableau Server configuration.
         :type config_json:      JSON or dict
-        :param env:             The environment from the configuration file to use. Defaults to 'tableau_prod'.
+        :param env:             The environment from the configuration file to use.
         :type env:              string
         """
         self._config = config_json
@@ -189,4 +188,20 @@ class TableauServerConnection:
                                                  query_data_alerts=True).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def add_user_to_data_driven_alert(self):
+        pass
+
+    def delete_user_from_data_driven_alert(self):
+        pass
+
+    def update_data_driven_alert(self, data_alert_id, subject=None, frequency=None, alert_owner_id=None,
+                                 is_public_flag=None):
+        self.active_request = UpdateDataAlertRequest(ts_connection=self, subject=subject, frequency=frequency,
+                                                     alert_owner_id=alert_owner_id,
+                                                     is_public_flag=is_public_flag).get_request()
+        self.active_endpoint = DataAlertEndpoint(ts_connection=self, data_alert_id=data_alert_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
