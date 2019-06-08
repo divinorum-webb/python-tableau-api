@@ -46,7 +46,6 @@ class PublishWorkbookRequest(BaseRequest):
                  ts_connection,
                  workbook_name,
                  project_id,
-                 boundary_string,
                  show_tabs_flag=False,
                  user_id=None,
                  server_address=None,
@@ -61,7 +60,6 @@ class PublishWorkbookRequest(BaseRequest):
         super().__init__(ts_connection)
         self._workbook_name = workbook_name
         self._project_id = project_id
-        self._boundary_string = boundary_string
         self._show_tabs_flag = show_tabs_flag
         self._user_id = user_id
         self._server_address = server_address
@@ -72,6 +70,8 @@ class PublishWorkbookRequest(BaseRequest):
         self._oauth_flag = oauth_flag
         self._workbook_views_to_hide = workbook_views_to_hide
         self._hide_view_flag = hide_view_flag
+        self.payload = None
+        self.content_type = None
         self.base_publish_workbook_request
 
     @property
@@ -172,6 +172,46 @@ class PublishWorkbookRequest(BaseRequest):
                     'hidden': 'true'
                 })
         return self._request_body
+
+    @staticmethod
+    def get_workbook(workbook_file_path):
+        workbook_file = os.path.basename(workbook_file_path)
+        with open(workbook_file_path, 'rb') as f:
+            workbook_bytes = f.read()
+        if 'twbx' in workbook_file_path.split('.'):
+            workbook_type = 'twbx'
+        elif 'twb' in workbook_file_path.split('.'):
+            workbook_type = 'twb'
+        else:
+            raise Exception('Invalid workbook type provided. Workbook must be a twbx or twb file.')
+        return workbook_file, workbook_bytes, workbook_type
+
+    def _make_multipart(self, workbook_file_path):
+        """
+        Creates one "chunk" for a multi-part file upload to apply to a POST request.
+
+        :param parts:                       'parts' is a dictionary that provides key-value pairs of the
+                                            format name: (filename, body, content_type).
+        :returns post_body, content_type:   Returns the post body and the content type string.
+        """
+        workbook_file, workbook_bytes, workbook_type = self.get_workbook(workbook_file_path)
+        parts = {'request_payload': (None, json.dumps(self.get_request()), 'application/json'),
+                 'tableau_workbook': (workbook_file, workbook_bytes, 'application/octet-stream')}
+
+        mime_multipart_parts = []
+        for name, (filename, blob, content_type) in parts.items():
+            multipart_part = RequestField(name=name, data=blob, filename=filename)
+            multipart_part.make_multipart(content_type=content_type)
+            mime_multipart_parts.append(multipart_part)
+
+        payload, content_type = encode_multipart_formdata(mime_multipart_parts)
+        content_type = ''.join(('multipart/mixed',) + content_type.partition(';')[1:])
+        return payload, content_type, workbook_type
+
+    def get_headers(self, new_content_type):
+        headers = self._connection.default_headers.copy()
+        headers['Content-Type'] = new_content_type
+        return headers
 
     def get_request(self):
         return self.modified_publish_workbook_request
