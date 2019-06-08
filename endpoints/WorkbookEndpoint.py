@@ -8,6 +8,8 @@ class WorkbookEndpoint(BaseEndpoint):
     :type query_workbooks:                      boolean
     :param query_workbook:                      Boolean flag; True if querying a specific workbook, False otherwise.
     :type query_workbook:                       boolean
+    :param publish_workbook:                    Boolean flag; True if publishing a specific workbook, False otherwise.
+    :type publish_workbook:                     boolean
     :param delete_workbook:                     Boolean flag; True if deleting a specific workbook, False otherwise.
     :type delete_workbook:                      boolean
     :param workbook_id:                         The workbook ID.
@@ -50,6 +52,7 @@ class WorkbookEndpoint(BaseEndpoint):
                  ts_connection,
                  query_workbooks=False,
                  query_workbook=False,
+                 publish_workbook=False,
                  delete_workbook=False,
                  workbook_id=None,
                  view_id=None,
@@ -70,6 +73,7 @@ class WorkbookEndpoint(BaseEndpoint):
         super().__init__(ts_connection)
         self._query_workbooks = query_workbooks
         self._query_workbook = query_workbook
+        self._publish_workbook = publish_workbook
         self._delete_workbook = delete_workbook
         self._workbook_id = workbook_id
         self._view_id = view_id
