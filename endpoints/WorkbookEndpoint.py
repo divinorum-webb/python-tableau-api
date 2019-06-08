@@ -2,35 +2,40 @@ class WorkbookEndpoint(BaseEndpoint):
     """
     Workbook endpoint for Tableau Server API requests.
 
-    :param ts_connection:               The Tableau Server connection object.
-    :type ts_connection:                class
-    :param query_workbooks:             Boolean flag; True if querying all workbooks; False otherwise.
-    :type query_workbooks:              boolean
-    :param query_workbook:              Boolean flag; True if querying a specific workbook, False otherwise.
-    :type query_workbook:               boolean
-    :param workbook_id:                 The workbook ID.
-    :type workbook_id:                  string
-    :param view_id:                     The view ID.
-    :type view_id:                      string
-    :param add_tags:                    Boolean flag; True if adding tags, False otherwise.
-    :type add_tags:                     boolean
-    :param delete_tag:                  Boolean flag; True if deleting a specific tag, False otherwise.
-    :type delete_tag:                   boolean
-    :param tag_name:                    The name of the tag.
-    :type tag_name:                     string
-    :param query_views:                 Boolean flag; True if querying all views, False otherwise.
-    :type query_views:                  boolean
-    :param query_connections:           Boolean flag; True if querying all connections, False otherwise.
-    :type query_connections:            boolean
-    :param query_workbook_preview_img:  Boolean flag; True if querying a specific preview image, False otherwise.
-    :type query_workbook_preview_img:   boolean
-    :param get_workbook_revisions:      Boolean flag; True if getting all workbook revisions, False otherwise.
-    :type get_workbook_revisions:       boolean
-    :param trigger_refresh:             Boolean flag; True if triggering a specific workbook refresh, False otherwise.
-    :type trigger_refresh:              boolean
-    :param parameter_dict:              Dictionary of URL parameters to append. The value in each key-value pair
-                                        is the literal text that will be appended to the URL endpoint.
-    :type parameter_dict:               dict
+    :param ts_connection:                       The Tableau Server connection object.
+    :type ts_connection:                        class
+    :param query_workbooks:                     Boolean flag; True if querying all workbooks; False otherwise.
+    :type query_workbooks:                      boolean
+    :param query_workbook:                      Boolean flag; True if querying a specific workbook, False otherwise.
+    :type query_workbook:                       boolean
+    :param workbook_id:                         The workbook ID.
+    :type workbook_id:                          string
+    :param view_id:                             The view ID.
+    :type view_id:                              string
+    :param add_tags:                            Boolean flag; True if adding tags, False otherwise.
+    :type add_tags:                             boolean
+    :param delete_tag:                          Boolean flag; True if deleting a specific tag, False otherwise.
+    :type delete_tag:                           boolean
+    :param tag_name:                            The name of the tag.
+    :type tag_name:                             string
+    :param query_views:                         Boolean flag; True if querying all views, False otherwise.
+    :type query_views:                          boolean
+    :param query_connections:                   Boolean flag; True if querying all connections, False otherwise.
+    :type query_connections:                    boolean
+    :param query_workbook_preview_img:          Boolean flag; True if querying a specific preview image,
+                                                False otherwise.
+    :type query_workbook_preview_img:           boolean
+    :param query_workbook_view_preview_img:     Boolean flag; True if querying a specific preview image,
+                                                False otherwise.
+    :type query_workbook_view_preview_img:      boolean
+    :param get_workbook_revisions:              Boolean flag; True if getting all workbook revisions, False otherwise.
+    :type get_workbook_revisions:               boolean
+    :param trigger_refresh:                     Boolean flag; True if triggering a specific workbook refresh,
+                                                False otherwise.
+    :type trigger_refresh:                      boolean
+    :param parameter_dict:                      Dictionary of URL parameters to append. The value in each key-value pair
+                                                is the literal text that will be appended to the URL endpoint.
+    :type parameter_dict:                       dict
     """
     def __init__(self,
                  ts_connection,
@@ -116,7 +121,7 @@ class WorkbookEndpoint(BaseEndpoint):
                 url = self.base_workbook_id_url
             elif self._add_tags:
                 url = self.base_workbook_tags_url
-            elif self._delete_tags:
+            elif self._delete_tag:
                 url = self.base_delete_workbook_tag_url
             elif self._query_views:
                 url = self.base_workbook_views_url
