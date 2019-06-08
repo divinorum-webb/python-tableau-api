@@ -39,9 +39,9 @@ class WorkbookEndpoint(BaseEndpoint):
     :param download_workbook_revision:          Boolean flag; Ture if downloading a specific workbook revision,
                                                 False otherwise.
     :type download_workbook_revision:           boolean
-    :param trigger_refresh:                     Boolean flag; True if triggering a specific workbook refresh,
+    :param refresh_workbook:                    Boolean flag; True if refreshing a specific workbook,
                                                 False otherwise.
-    :type trigger_refresh:                      boolean
+    :type refresh_workbook:                     boolean
     :param parameter_dict:                      Dictionary of URL parameters to append. The value in each key-value pair
                                                 is the literal text that will be appended to the URL endpoint.
     :type parameter_dict:                       dict
@@ -64,7 +64,7 @@ class WorkbookEndpoint(BaseEndpoint):
                  get_workbook_revisions=False,
                  download_workbook=False,
                  download_workbook_revision=False,
-                 trigger_refresh=False,
+                 refresh_workbook=False,
                  parameter_dict=None):
 
         super().__init__(ts_connection)
@@ -84,7 +84,7 @@ class WorkbookEndpoint(BaseEndpoint):
         self._get_workbook_revisions = get_workbook_revisions
         self._download_workbook = download_workbook
         self._download_workbook_revision = download_workbook_revision
-        self._trigger_refresh = trigger_refresh
+        self._refresh_workbook = refresh_workbook
         self._parameter_dict = parameter_dict
 
     @property
@@ -165,7 +165,7 @@ class WorkbookEndpoint(BaseEndpoint):
                 url = self.base_workbook_content_url
             elif self._download_workbook_revision and self._revision_number:
                 url = self.base_workbook_revision_number_url
-            elif self._trigger_refresh:
+            elif self._refresh_workbook:
                 url = self.base_workbook_refresh_url
             else:
                 self._invalid_parameter_exception()
