@@ -51,6 +51,7 @@ class WorkbookEndpoint(BaseEndpoint):
                  query_workbook_preview_img=False,
                  query_workbook_view_preview_img=False,
                  get_workbook_revisions=False,
+                 download_workbook=False,
                  trigger_refresh=False,
                  parameter_dict=None):
 
@@ -67,6 +68,7 @@ class WorkbookEndpoint(BaseEndpoint):
         self._query_workbook_preview_img = query_workbook_preview_img
         self._query_workbook_view_preview_img = query_workbook_view_preview_img
         self._get_workbook_revisions = get_workbook_revisions
+        self._download_workbook = download_workbook
         self._trigger_refresh = trigger_refresh
         self._parameter_dict = parameter_dict
 
@@ -112,6 +114,10 @@ class WorkbookEndpoint(BaseEndpoint):
         return "{0}/revisions".format(self.base_workbook_id_url)
 
     @property
+    def base_workbook_content_url(self):
+        return "{0}/content".format(self.base_workbook_id_url)
+
+    @property
     def base_workbook_refresh_url(self):
         return "{0}/refresh".format(self.base_workbook_id_url)
 
@@ -133,6 +139,8 @@ class WorkbookEndpoint(BaseEndpoint):
                 url = self.base_workbook_view_preview_url
             elif self._get_workbook_revisions:
                 url = self.base_workbook_revisions_url
+            elif self._download_workbook:
+                url = self.base_workbook_content_url
             elif self._trigger_refresh:
                 url = self.base_workbook_refresh_url
             else:
