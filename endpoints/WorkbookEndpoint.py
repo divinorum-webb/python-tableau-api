@@ -30,6 +30,8 @@ class WorkbookEndpoint(BaseEndpoint):
     :type query_workbook_view_preview_img:      boolean
     :param get_workbook_revisions:              Boolean flag; True if getting all workbook revisions, False otherwise.
     :type get_workbook_revisions:               boolean
+    :param download_workbook:                   Boolean flag; True if downloading workbook content, False otherwise.
+    :type download_workbook:                    boolean
     :param trigger_refresh:                     Boolean flag; True if triggering a specific workbook refresh,
                                                 False otherwise.
     :type trigger_refresh:                      boolean
