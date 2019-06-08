@@ -256,8 +256,28 @@ class TableauServerConnection:
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def publish_workbook(self):
-        pass
+    def publish_workbook(self, workbook_file_path, workbook_name, project_id, show_tabs_flag=False,
+                         user_id=None, server_address=None, port_number=None, connection_username=None,
+                         connection_password=None,
+                         embed_credentials_flag=False, oauth_flag=False, workbook_views_to_hide=None,
+                         hide_view_flag=False, parameter_dict={}):
+        self.active_request = PublishWorkbookRequest(ts_connection=self, workbook_name=workbook_name,
+                                                     project_id=project_id,
+                                                     show_tabs_flag=show_tabs_flag, user_id=user_id,
+                                                     server_address=server_address,
+                                                     port_number=port_number, connection_username=connection_username,
+                                                     connection_password=connection_password,
+                                                     embed_credentials_flag=embed_credentials_flag,
+                                                     oauth_flag=oauth_flag,
+                                                     workbook_views_to_hide=workbook_views_to_hide,
+                                                     hide_view_flag=hide_view_flag)
+        payload, content_type, workbook_type = self.active_request._make_multipart(workbook_file_path)
+        parameter_dict.update({'workbookType': 'workbookType={}'.format(workbook_type)})
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, publish_workbook=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.active_request.get_headers(content_type)
+        response = requests.post(url=self.active_endpoint, data=payload, headers=self.active_headers)
+        return response
 
     def add_tags_to_view(self):
         pass
