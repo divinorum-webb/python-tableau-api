@@ -255,3 +255,78 @@ class TableauServerConnection:
         self.active_headers = self.default_headers
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
+
+    def publish_workbook(self):
+        pass
+
+    def add_tags_to_view(self):
+        pass
+
+    def add_tags_to_workbook(self):
+        pass
+
+    def query_views_for_site(self, parameter_dict=None):
+        self.active_endpoint = ViewEndpoint(ts_connection=self, query_views=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_views_for_workbook(self):
+
+        pass
+
+    def query_view_data(self):
+        pass
+
+    def query_view_image(self):
+        pass
+
+    def query_view_preview_image(self):
+        pass
+
+    def query_workbook(self):
+        pass
+
+    def query_workbook_connections(self):
+        pass
+
+    def get_workbook_revisions(self):
+        pass
+
+    def query_workbook_preview_image(self):
+        pass
+
+    def query_workbooks_for_site(self, parameter_dict=None):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, query_workbooks=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_workbooks_for_user(self):
+        pass
+
+    def download_workbook(self):
+        pass
+
+    def download_workbook_revision(self):
+        pass
+
+    def update_workbook(self):
+        pass
+
+    def update_workbook_connection(self):
+        pass
+
+    def update_workbook_now(self):
+        pass
+
+    def delete_workbook(self):
+        pass
+
+    def delete_tag_from_view(self):
+        pass
+
+    def delete_tag_from_workbook(self):
+        pass
