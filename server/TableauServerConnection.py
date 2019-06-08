@@ -272,18 +272,37 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def query_views_for_workbook(self):
+    def query_views_for_workbook(self, workbook_id, parameter_dict=None):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, query_views=True, workbook_id=workbook_id,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-        pass
+    def query_view_data(self, view_id, parameter_dict=None):
+        # the CSV returned is in the response body as response.content
+        self.active_endpoint = ViewEndpoint(ts_connection=self, view_id=view_id, query_view_data=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def query_view_data(self):
-        pass
+    def query_view_image(self, view_id, parameter_dict=None):
+        # the image returned is in the response body as response.content
+        self.active_endpoint = ViewEndpoint(ts_connection=self, view_id=view_id, query_view_image=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def query_view_image(self):
-        pass
-
-    def query_view_preview_image(self):
-        pass
+    def query_view_preview_image(self, workbook_id, view_id, parameter_dict=None):
+        # the image returned is in the response body as response.content
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id, view_id=view_id,
+                                                query_workbook_view_preview_img=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def query_workbook(self):
         pass
