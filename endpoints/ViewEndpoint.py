@@ -18,6 +18,8 @@ class ViewEndpoint(BaseEndpoint):
     :type tag_name:             string
     :param query_view_pdf:      Boolean flag; True if querying a specific view's PDF, False otherwise.
     :type query_view_pdf:       boolean
+    :param query_view_image:    Boolean flag; True if querying a specific view's image, False otherwise.
+    :type query_view_image:     boolean
     :param query_view_data:     Boolean flag; True if querying a specific view's data, False otherwise.
     :type query_view_data:      boolean
     :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
@@ -33,6 +35,7 @@ class ViewEndpoint(BaseEndpoint):
                  delete_tag=False,
                  tag_name=None,
                  query_view_pdf=False,
+                 query_view_image=False,
                  query_view_data=False,
                  parameter_dict=None):
 
@@ -44,6 +47,7 @@ class ViewEndpoint(BaseEndpoint):
         self._query_view = query_view
         self._query_views = query_views
         self._query_view_pdf = query_view_pdf
+        self._query_view_image = query_view_image
         self._query_view_data = query_view_data
         self._parameter_dict = parameter_dict
 
@@ -73,6 +77,11 @@ class ViewEndpoint(BaseEndpoint):
                                     self._view_id)
 
     @property
+    def base_query_view_image_url(self):
+        return "{0}/{1}/image".format(self.base_view_url,
+                                      self._view_id)
+
+    @property
     def base_query_view_data_url(self):
         return "{0}/data".format(self.base_view_id_url)
 
@@ -86,6 +95,8 @@ class ViewEndpoint(BaseEndpoint):
                 url = self.base_delete_view_tag_url
             elif self._query_view_pdf:
                 url = self.base_query_view_pdf_url
+            elif self._query_view_image:
+                url = self.base_query_view_image_url
             elif self._query_view_data:
                 url = self.base_query_view_data_url
             else:
