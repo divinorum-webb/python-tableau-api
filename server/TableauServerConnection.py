@@ -295,8 +295,16 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
+    def query_view_pdf(self, view_id, parameter_dict=None):
+        # the PDF returned is in the response body as response.content
+        self.active_endpoint = ViewEndpoint(ts_connection=self, view_id=view_id, query_view_pdf=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
     def query_view_preview_image(self, workbook_id, view_id, parameter_dict=None):
-        # the image returned is in the response body as response.content
+        # the preview thumbnail image returned is in the response body as response.content
         self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id, view_id=view_id,
                                                 query_workbook_view_preview_img=True,
                                                 parameter_dict=parameter_dict).get_endpoint()
@@ -369,8 +377,12 @@ class TableauServerConnection:
     def update_workbook_now(self):
         pass
 
-    def delete_workbook(self):
-        pass
+    def delete_workbook(self, workbook_id):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
+                                                delete_workbook=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def delete_tag_from_view(self):
         pass
