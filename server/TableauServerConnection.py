@@ -304,14 +304,27 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def query_workbook(self):
-        pass
+    def query_workbook(self, workbook_id, parameter_dict=None):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id, query_workbook=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def query_workbook_connections(self):
-        pass
+    def query_workbook_connections(self, workbook_id, parameter_dict=None):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id, query_connections=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def get_workbook_revisions(self):
-        pass
+    def get_workbook_revisions(self, workbook_id, parameter_dict=None):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
+                                                get_workbook_revisions=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def query_workbook_preview_image(self):
         pass
@@ -323,14 +336,29 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def query_workbooks_for_user(self):
-        pass
+    def query_workbooks_for_user(self, user_id, parameter_dict=None):
+        self.active_endpoint = UserEndpoint(ts_connection=self, user_id=user_id, query_workbooks_for_user=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def download_workbook(self):
-        pass
+    def download_workbook(self, workbook_id, parameter_dict=None):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id, download_workbook=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def download_workbook_revision(self):
-        pass
+    def download_workbook_revision(self, workbook_id, revision_number, parameter_dict=None):
+        # this method only works for workbook versions that are NOT the current version
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
+                                                revision_number=revision_number,
+                                                download_workbook_revision=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def update_workbook(self):
         pass
