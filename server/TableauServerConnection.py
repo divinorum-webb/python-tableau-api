@@ -343,8 +343,12 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def download_workbook(self):
-        pass
+    def download_workbook(self, workbook_id, parameter_dict=None):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id, download_workbook=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def download_workbook_revision(self):
         pass
