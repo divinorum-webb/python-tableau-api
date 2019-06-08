@@ -18,6 +18,8 @@ class WorkbookEndpoint(BaseEndpoint):
     :type delete_tag:                           boolean
     :param tag_name:                            The name of the tag.
     :type tag_name:                             string
+    :param revision_number                      The revision number of the workbook revision to download.
+    :type revision_number                       string
     :param query_views:                         Boolean flag; True if querying all views, False otherwise.
     :type query_views:                          boolean
     :param query_connections:                   Boolean flag; True if querying all connections, False otherwise.
@@ -32,6 +34,9 @@ class WorkbookEndpoint(BaseEndpoint):
     :type get_workbook_revisions:               boolean
     :param download_workbook:                   Boolean flag; True if downloading workbook content, False otherwise.
     :type download_workbook:                    boolean
+    :param download_workbook_revision:          Boolean flag; Ture if downloading a specific workbook revision,
+                                                False otherwise.
+    :type download_workbook_revision:           boolean
     :param trigger_refresh:                     Boolean flag; True if triggering a specific workbook refresh,
                                                 False otherwise.
     :type trigger_refresh:                      boolean
@@ -48,12 +53,14 @@ class WorkbookEndpoint(BaseEndpoint):
                  add_tags=False,
                  delete_tag=False,
                  tag_name=None,
+                 revision_number=None,
                  query_views=False,
                  query_connections=False,
                  query_workbook_preview_img=False,
                  query_workbook_view_preview_img=False,
                  get_workbook_revisions=False,
                  download_workbook=False,
+                 download_workbook_revision=False,
                  trigger_refresh=False,
                  parameter_dict=None):
 
@@ -65,12 +72,14 @@ class WorkbookEndpoint(BaseEndpoint):
         self._add_tags = add_tags
         self._delete_tag = delete_tag
         self._tag_name = tag_name
+        self._revision_number = revision_number
         self._query_views = query_views
         self._query_connections = query_connections
         self._query_workbook_preview_img = query_workbook_preview_img
         self._query_workbook_view_preview_img = query_workbook_view_preview_img
         self._get_workbook_revisions = get_workbook_revisions
         self._download_workbook = download_workbook
+        self._download_workbook_revision = download_workbook_revision
         self._trigger_refresh = trigger_refresh
         self._parameter_dict = parameter_dict
 
@@ -120,6 +129,11 @@ class WorkbookEndpoint(BaseEndpoint):
         return "{0}/content".format(self.base_workbook_id_url)
 
     @property
+    def base_workbook_revision_number_url(self):
+        return "{0}/{1}/content".format(self.base_workbook_revisions_url,
+                                        self._revision_number)
+
+    @property
     def base_workbook_refresh_url(self):
         return "{0}/refresh".format(self.base_workbook_id_url)
 
@@ -143,6 +157,8 @@ class WorkbookEndpoint(BaseEndpoint):
                 url = self.base_workbook_revisions_url
             elif self._download_workbook:
                 url = self.base_workbook_content_url
+            elif self._download_workbook_revision and self._revision_number:
+                url = self.base_workbook_revision_number_url
             elif self._trigger_refresh:
                 url = self.base_workbook_refresh_url
             else:
