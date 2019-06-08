@@ -374,8 +374,13 @@ class TableauServerConnection:
     def update_workbook_connection(self):
         pass
 
-    def update_workbook_now(self):
-        pass
+    def update_workbook_now(self, workbook_id):
+        self.active_request = EmptyRequest(ts_connection=self).get_request()
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
+                                                refresh_workbook=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def delete_workbook(self, workbook_id):
         self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
