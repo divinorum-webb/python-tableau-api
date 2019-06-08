@@ -116,7 +116,7 @@ class WorkbookEndpoint(BaseEndpoint):
                 url = self.base_workbook_id_url
             elif self._add_tags:
                 url = self.base_workbook_tags_url
-            elif self._delete_tags:
+            elif self._delete_tag:
                 url = self.base_delete_workbook_tag_url
             elif self._query_views:
                 url = self.base_workbook_views_url
