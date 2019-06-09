@@ -256,8 +256,28 @@ class TableauServerConnection:
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def publish_workbook(self):
-        pass
+    def publish_workbook(self, workbook_file_path, workbook_name, project_id, show_tabs_flag=False,
+                         user_id=None, server_address=None, port_number=None, connection_username=None,
+                         connection_password=None,
+                         embed_credentials_flag=False, oauth_flag=False, workbook_views_to_hide=None,
+                         hide_view_flag=False, parameter_dict={}):
+        self.active_request = PublishWorkbookRequest(ts_connection=self, workbook_name=workbook_name,
+                                                     project_id=project_id,
+                                                     show_tabs_flag=show_tabs_flag, user_id=user_id,
+                                                     server_address=server_address,
+                                                     port_number=port_number, connection_username=connection_username,
+                                                     connection_password=connection_password,
+                                                     embed_credentials_flag=embed_credentials_flag,
+                                                     oauth_flag=oauth_flag,
+                                                     workbook_views_to_hide=workbook_views_to_hide,
+                                                     hide_view_flag=hide_view_flag)
+        payload, content_type, workbook_type = self.active_request._make_multipart(workbook_file_path)
+        parameter_dict.update({'workbookType': 'workbookType={}'.format(workbook_type)})
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, publish_workbook=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.active_request.get_headers(content_type)
+        response = requests.post(url=self.active_endpoint, data=payload, headers=self.active_headers)
+        return response
 
     def add_tags_to_view(self):
         pass
@@ -334,8 +354,14 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def query_workbook_preview_image(self):
-        pass
+    def query_workbook_preview_image(self, workbook_id, parameter_dict=None):
+        # the preview image returned is in the response body as response.content
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
+                                                query_workbook_preview_img=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def query_workbooks_for_site(self, parameter_dict=None):
         self.active_endpoint = WorkbookEndpoint(ts_connection=self, query_workbooks=True,
@@ -368,8 +394,14 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def update_workbook(self):
-        pass
+    def update_workbook(self, workbook_id, show_tabs_flag=None, project_id=None, owner_id=None):
+        self.active_request = UpdateWorkbookRequest(ts_connection=self, show_tabs_flag=show_tabs_flag,
+                                                    project_id=project_id, owner_id=owner_id).get_request()
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
+                                                update_workbook=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def update_workbook_connection(self):
         pass

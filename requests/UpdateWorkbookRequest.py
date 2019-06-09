@@ -14,7 +14,7 @@ class UpdateWorkbookRequest(BaseRequest):
     """
     def __init__(self,
                  ts_connection,
-                 show_tabs_flag=False,
+                 show_tabs_flag=None,
                  project_id=None,
                  owner_id=None):
 
@@ -38,7 +38,7 @@ class UpdateWorkbookRequest(BaseRequest):
 
     @property
     def optional_workbook_param_values(self):
-        return ['true' if self._show_tabs_flag == True else 'false' if self._show_tabs_flag == False else None]
+        return ['true' if self._show_tabs_flag is True else 'false' if self._show_tabs_flag is False else None]
 
     @property
     def optional_project_param_values(self):
