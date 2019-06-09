@@ -8,6 +8,9 @@ class WorkbookEndpoint(BaseEndpoint):
     :type query_workbooks:                      boolean
     :param query_workbook:                      Boolean flag; True if querying a specific workbook, False otherwise.
     :type query_workbook:                       boolean
+    :param update_workbook_connection:          Boolean flag; True if updating a specific workbook connection,
+                                                False otherwise.
+    :type update_workbook_connection:           boolean
     :param publish_workbook:                    Boolean flag; True if publishing a specific workbook, False otherwise.
     :type publish_workbook:                     boolean
     :param update_workbook:                     Boolean flag; True if updating a specific workbook, False otherwise.
@@ -18,6 +21,8 @@ class WorkbookEndpoint(BaseEndpoint):
     :type workbook_id:                          string
     :param view_id:                             The view ID.
     :type view_id:                              string
+    :param connection_id:                       The workbook connection ID.
+    :type connection_id:                        string
     :param add_tags:                            Boolean flag; True if adding tags, False otherwise.
     :type add_tags:                             boolean
     :param delete_tag:                          Boolean flag; True if deleting a specific tag, False otherwise.
@@ -57,8 +62,10 @@ class WorkbookEndpoint(BaseEndpoint):
                  publish_workbook=False,
                  update_workbook=False,
                  delete_workbook=False,
+                 update_workbook_connection=False,
                  workbook_id=None,
                  view_id=None,
+                 connection_id=None,
                  add_tags=False,
                  delete_tag=False,
                  tag_name=None,
@@ -79,8 +86,10 @@ class WorkbookEndpoint(BaseEndpoint):
         self._publish_workbook = publish_workbook
         self._update_workbook = update_workbook
         self._delete_workbook = delete_workbook
+        self._update_workbook_connection = update_workbook_connection
         self._workbook_id = workbook_id
         self._view_id = view_id
+        self._connection_id = connection_id
         self._add_tags = add_tags
         self._delete_tag = delete_tag
         self._tag_name = tag_name
@@ -124,6 +133,11 @@ class WorkbookEndpoint(BaseEndpoint):
         return "{0}/connections".format(self.base_workbook_id_url)
 
     @property
+    def base_workbook_connection_id_url(self):
+        return "{0}/{1}".format(self.base_workbook_connections_url,
+                                self._connection_id)
+
+    @property
     def base_workbook_preview_url(self):
         return "{0}/previewImage".format(self.base_workbook_id_url)
 
@@ -155,6 +169,8 @@ class WorkbookEndpoint(BaseEndpoint):
                 url = self.base_workbook_id_url
             elif self._delete_workbook:
                 url = self.base_workbook_id_url
+            elif self._update_workbook_connection and self._connection_id:
+                url = self.base_workbook_connection_id_url
             elif self._update_workbook and not (self._delete_workbook or self._publish_workbook):
                 url = self.base_workbook_id_url
             elif self._add_tags:
