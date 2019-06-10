@@ -281,11 +281,20 @@ class TableauServerConnection:
         response = requests.post(url=self.active_endpoint, data=payload, headers=self.active_headers)
         return response
 
-    def add_tags_to_view(self):
-        pass
+    def add_tags_to_view(self, view_id, tags):
+        self.active_request = AddTagsRequest(ts_connection=self, tags=tags).get_request()
+        self.active_endpoint = ViewEndpoint(ts_connection=self, view_id=view_id, add_tags=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def add_tags_to_workbook(self):
-        pass
+    def add_tags_to_workbook(self, workbook_id, tags):
+        self.active_request = AddTagsRequest(ts_connection=self, tags=tags).get_request()
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
+                                                add_tags=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def query_views_for_site(self, parameter_dict=None):
         self.active_endpoint = ViewEndpoint(ts_connection=self, query_views=True,
@@ -437,11 +446,19 @@ class TableauServerConnection:
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def delete_tag_from_view(self):
-        pass
+    def delete_tag_from_view(self, view_id, tag_name):
+        self.active_endpoint = ViewEndpoint(ts_connection=self, view_id=view_id, tag_name=tag_name,
+                                            delete_tag=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def delete_tag_from_workbook(self):
-        pass
+    def delete_tag_from_workbook(self, workbook_id, tag_name):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id, tag_name=tag_name,
+                                                delete_tag=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     # data sources
 
