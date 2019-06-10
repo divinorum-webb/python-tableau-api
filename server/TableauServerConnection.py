@@ -281,11 +281,20 @@ class TableauServerConnection:
         response = requests.post(url=self.active_endpoint, data=payload, headers=self.active_headers)
         return response
 
-    def add_tags_to_view(self):
-        pass
+    def add_tags_to_view(self, view_id, tags):
+        self.active_request = AddTagsRequest(ts_connection=self, tags=tags).get_request()
+        self.active_endpoint = ViewEndpoint(ts_connection=self, view_id=view_id, add_tags=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def add_tags_to_workbook(self):
-        pass
+    def add_tags_to_workbook(self, workbook_id, tags):
+        self.active_request = AddTagsRequest(ts_connection=self, tags=tags).get_request()
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
+                                                add_tags=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def query_views_for_site(self, parameter_dict=None):
         self.active_endpoint = ViewEndpoint(ts_connection=self, query_views=True,
@@ -437,13 +446,88 @@ class TableauServerConnection:
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def delete_tag_from_view(self):
-        pass
+    def delete_tag_from_view(self, view_id, tag_name):
+        self.active_endpoint = ViewEndpoint(ts_connection=self, view_id=view_id, tag_name=tag_name,
+                                            delete_tag=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def delete_tag_from_workbook(self):
-        pass
+    def delete_tag_from_workbook(self, workbook_id, tag_name):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id, tag_name=tag_name,
+                                                delete_tag=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     # data sources
 
     def publish_data_source(self):
         pass
+
+    def add_tags_to_data_source(self):
+        pass
+
+    def delete_tag_from_data_source(self):
+        pass
+
+    def query_data_source(self, datasource_id):
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  query_datasource=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_data_sources(self, parameter_dict=None):
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, query_datasources=True,
+                                                  parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_data_source_connections(self, datasource_id):
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  query_datasource_connections=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def get_data_source_revisions(self, datasource_id, parameter_dict=None):
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  get_datasource_revisions=True,
+                                                  parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def update_data_source(self, datasource_id, new_project_id=None, new_owner_id=None, is_certified_flag=None,
+                           certification_note=None):
+        """
+        Note that assigning an embedded extract will remain in the same project as its workbook, even if the
+        response indicates it has moved
+        """
+        self.active_request = UpdateDatasourceRequest(ts_connection=self, new_project_id=new_project_id,
+                                                      new_owner_id=new_owner_id,
+                                                      is_certified_flag=is_certified_flag,
+                                                      certification_note=certification_note).get_request()
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  update_datasource=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def update_data_source_connection(self, datasource_id, connection_id, server_address=None, port=None,
+                                      connection_username=None,
+                                      connection_password=None, embed_password_flag=None):
+        """Note that you must set the connection_password='' if changing the embed_password_flag from True to False"""
+        self.active_request = UpdateDatasourceConnectionRequest(ts_connection=self, server_address=server_address,
+                                                                port=port,
+                                                                connection_username=connection_username,
+                                                                connection_password=connection_password,
+                                                                embed_password_flag=embed_password_flag).get_request()
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  connection_id=connection_id,
+                                                  update_datasource_connection=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response

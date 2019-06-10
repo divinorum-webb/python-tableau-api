@@ -17,11 +17,11 @@ class UpdateDatasourceConnectionRequest(BaseRequest):
     """
     def __init__(self,
                  ts_connection,
-                 server_address,
-                 port,
-                 connection_username,
-                 connection_password,
-                 embed_password_flag=False):
+                 server_address=None,
+                 port=None,
+                 connection_username=None,
+                 connection_password=None,
+                 embed_password_flag=None):
 
         super().__init__(ts_connection)
         self._server_address = server_address
@@ -29,9 +29,10 @@ class UpdateDatasourceConnectionRequest(BaseRequest):
         self._connection_username = connection_username
         self._connection_password = connection_password
         self._embed_password_flag = embed_password_flag
+        self.base_update_datasource_connection_request
 
     @property
-    def required_connection_param_keys(self):
+    def optional_parameter_keys(self):
         return [
             'serverAddress',
             'serverPort',
@@ -41,13 +42,23 @@ class UpdateDatasourceConnectionRequest(BaseRequest):
         ]
 
     @property
-    def required_connection_param_values(self):
+    def optional_parameter_values_exist(self):
         return [
             self._server_address,
             self._port,
             self._connection_username,
             self._connection_password,
-            'true' if self._embed_password_flag is True else 'false' if self._embed_password_flag is False else None
+            True if self._embed_password_flag is not None else None
+        ]
+
+    @property
+    def optional_parameter_values(self):
+        return [
+            self._server_address,
+            self._port,
+            self._connection_username,
+            self._connection_password,
+            self._embed_password_flag
         ]
 
     @property
@@ -57,13 +68,20 @@ class UpdateDatasourceConnectionRequest(BaseRequest):
 
     @property
     def modified_update_datasource_connection_request(self):
-        if all(self.required_connection_param_values):
-            self._request_body.update(
-                self._get_parameters_dict(self.required_connection_param_keys,
-                                          self.required_connection_param_values))
-        else:
-            self._invalid_parameter_exception()
+        if any(self.optional_parameter_values_exist):
+            self._request_body['connection'].update(
+                self._get_parameters_dict(self.optional_parameter_keys,
+                                          self.optional_parameter_values))
         return self._request_body
+
+    @staticmethod
+    def _get_parameters_dict(param_keys, param_values):
+        """Override the inherited _get_parameters_dict() method to allow passing boolean values directly"""
+        params_dict = {}
+        for i, key in enumerate(param_keys):
+            if param_values[i] is not None:
+                params_dict.update({key: param_values[i]})
+        return params_dict
 
     def get_request(self):
         return self.modified_update_datasource_connection_request
