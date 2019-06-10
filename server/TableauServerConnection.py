@@ -459,8 +459,3 @@ class TableauServerConnection:
         self.active_headers = self.default_headers
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
-
-    # data sources
-
-    def publish_data_source(self):
-        pass
