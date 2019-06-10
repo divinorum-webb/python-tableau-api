@@ -17,11 +17,11 @@ class UpdateWorkbookConnectionRequest(BaseRequest):
     """
     def __init__(self,
                  ts_connection,
-                 server_address,
-                 port,
-                 connection_username,
-                 connection_password,
-                 embed_password_flag):
+                 server_address=None,
+                 port=None,
+                 connection_username=None,
+                 connection_password=None,
+                 embed_password_flag=None):
         super().__init__(ts_connection)
         self._server_address = server_address
         self._port = port
@@ -41,13 +41,23 @@ class UpdateWorkbookConnectionRequest(BaseRequest):
         ]
 
     @property
+    def required_parameter_values_exist(self):
+        return [
+            self._server_address,
+            self._port,
+            self._connection_username,
+            self._connection_password,
+            True if self._embed_password_flag is not None else None
+        ]
+
+    @property
     def required_parameter_values(self):
         return [
             self._server_address,
             self._port,
             self._connection_username,
             self._connection_password,
-            'true' if self._embed_password_flag is True else 'false' if self._embed_password_flag is False else None
+            self._embed_password_flag
         ]
 
     @property
@@ -57,11 +67,20 @@ class UpdateWorkbookConnectionRequest(BaseRequest):
 
     @property
     def modified_update_workbook_connection_request(self):
-        if any(self.required_parameter_values):
+        if any(self.required_parameter_values_exist):
             self._request_body['connection'].update(
                 self._get_parameters_dict(self.required_parameter_keys,
                                           self.required_parameter_values))
         return self._request_body
+
+    @staticmethod
+    def _get_parameters_dict(param_keys, param_values):
+        """Override the inherited _get_parameters_dict() method to allow passing boolean values directly"""
+        params_dict = {}
+        for i, key in enumerate(param_keys):
+            if param_values[i] is not None:
+                params_dict.update({key: param_values[i]})
+        return params_dict
 
     def get_request(self):
         return self.modified_update_workbook_connection_request
