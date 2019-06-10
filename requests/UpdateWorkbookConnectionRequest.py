@@ -31,7 +31,7 @@ class UpdateWorkbookConnectionRequest(BaseRequest):
         self.base_update_workbook_connection_request
 
     @property
-    def required_parameter_keys(self):
+    def optional_parameter_keys(self):
         return [
             'serverAddress',
             'serverPort',
@@ -41,7 +41,7 @@ class UpdateWorkbookConnectionRequest(BaseRequest):
         ]
 
     @property
-    def required_parameter_values_exist(self):
+    def optional_parameter_values_exist(self):
         return [
             self._server_address,
             self._port,
@@ -51,7 +51,7 @@ class UpdateWorkbookConnectionRequest(BaseRequest):
         ]
 
     @property
-    def required_parameter_values(self):
+    def optional_parameter_values(self):
         return [
             self._server_address,
             self._port,
@@ -67,10 +67,10 @@ class UpdateWorkbookConnectionRequest(BaseRequest):
 
     @property
     def modified_update_workbook_connection_request(self):
-        if any(self.required_parameter_values_exist):
+        if any(self.optional_parameter_values_exist):
             self._request_body['connection'].update(
-                self._get_parameters_dict(self.required_parameter_keys,
-                                          self.required_parameter_values))
+                self._get_parameters_dict(self.optional_parameter_keys,
+                                          self.optional_parameter_values))
         return self._request_body
 
     @staticmethod
