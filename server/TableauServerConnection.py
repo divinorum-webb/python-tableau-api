@@ -256,6 +256,8 @@ class TableauServerConnection:
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
 
+    # workbooks and views
+
     def publish_workbook(self, workbook_file_path, workbook_name, project_id, show_tabs_flag=False,
                          user_id=None, server_address=None, port_number=None, connection_username=None,
                          connection_password=None,
@@ -403,10 +405,24 @@ class TableauServerConnection:
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
-    def update_workbook_connection(self):
-        pass
+    def update_workbook_connection(self, workbook_id, connection_id, server_address=None, port=None,
+                                   connection_username=None,
+                                   connection_password=None, embed_password_flag=None, parameter_dict=None):
+        # fails to execute correctly on Tableau Server's side
+        self.active_request = UpdateWorkbookConnectionRequest(ts_connection=self, server_address=server_address,
+                                                              port=port,
+                                                              connection_username=connection_username,
+                                                              connection_password=connection_password,
+                                                              embed_password_flag=embed_password_flag).get_request()
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
+                                                connection_id=connection_id,
+                                                update_workbook_connection=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def update_workbook_now(self, workbook_id):
+    def update_workbook_now(self, workbook_id, ):
         self.active_request = EmptyRequest(ts_connection=self).get_request()
         self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
                                                 refresh_workbook=True).get_endpoint()
@@ -425,4 +441,9 @@ class TableauServerConnection:
         pass
 
     def delete_tag_from_workbook(self):
+        pass
+
+    # data sources
+
+    def publish_data_source(self):
         pass
