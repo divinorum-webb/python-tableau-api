@@ -500,8 +500,34 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def update_data_source(self):
-        pass
+    def update_data_source(self, datasource_id, new_project_id=None, new_owner_id=None, is_certified_flag=None,
+                           certification_note=None):
+        """
+        Note that assigning an embedded extract will remain in the same project as its workbook, even if the
+        response indicates it has moved
+        """
+        self.active_request = UpdateDatasourceRequest(ts_connection=self, new_project_id=new_project_id,
+                                                      new_owner_id=new_owner_id,
+                                                      is_certified_flag=is_certified_flag,
+                                                      certification_note=certification_note).get_request()
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  update_datasource=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def update_data_source_connection(self):
-        pass
+    def update_data_source_connection(self, datasource_id, connection_id, server_address=None, port=None,
+                                      connection_username=None,
+                                      connection_password=None, embed_password_flag=None):
+        """Note that you must set the connection_password='' if changing the embed_password_flag from True to False"""
+        self.active_request = UpdateDatasourceConnectionRequest(ts_connection=self, server_address=server_address,
+                                                                port=port,
+                                                                connection_username=connection_username,
+                                                                connection_password=connection_password,
+                                                                embed_password_flag=embed_password_flag).get_request()
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  connection_id=connection_id,
+                                                  update_datasource_connection=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
