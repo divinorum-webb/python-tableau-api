@@ -21,7 +21,10 @@ class DatasourceEndpoint(BaseEndpoint):
     :type delete_tag:                       boolean
     :param refresh_datasource:              Boolean flag; True if refreshing the datasource, False otherwise.
     :type refresh_datasource:               boolean
-    :param update_datasource_connection:    Boolean flag; True if updating a datasource connection's information;
+    :param update_datasource:               Boolean flag; True if updating a datasource's information,
+                                            False otherwise.
+    :type update_datasource:                boolean
+    :param update_datasource_connection:    Boolean flag; True if updating a datasource connection's information,
                                             False otherwise.
     :type update_datasource_connection:     boolean
     :type tag_name:                         The name / label for the datasource tag being added.
@@ -52,6 +55,7 @@ class DatasourceEndpoint(BaseEndpoint):
                  add_tags=False,
                  delete_tag=False,
                  refresh_datasource=False,
+                 update_datasource=False,
                  update_datasource_connection=False,
                  tag_name=None,
                  download_datasource=False,
@@ -67,6 +71,7 @@ class DatasourceEndpoint(BaseEndpoint):
         self._add_tags = add_tags
         self._delete_tag = delete_tag
         self._refresh_datasource = refresh_datasource
+        self._update_datasource = update_datasource
         self._update_datasource_connection = update_datasource_connection
         self._tag_name = tag_name
         self._query_datasource = query_datasource
@@ -150,8 +155,10 @@ class DatasourceEndpoint(BaseEndpoint):
                 url = self.base_download_datasource_revision_url
             elif self._refresh_datasource:
                 url = self.base_refresh_datasource_url
+            elif self._update_datasource:
+                url = self.base_datasource_id_url
             elif self._update_datasource_connection:
-                url = self.base_datsource_connection_id_url
+                url = self.base_datasource_connection_id_url
             else:
                 self._invalid_parameter_exception()
         else:
