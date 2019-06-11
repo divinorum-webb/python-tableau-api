@@ -537,3 +537,26 @@ class TableauServerConnection:
         self.active_headers = self.default_headers
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
+
+    def update_data_source_now(self, datasource_id):
+        self.active_request = EmptyRequest(ts_connection=self).get_request()
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  refresh_datasource=True).get_endpoint()
+        self.headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def delete_data_source(self, datasource_id):
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  delete_datasource=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def remove_data_source_revision(self, datasource_id, revision_number):
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  revision_number=revision_number,
+                                                  remove_datasource_revision=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
