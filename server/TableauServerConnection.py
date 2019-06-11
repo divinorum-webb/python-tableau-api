@@ -465,11 +465,20 @@ class TableauServerConnection:
     def publish_data_source(self):
         pass
 
-    def add_tags_to_data_source(self):
-        pass
+    def add_tags_to_data_source(self, datasource_id, tags):
+        self.active_request = AddTagsRequest(ts_connection=self, tags=tags).get_request()
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  add_tags=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def delete_tag_from_data_source(self):
-        pass
+    def delete_tag_from_data_source(self, datasource_id, tag_name):
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id, tag_name=tag_name,
+                                                  delete_tag=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def query_data_source(self, datasource_id):
         self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
@@ -502,10 +511,7 @@ class TableauServerConnection:
 
     def update_data_source(self, datasource_id, new_project_id=None, new_owner_id=None, is_certified_flag=None,
                            certification_note=None):
-        """
-        Note that assigning an embedded extract will remain in the same project as its workbook, even if the
-        response indicates it has moved
-        """
+        """Note that assigning an embedded extract will remain in the same project as its workbook, even if the response indicates it has moved"""
         self.active_request = UpdateDatasourceRequest(ts_connection=self, new_project_id=new_project_id,
                                                       new_owner_id=new_owner_id,
                                                       is_certified_flag=is_certified_flag,
@@ -530,4 +536,27 @@ class TableauServerConnection:
                                                   update_datasource_connection=True).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def update_data_source_now(self, datasource_id):
+        self.active_request = EmptyRequest(ts_connection=self).get_request()
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  refresh_datasource=True).get_endpoint()
+        self.headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def delete_data_source(self, datasource_id):
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  delete_datasource=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def remove_data_source_revision(self, datasource_id, revision_number):
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  revision_number=revision_number,
+                                                  remove_datasource_revision=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
