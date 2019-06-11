@@ -31,6 +31,8 @@ class DatasourceEndpoint(BaseEndpoint):
     :param tag_name:                        string
     :type download_datasource:              Boolean flag; True if downloading the datasource, False otherwise.
     :param download_datasource:             boolean
+    :type delete_datasource:                Boolean flag; True if deleting the datasource, False otherwise.
+    :param delete_datasource:               boolean
     :type get_datasource_revisions:         Boolean flag; True if getting datasource revisions, False otherwise.
     :param get_datasource_revisions:        boolean
     :type download_datasource_revision:     Boolean flag; True if downloading a specific datasource revision,
@@ -59,6 +61,7 @@ class DatasourceEndpoint(BaseEndpoint):
                  update_datasource_connection=False,
                  tag_name=None,
                  download_datasource=False,
+                 delete_datasource=False,
                  get_datasource_revisions=False,
                  download_datasource_revision=False,
                  remove_datasource_revision=False,
@@ -78,6 +81,7 @@ class DatasourceEndpoint(BaseEndpoint):
         self._query_datasources = query_datasources
         self._query_datasource_connections = query_datasource_connections
         self._download_datasource = download_datasource
+        self._delete_datasource = delete_datasource
         self._get_datasource_revisions = get_datasource_revisions
         self._download_datasource_revision = download_datasource_revision
         self._remove_datasource_revision = remove_datasource_revision
@@ -151,6 +155,8 @@ class DatasourceEndpoint(BaseEndpoint):
                 url = self.base_datasource_revision_number_url
             elif self._download_datasource:
                 url = self.base_download_datasource_url
+            elif self._delete_datasource:
+                url = self.base_datasource_id_url
             elif self._download_datasource_revision:
                 url = self.base_download_datasource_revision_url
             elif self._refresh_datasource:
