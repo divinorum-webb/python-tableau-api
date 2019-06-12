@@ -6,12 +6,16 @@ class UserEndpoint(BaseEndpoint):
     :type ts_connection:                class
     :param query_user:                  Boolean flag; True if querying a specific user, False otherwise.
     :type query_user:                   boolean
+    :param query_users:                 Boolean flag; True if querying all users on the site, False otherwise.
+    :type query_users:                  boolean
     :param query_workbooks_for_user:    Boolean flag; True if querying a specific user, False otherwise.
     :type query_workbooks_for_user:     boolean
     :param user_id:                     The user ID.
     :type user_id:                      string
     :param update_user:                 Boolean flag; True if updating a specific user, False otherwise.
     :type update_user:                  boolean
+    :param remove_user:                 Boolean flag; True if removing a specific user from the site, False otherwise.
+    :type remove_user:                  boolean
     :param parameter_dict:              Dictionary of URL parameters to append. The value in each key-value pair
                                         is the literal text that will be appended to the URL endpoint.
     :type parameter_dict:               dict
@@ -19,16 +23,20 @@ class UserEndpoint(BaseEndpoint):
     def __init__(self,
                  ts_connection,
                  query_user=False,
+                 query_users=False,
                  query_workbooks_for_user=False,
                  user_id=None,
                  update_user=False,
+                 remove_user=False,
                  parameter_dict=None):
 
         super().__init__(ts_connection)
         self._query_user = query_user
+        self._query_users = query_users
         self._query_workbooks_for_user = query_workbooks_for_user
         self._user_id = user_id
         self._update_user = update_user
+        self._remove_user = remove_user
         self._parameter_dict = parameter_dict
 
     @property
@@ -51,6 +59,8 @@ class UserEndpoint(BaseEndpoint):
             if self._query_user and not self._update_user:
                 url = self.base_user_id_url
             elif self._update_user and not self._query_user:
+                url = self.base_user_id_url
+            elif self._remove_user:
                 url = self.base_user_id_url
             elif self._query_workbooks_for_user and self._user_id:
                 url = self.base_user_workbooks_url
