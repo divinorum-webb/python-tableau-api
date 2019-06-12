@@ -463,7 +463,6 @@ class TableauServerConnection:
     # data sources
 
     def publish_data_source(self):
-        # loop back to this function later, it is more complicated
         pass
 
     def add_tags_to_data_source(self, datasource_id, tags):
@@ -583,8 +582,13 @@ class TableauServerConnection:
         response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
-    def add_user_to_site(self):
-        pass
+    def add_user_to_site(self, user_name, site_role, auth_setting=None):
+        self.active_request = AddUserToSiteRequest(ts_connection=self, user_name=user_name,
+                                                   site_role=site_role, auth_setting=auth_setting).get_request()
+        self.active_endpoint = UserEndpoint(ts_connection=self, add_user=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def get_users_in_group(self, group_id, parameter_dict=None):
         self.active_endpoint = GroupEndpoint(ts_connection=self, group_id=group_id, get_users=True,
@@ -593,8 +597,12 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def get_users_on_site(self):
-        pass
+    def get_users_on_site(self, parameter_dict=None):
+        self.active_endpoint = UserEndpoint(ts_connection=self, query_users=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def query_groups(self, parameter_dict=None):
         self.active_endpoint = GroupEndpoint(ts_connection=self, query_groups=True,
@@ -603,8 +611,11 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def query_user_on_site(self):
-        pass
+    def query_user_on_site(self, user_id):
+        self.active_endpoint = UserEndpoint(ts_connection=self, user_id=user_id, query_user=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def update_group(self, group_id, new_group_name=None, active_directory_group_name=None,
                      active_directory_domain_name=None,
@@ -619,8 +630,15 @@ class TableauServerConnection:
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
-    def update_user(self):
-        pass
+    def update_user(self, user_id, new_full_name=None, new_email=None, new_password=None, new_site_role=None,
+                    new_auth_setting=None):
+        self.active_request = UpdateUserRequest(ts_connection=self, new_full_name=new_full_name, new_email=new_email,
+                                                new_password=new_password, new_site_role=new_site_role,
+                                                new_auth_setting=new_auth_setting).get_request()
+        self.active_endpoint = UserEndpoint(ts_connection=self, user_id=user_id, update_user=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.default_headers)
+        return response
 
     def remove_user_from_group(self, group_id, user_id):
         self.active_endpoint = GroupEndpoint(ts_connection=self, group_id=group_id, user_id=user_id,
@@ -629,8 +647,11 @@ class TableauServerConnection:
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def remove_user_from_site(self):
-        pass
+    def remove_user_from_site(self, user_id):
+        self.active_endpoint = UserEndpoint(ts_connection=self, user_id=user_id, remove_user=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def delete_group(self, group_id):
         self.active_endpoint = GroupEndpoint(ts_connection=self, group_id=group_id, delete_group=True).get_endpoint()
