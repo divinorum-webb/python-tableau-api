@@ -30,6 +30,7 @@ class GroupEndpoint(BaseEndpoint):
                  group_id=None,
                  update_group=False,
                  delete_group=False,
+                 create_group=False,
                  get_users=False,
                  add_user=False,
                  remove_user=False,
@@ -41,6 +42,7 @@ class GroupEndpoint(BaseEndpoint):
         self._group_id = group_id
         self._update_group = update_group
         self._delete_group = delete_group
+        self._create_group = create_group
         self._get_users = get_users
         self._add_user = add_user
         self._remove_user = remove_user
