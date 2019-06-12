@@ -4,6 +4,8 @@ class UserEndpoint(BaseEndpoint):
 
     :param ts_connection:               The Tableau Server connection object.
     :type ts_connection:                class
+    :param add_user:                    Boolean flag; True if adding a user, False otherwise.
+    :type add_user:                     boolean
     :param query_user:                  Boolean flag; True if querying a specific user, False otherwise.
     :type query_user:                   boolean
     :param query_users:                 Boolean flag; True if querying all users on the site, False otherwise.
@@ -22,6 +24,7 @@ class UserEndpoint(BaseEndpoint):
     """
     def __init__(self,
                  ts_connection,
+                 add_user=False,
                  query_user=False,
                  query_users=False,
                  query_workbooks_for_user=False,
@@ -31,6 +34,7 @@ class UserEndpoint(BaseEndpoint):
                  parameter_dict=None):
 
         super().__init__(ts_connection)
+        self._add_user = add_user
         self._query_user = query_user
         self._query_users = query_users
         self._query_workbooks_for_user = query_workbooks_for_user
