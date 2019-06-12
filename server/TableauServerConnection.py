@@ -625,8 +625,15 @@ class TableauServerConnection:
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
-    def update_user(self):
-        pass
+    def update_user(self, user_id, new_full_name=None, new_email=None, new_password=None, new_site_role=None,
+                    new_auth_setting=None):
+        self.active_request = UpdateUserRequest(ts_connection=self, new_full_name=new_full_name, new_email=new_email,
+                                                new_password=new_password, new_site_role=new_site_role,
+                                                new_auth_setting=new_auth_setting).get_request()
+        self.active_endpoint = UserEndpoint(ts_connection=self, user_id=user_id, update_user=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.default_headers)
+        return response
 
     def remove_user_from_group(self, group_id, user_id):
         self.active_endpoint = GroupEndpoint(ts_connection=self, group_id=group_id, user_id=user_id,
