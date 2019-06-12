@@ -582,8 +582,13 @@ class TableauServerConnection:
         response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
-    def add_user_to_site(self):
-        pass
+    def add_user_to_site(self, user_name, site_role, auth_setting=None):
+        self.active_request = AddUserToSiteRequest(ts_connection=self, user_name=user_name,
+                                                   site_role=site_role, auth_setting=auth_setting).get_request()
+        self.active_endpoint = UserEndpoint(ts_connection=self, add_user=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def get_users_in_group(self, group_id, parameter_dict=None):
         self.active_endpoint = GroupEndpoint(ts_connection=self, group_id=group_id, get_users=True,
