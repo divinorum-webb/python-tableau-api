@@ -43,6 +43,8 @@ class WorkbookEndpoint(BaseEndpoint):
     :type query_workbook_view_preview_img:      boolean
     :param get_workbook_revisions:              Boolean flag; True if getting all workbook revisions, False otherwise.
     :type get_workbook_revisions:               boolean
+    :param remove_workbook_revision:           Boolean flag; True if removing a workbook revision, False otherwise.
+    :type remove_workbook_revision:            boolean
     :param download_workbook:                   Boolean flag; True if downloading workbook content, False otherwise.
     :type download_workbook:                    boolean
     :param download_workbook_revision:          Boolean flag; Ture if downloading a specific workbook revision,
@@ -75,6 +77,7 @@ class WorkbookEndpoint(BaseEndpoint):
                  query_workbook_preview_img=False,
                  query_workbook_view_preview_img=False,
                  get_workbook_revisions=False,
+                 remove_workbook_revision=False,
                  download_workbook=False,
                  download_workbook_revision=False,
                  refresh_workbook=False,
@@ -99,6 +102,7 @@ class WorkbookEndpoint(BaseEndpoint):
         self._query_workbook_preview_img = query_workbook_preview_img
         self._query_workbook_view_preview_img = query_workbook_view_preview_img
         self._get_workbook_revisions = get_workbook_revisions
+        self._remove_workbook_revision = remove_workbook_revision
         self._download_workbook = download_workbook
         self._download_workbook_revision = download_workbook_revision
         self._refresh_workbook = refresh_workbook
@@ -151,6 +155,11 @@ class WorkbookEndpoint(BaseEndpoint):
         return "{0}/revisions".format(self.base_workbook_id_url)
 
     @property
+    def base_workbook_revision_number_url(self):
+        return "{0}/{1}".format(self.base_workbook_revisions_url,
+                                self._revision_number)
+
+    @property
     def base_workbook_content_url(self):
         return "{0}/content".format(self.base_workbook_id_url)
 
@@ -187,6 +196,8 @@ class WorkbookEndpoint(BaseEndpoint):
                 url = self.base_workbook_view_preview_url
             elif self._get_workbook_revisions:
                 url = self.base_workbook_revisions_url
+            elif self._remove_workbook_revision:
+                url = self.base_workbook_revision_number_url
             elif self._download_workbook:
                 url = self.base_workbook_content_url
             elif self._download_workbook_revision and self._revision_number:
