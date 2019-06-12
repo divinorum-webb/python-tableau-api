@@ -463,6 +463,7 @@ class TableauServerConnection:
     # data sources
 
     def publish_data_source(self):
+        # loop back to this function later, it is more complicated
         pass
 
     def add_tags_to_data_source(self, datasource_id, tags):
@@ -542,7 +543,7 @@ class TableauServerConnection:
         self.active_request = EmptyRequest(ts_connection=self).get_request()
         self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
                                                   refresh_datasource=True).get_endpoint()
-        self.headers = self.default_headers
+        self.active_headers = self.default_headers
         response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
@@ -557,6 +558,82 @@ class TableauServerConnection:
         self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
                                                   revision_number=revision_number,
                                                   remove_datasource_revision=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    # users and groups
+
+    def create_group(self, new_group_name, active_directory_group_name=None, active_directory_domain_name=None,
+                     default_site_role=None, parameter_dict=None):
+        self.active_request = CreateGroupRequest(ts_connection=self, new_group_name=new_group_name,
+                                                 active_directory_group_name=active_directory_group_name,
+                                                 active_directory_domain_name=active_directory_domain_name,
+                                                 default_site_role=default_site_role).get_request()
+        self.active_endpoint = GroupEndpoint(ts_connection=self, create_group=True,
+                                             parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def add_user_to_group(self, group_id, user_id):
+        self.active_request = AddUserToGroupRequest(ts_connection=self, user_id=user_id).get_request()
+        self.active_endpoint = GroupEndpoint(ts_connection=self, group_id=group_id, add_user=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def add_user_to_site(self):
+        pass
+
+    def get_users_in_group(self, group_id, parameter_dict=None):
+        self.active_endpoint = GroupEndpoint(ts_connection=self, group_id=group_id, get_users=True,
+                                             parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def get_users_on_site(self):
+        pass
+
+    def query_groups(self, parameter_dict=None):
+        self.active_endpoint = GroupEndpoint(ts_connection=self, query_groups=True,
+                                             parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_user_on_site(self):
+        pass
+
+    def update_group(self, group_id, new_group_name=None, active_directory_group_name=None,
+                     active_directory_domain_name=None,
+                     default_site_role=None, parameter_dict=None):
+        self.active_request = UpdateGroupRequest(ts_connection=self, new_group_name=new_group_name,
+                                                 active_directory_group_name=active_directory_group_name,
+                                                 active_directory_domain_name=active_directory_domain_name,
+                                                 default_site_role=default_site_role).get_request()
+        self.active_endpoint = GroupEndpoint(ts_connection=self, group_id=group_id, update_group=True,
+                                             parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def update_user(self):
+        pass
+
+    def remove_user_from_group(self, group_id, user_id):
+        self.active_endpoint = GroupEndpoint(ts_connection=self, group_id=group_id, user_id=user_id,
+                                             remove_user=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def remove_user_from_site(self):
+        pass
+
+    def delete_group(self, group_id):
+        self.active_endpoint = GroupEndpoint(ts_connection=self, group_id=group_id, delete_group=True).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response

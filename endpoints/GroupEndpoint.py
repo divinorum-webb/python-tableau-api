@@ -10,6 +10,8 @@ class GroupEndpoint(BaseEndpoint):
     :type group_id:             string
     :param update_group:        Boolean flag; True if updating a specific group's information, False otherwise.
     :type update_group:         boolean
+    :param delete_group:        Boolean flag; True if deleting a specific group, False otherwise.
+    :type delete_group:         boolean
     :param get_users:           Boolean flag; True if querying all users in a specific group, False otherwise.
     :type get_users:            boolean
     :param add_user:            Boolean flag; True if adding a user to a specific group, False otherwise.
@@ -27,6 +29,8 @@ class GroupEndpoint(BaseEndpoint):
                  query_groups=False,
                  group_id=None,
                  update_group=False,
+                 delete_group=False,
+                 create_group=False,
                  get_users=False,
                  add_user=False,
                  remove_user=False,
@@ -37,6 +41,8 @@ class GroupEndpoint(BaseEndpoint):
         self._query_groups = query_groups
         self._group_id = group_id
         self._update_group = update_group
+        self._delete_group = delete_group
+        self._create_group = create_group
         self._get_users = get_users
         self._add_user = add_user
         self._remove_user = remove_user
@@ -65,6 +71,8 @@ class GroupEndpoint(BaseEndpoint):
     def get_endpoint(self):
         if self._group_id:
             if self._update_group:
+                url = self.base_group_id_url
+            elif self._delete_group:
                 url = self.base_group_id_url
             elif self._get_users or self._add_user:
                 url = self.base_group_user_url
