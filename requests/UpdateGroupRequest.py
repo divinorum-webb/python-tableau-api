@@ -8,8 +8,8 @@ class UpdateGroupRequest(BaseRequest):
     :type new_group_name:                   string
     :param active_directory_group_name:     The name of the Active Directory group to synchronize with.
     :type active_directory_group_name:      string
-    :param active_directory_domain:         The domain for the Active Directory group.
-    :type active_directory_domain:          string
+    :param active_directory_domain_name:    The domain for the Active Directory group.
+    :type active_directory_domain_name:     string
     :param default_site_role:               The site role to assign to users that are synchronized with
                                             Active Directory. You can assign the following roles:
                                             Creator, Explorer, ExplorerCanPublish, SiteAdministratorExplorer,
@@ -20,12 +20,12 @@ class UpdateGroupRequest(BaseRequest):
                  ts_connection,
                  new_group_name,
                  active_directory_group_name=None,
-                 active_directory_domain=None,
+                 active_directory_domain_name=None,
                  default_site_role=None):
         super().__init__(ts_connection)
         self._new_group_name = new_group_name
         self._active_directory_group_name = active_directory_group_name
-        self._active_directory_domain = active_directory_domain
+        self._active_directory_domain_name = active_directory_domain_name
         self._default_site_role = default_site_role
         self.base_update_group_request
 
@@ -49,7 +49,7 @@ class UpdateGroupRequest(BaseRequest):
     def optional_import_param_values(self):
         return [
             self._active_directory_group_name,
-            self._active_directory_domain,
+            self._active_directory_domain_name,
             self._default_site_role
         ]
 
