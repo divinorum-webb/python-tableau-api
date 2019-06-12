@@ -155,7 +155,7 @@ class WorkbookEndpoint(BaseEndpoint):
         return "{0}/revisions".format(self.base_workbook_id_url)
 
     @property
-    def base_workbook_revision_number_url(self):
+    def base_workbook_revision_removal_url(self):
         return "{0}/{1}".format(self.base_workbook_revisions_url,
                                 self._revision_number)
 
@@ -164,7 +164,7 @@ class WorkbookEndpoint(BaseEndpoint):
         return "{0}/content".format(self.base_workbook_id_url)
 
     @property
-    def base_workbook_revision_number_url(self):
+    def base_workbook_revision_download_url(self):
         return "{0}/{1}/content".format(self.base_workbook_revisions_url,
                                         self._revision_number)
 
@@ -197,11 +197,11 @@ class WorkbookEndpoint(BaseEndpoint):
             elif self._get_workbook_revisions:
                 url = self.base_workbook_revisions_url
             elif self._remove_workbook_revision:
-                url = self.base_workbook_revision_number_url
+                url = self.base_workbook_revision_removal_url
             elif self._download_workbook:
                 url = self.base_workbook_content_url
             elif self._download_workbook_revision and self._revision_number:
-                url = self.base_workbook_revision_number_url
+                url = self.base_workbook_revision_download_url
             elif self._refresh_workbook:
                 url = self.base_workbook_refresh_url
             else:
