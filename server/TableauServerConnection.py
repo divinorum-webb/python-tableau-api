@@ -463,7 +463,6 @@ class TableauServerConnection:
     # data sources
 
     def publish_data_source(self):
-        # loop back to this function later, it is more complicated
         pass
 
     def add_tags_to_data_source(self, datasource_id, tags):
@@ -593,8 +592,12 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def get_users_on_site(self):
-        pass
+    def get_users_on_site(self, parameter_dict=None):
+        self.active_endpoint = UserEndpoint(ts_connection=self, query_users=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def query_groups(self, parameter_dict=None):
         self.active_endpoint = GroupEndpoint(ts_connection=self, query_groups=True,
@@ -603,8 +606,11 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def query_user_on_site(self):
-        pass
+    def query_user_on_site(self, user_id):
+        self.active_endpoint = UserEndpoint(ts_connection=self, user_id=user_id, query_user=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def update_group(self, group_id, new_group_name=None, active_directory_group_name=None,
                      active_directory_domain_name=None,
