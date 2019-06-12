@@ -365,6 +365,14 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
+    def remove_workbook_revision(self, workbook_id, revision_number):
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
+                                                revision_number=revision_number,
+                                                remove_workbook_revision=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
     def query_workbook_preview_image(self, workbook_id, parameter_dict=None):
         # the preview image returned is in the response body as response.content
         self.active_endpoint = WorkbookEndpoint(ts_connection=self, workbook_id=workbook_id,
@@ -504,6 +512,15 @@ class TableauServerConnection:
     def get_data_source_revisions(self, datasource_id, parameter_dict=None):
         self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
                                                   get_datasource_revisions=True,
+                                                  parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def download_data_source_revision(self, datasource_id, revision_number, parameter_dict=None):
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, datasource_id=datasource_id,
+                                                  revision_number=revision_number,
+                                                  download_datasource_revision=True,
                                                   parameter_dict=parameter_dict).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
