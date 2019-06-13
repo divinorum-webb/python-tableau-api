@@ -675,3 +675,57 @@ class TableauServerConnection:
         self.active_headers = self.default_headers
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
+
+    # permissions
+
+    #     def add_data_source_permissions(self):
+    #         pass
+
+    #     def add_project_permissions(self):
+    #         pass
+
+    #     def add_default_permissions(self):
+    #         pass
+
+    #     def add_view_permissions(self):
+    #         pass
+
+    #     def add_workbook_permissions(self):
+    #         pass
+
+    #     def add_workbook_to_schedule(self):
+    #         pass
+
+    #     def query_data_source_permissions(self):
+    #         pass
+
+    #     def query_project_permissions(self):
+    #         pass
+
+    #     def query_default_permissions(self):
+    #         pass
+
+    def query_view_permissions(self, view_id):
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='view', object_id=view_id,
+                                                   query_object_permissions=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+#     def query_workbook_permissions(self):
+#         pass
+
+#     def delete_data_source_permission(self):
+#         pass
+
+#     def delete_project_permission(self):
+#         pass
+
+#     def delete_default_permission(self):
+#         pass
+
+#     def delete_view_permission(self):
+#         pass
+
+#     def delete_workbook_permission(self):
+#         pass
