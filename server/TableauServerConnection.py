@@ -699,8 +699,11 @@ class TableauServerConnection:
     #     def query_data_source_permissions(self):
     #         pass
 
-    #     def query_project_permissions(self):
-    #         pass
+    def query_project_permissions(self, project_id):
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='project', object_id=project_id, query_object_permissions=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     #     def query_default_permissions(self):
     #         pass
@@ -712,8 +715,12 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-#     def query_workbook_permissions(self):
-#         pass
+    def query_workbook_permissions(self, workbook_id):
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='workbook', object_id=workbook_id,
+                                                   query_object_permissions=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
 #     def delete_data_source_permission(self):
 #         pass
