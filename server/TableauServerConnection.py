@@ -696,11 +696,17 @@ class TableauServerConnection:
     #     def add_workbook_to_schedule(self):
     #         pass
 
-    #     def query_data_source_permissions(self):
-    #         pass
+    def query_data_source_permissions(self, datasource_id):
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='datasource',
+                                                   object_id=datasource_id,
+                                                   query_object_permissions=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def query_project_permissions(self, project_id):
-        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='project', object_id=project_id, query_object_permissions=True).get_endpoint()
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='project', object_id=project_id,
+                                                   query_object_permissions=True).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
