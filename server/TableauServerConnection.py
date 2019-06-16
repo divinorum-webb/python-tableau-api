@@ -711,8 +711,8 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    #     def query_default_permissions(self):
-    #         pass
+    def query_default_permissions(self):
+        pass
 
     def query_view_permissions(self, view_id):
         self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='view', object_id=view_id,
