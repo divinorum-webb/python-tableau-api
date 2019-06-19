@@ -8,6 +8,8 @@ class PermissionsEndpoint(BaseEndpoint):
     :type add_object_permissions:               boolean
     :param query_object_permissions:            Boolean flag; True if querying object permissions, False otherwise.
     :type query_object_permissions:             boolean
+    :param delete_object_permissions:           Boolean flag; True if deleting object permissions, False otherwise.
+    :type delete_object_permissions:            boolean
     :param object_type:                         The Tableau object type (workbook, etc.).
     :type object_type:                          string
     :param object_id:                           The Tableau object ID.
@@ -27,6 +29,7 @@ class PermissionsEndpoint(BaseEndpoint):
                  ts_connection,
                  add_object_permissions=False,
                  query_object_permissions=False,
+                 delete_object_permissions=False,
                  object_type=None,
                  object_id=None,
                  query_default_project_permissions=False,
@@ -37,6 +40,7 @@ class PermissionsEndpoint(BaseEndpoint):
         super().__init__(ts_connection)
         self._add_object_permissions = add_object_permissions
         self._query_object_permissions = query_object_permissions
+        self._delete_object_permissions = delete_object_permissions
         self._object_type = object_type
         self._object_id = object_id
         self._query_default_project_permissions = query_default_project_permissions
@@ -63,9 +67,11 @@ class PermissionsEndpoint(BaseEndpoint):
                                                                  self._project_permissions_object)
 
     def get_endpoint(self):
-        if self._add_object_permissions and not self._query_object_permissions:
+        if self._add_object_permissions and not (self._query_object_permissions or self._delete_object_permissions):
             url = self.base_object_permissions_url
-        elif self._query_object_permissions and not self._add_object_permissions:
+        elif self._query_object_permissions and not (self._add_object_permissions or self._delete_object_permissions):
+            url = self.base_object_permissions_url
+        elif self._delete_object_permissions and not (self._add_object_permissions or self._query_object_permissions):
             url = self.base_object_permissions_url
         elif self._query_default_project_permissions:
             url = self.base_query_default_permissions_url
