@@ -19,6 +19,16 @@ class PermissionsEndpoint(BaseEndpoint):
     :type query_default_project_permissions:    boolean
     :param project_permissions_object:          The project permissions object (workbook, etc.).
     :type project_permissions_object:           string
+    :param delete_permissions_object:           The permissions object to delete (user, group, etc.).
+    :type delete_permissions_object:            string
+    :param delete_permissions_object_id:        The ID of the permissions object to delete (user ID, group ID, etc.).
+    :type delete_permissions_object_id:         string
+    :param capability_name:                     The permissions capability being targeted (only use when deleting).
+    :type capability_name:                      string
+    :param capability_mode:                     Set this value to 'Allow' when you want to delete a permission allowing
+                                                a capability; set this value to 'Deny' when you want to delete a
+                                                permission denying a capability.
+    :type capability_mode:                      string
     :param project_id:                          The project ID.
     :type project_id:                           string
     :param parameter_dict:                      Dictionary of URL parameters to append. The value in each key-value pair
@@ -34,6 +44,10 @@ class PermissionsEndpoint(BaseEndpoint):
                  object_id=None,
                  query_default_project_permissions=False,
                  project_permissions_object=None,
+                 delete_permissions_object=None,
+                 delete_permissions_object_id=None,
+                 capability_name=None,
+                 capability_mode=None,
                  project_id=None,
                  parameter_dict=None):
 
@@ -45,6 +59,10 @@ class PermissionsEndpoint(BaseEndpoint):
         self._object_id = object_id
         self._query_default_project_permissions = query_default_project_permissions
         self._project_permissions_object = project_permissions_object
+        self._delete_permissions_object = delete_permissions_object
+        self._delete_permissions_object_id = delete_permissions_object_id
+        self._capability_name = capability_name
+        self._capability_mode = capability_mode
         self._project_id = project_id
         self._parameter_dict = parameter_dict
 
@@ -66,13 +84,21 @@ class PermissionsEndpoint(BaseEndpoint):
                                                                  self._project_id,
                                                                  self._project_permissions_object)
 
+    @property
+    def base_delete_permission_url(self):
+        return "{0}/{1}s/{2}/{3}/{4}".format(self.base_delete_permission_url,
+                                             self._delete_permissions_object,
+                                             self._delete_permissions_object_id,
+                                             self._capability_name,
+                                             self._capability_mode)
+
     def get_endpoint(self):
         if self._add_object_permissions and not (self._query_object_permissions or self._delete_object_permissions):
             url = self.base_object_permissions_url
         elif self._query_object_permissions and not (self._add_object_permissions or self._delete_object_permissions):
             url = self.base_object_permissions_url
         elif self._delete_object_permissions and not (self._add_object_permissions or self._query_object_permissions):
-            url = self.base_object_permissions_url
+            url = self.base_delete_permission_url
         elif self._query_default_project_permissions:
             url = self.base_query_default_permissions_url
         else:
