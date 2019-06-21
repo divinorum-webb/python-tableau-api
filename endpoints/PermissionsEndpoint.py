@@ -86,7 +86,7 @@ class PermissionsEndpoint(BaseEndpoint):
 
     @property
     def base_delete_permission_url(self):
-        return "{0}/{1}s/{2}/{3}/{4}".format(self.base_delete_permission_url,
+        return "{0}/{1}s/{2}/{3}/{4}".format(self.base_object_permissions_url,
                                              self._delete_permissions_object,
                                              self._delete_permissions_object_id,
                                              self._capability_name,
