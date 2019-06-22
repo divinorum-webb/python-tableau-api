@@ -114,7 +114,7 @@ class AddDatasourcePermissionsRequest(BaseRequest):
                                           self.optional_datasource_param_values))
         if self._user_capability_names:
             capability_dict = {}
-            capability_dict.update({'user': {'id': {self._user_id}}})
+            capability_dict.update({'user': {'id': self._user_id}})
             capability_dict.update({'capabilities': {
                 'capability': [self._get_capability_parameters_dict(self._user_capability_names,
                                                                     self._user_capability_modes)]
@@ -123,7 +123,7 @@ class AddDatasourcePermissionsRequest(BaseRequest):
 
         if self._group_capability_names:
             capability_dict = {}
-            capability_dict.update({'group': {'id': {self._group_id}}})
+            capability_dict.update({'group': {'id': self._group_id}})
             capability_dict.update({'capabilities': {
                 'capability': [self._get_capability_parameters_dict(self._group_capability_names,
                                                                     self._group_capability_modes)]
