@@ -91,17 +91,17 @@ class AddWorkbookPermissionsRequest(BaseRequest):
                     self._group_capability_dict)
 
     @staticmethod
-    def _get_capability_parameters_dict(param_keys, param_values):
-        params_dict = {}
+    def _get_capability_parameters_list(param_keys, param_values):
+        params_list = []
         for i, key in enumerate(param_keys):
             if param_values[i]:
-                params_dict.update({'name': key,
+                params_list.append({'name': key,
                                     'mode': param_values[i]})
-        return params_dict
+        return params_list
 
     @property
     def optional_workbook_param_keys(self):
-        return ['workbook']
+        return ['id']
 
     @property
     def optional_workbook_param_values(self):
@@ -123,8 +123,8 @@ class AddWorkbookPermissionsRequest(BaseRequest):
             capability_dict = {}
             capability_dict.update({'user': {'id': self._user_id}})
             capability_dict.update({'capabilities': {
-                'capability': [self._get_capability_parameters_dict(self._user_capability_names,
-                                                                    self._user_capability_modes)]
+                'capability': self._get_capability_parameters_list(self._user_capability_names,
+                                                                   self._user_capability_modes)
             }})
             self._request_body['permissions']['granteeCapabilities'].append(capability_dict)
 
@@ -132,8 +132,8 @@ class AddWorkbookPermissionsRequest(BaseRequest):
             capability_dict = {}
             capability_dict.update({'group': {'id': self._group_id}})
             capability_dict.update({'capabilities': {
-                'capability': [self._get_capability_parameters_dict(self._group_capability_names,
-                                                                    self._group_capability_modes)]
+                'capability': self._get_capability_parameters_list(self._group_capability_names,
+                                                                   self._group_capability_modes)
             }})
             self._request_body['permissions']['granteeCapabilities'].append(capability_dict)
 
