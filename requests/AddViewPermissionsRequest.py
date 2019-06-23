@@ -92,7 +92,7 @@ class AddViewPermissionsRequest(BaseRequest):
 
     @staticmethod
     def _get_capability_parameters_list(param_keys, param_values):
-        params_list = {}
+        params_list = []
         for i, key in enumerate(param_keys):
             if param_values[i]:
                 params_list.append({'name': key,
@@ -101,7 +101,7 @@ class AddViewPermissionsRequest(BaseRequest):
 
     @property
     def optional_view_param_keys(self):
-        return ['view']
+        return ['id']
 
     @property
     def optional_view_param_values(self):
@@ -116,11 +116,11 @@ class AddViewPermissionsRequest(BaseRequest):
     def modified_add_permissions_request(self):
         if any(self.optional_view_param_values):
             self._request_body['permissions'].update({'view': {}})
-            self._request_body['permissions']['view'].update(self._get_parameters_list(self.optional_view_param_keys,
+            self._request_body['permissions']['view'].update(self._get_parameters_dict(self.optional_view_param_keys,
                                                                                        self.optional_view_param_values))
         if self._user_capability_names:
             capability_dict = {}
-            capability_dict.update({'user': {'id': {self._user_id}}})
+            capability_dict.update({'user': {'id': self._user_id}})
             capability_dict.update({'capabilities': {
                 'capability': self._get_capability_parameters_list(self._user_capability_names,
                                                                    self._user_capability_modes)
@@ -129,7 +129,7 @@ class AddViewPermissionsRequest(BaseRequest):
 
         if self._group_capability_names:
             capability_dict = {}
-            capability_dict.update({'group': {'id': {self._group_id}}})
+            capability_dict.update({'group': {'id': self._group_id}})
             capability_dict.update({'capabilities': {
                 'capability': self._get_capability_parameters_list(self._group_capability_names,
                                                                    self._group_capability_modes)
