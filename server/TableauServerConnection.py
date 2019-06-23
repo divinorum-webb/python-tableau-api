@@ -678,8 +678,18 @@ class TableauServerConnection:
 
     # permissions
 
-    #     def add_data_source_permissions(self):
-    #         pass
+    def add_data_source_permissions(self, datasource_id, user_capability_dict=None, group_capability_dict=None,
+                                    user_id=None, group_id=None):
+        self.active_request = AddDatasourcePermissionsRequest(ts_connection=self, datasource_id=datasource_id,
+                                                              user_id=user_id, group_id=group_id,
+                                                              user_capability_dict=user_capability_dict,
+                                                              group_capability_dict=group_capability_dict).get_request()
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='datasource',
+                                                   object_id=datasource_id,
+                                                   add_object_permissions=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     #     def add_project_permissions(self):
     #         pass
@@ -687,11 +697,29 @@ class TableauServerConnection:
     #     def add_default_permissions(self):
     #         pass
 
-    #     def add_view_permissions(self):
-    #         pass
+    def add_view_permissions(self, view_id, user_capability_dict=None, group_capability_dict=None, user_id=None,
+                             group_id=None):
+        self.active_request = AddViewPermissionsRequest(ts_connection=self, view_id=view_id, user_id=user_id,
+                                                        group_id=group_id,
+                                                        user_capability_dict=user_capability_dict,
+                                                        group_capability_dict=group_capability_dict).get_request()
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='view', object_id=view_id,
+                                                   add_object_permissions=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    #     def add_workbook_permissions(self):
-    #         pass
+    def add_workbook_permissions(self, workbook_id, user_capability_dict=None, group_capability_dict=None, user_id=None,
+                                 group_id=None):
+        self.active_request = AddWorkbookPermissionsRequest(ts_connection=self, workbook_id=workbook_id,
+                                                            user_id=user_id, group_id=group_id,
+                                                            user_capability_dict=user_capability_dict,
+                                                            group_capability_dict=group_capability_dict).get_request()
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='workbook', object_id=workbook_id,
+                                                   add_object_permissions=True).get_endpoint()
+        self.active_headers = self.default_headers.copy()
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     #     def add_workbook_to_schedule(self):
     #         pass
@@ -733,8 +761,17 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    #     def delete_data_source_permission(self):
-    #         pass
+    def delete_data_source_permission(self, datasource_id, delete_permissions_object, delete_permissions_object_id,
+                                      capability_name, capability_mode):
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='datasource',
+                                                   object_id=datasource_id, delete_object_permissions=True,
+                                                   delete_permissions_object=delete_permissions_object,
+                                                   delete_permissions_object_id=delete_permissions_object_id,
+                                                   capability_name=capability_name,
+                                                   capability_mode=capability_mode).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     #     def delete_project_permission(self):
     #         pass
@@ -742,8 +779,17 @@ class TableauServerConnection:
     #     def delete_default_permission(self):
     #         pass
 
-    def delete_view_permission(self):
-        pass
+    def delete_view_permission(self, view_id, delete_permissions_object, delete_permissions_object_id,
+                               capability_name, capability_mode):
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='view', object_id=view_id,
+                                                   delete_object_permissions=True,
+                                                   delete_permissions_object=delete_permissions_object,
+                                                   delete_permissions_object_id=delete_permissions_object_id,
+                                                   capability_name=capability_name,
+                                                   capability_mode=capability_mode).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def delete_workbook_permission(self, workbook_id, delete_permissions_object, delete_permissions_object_id,
                                    capability_name, capability_mode):

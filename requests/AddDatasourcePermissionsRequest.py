@@ -94,7 +94,7 @@ class AddDatasourcePermissionsRequest(BaseRequest):
 
     @property
     def optional_datasource_param_keys(self):
-        return ['datasource']
+        return ['id']
 
     @property
     def optional_datasource_param_values(self):
