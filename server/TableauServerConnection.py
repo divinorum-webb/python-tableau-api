@@ -691,8 +691,16 @@ class TableauServerConnection:
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
-    #     def add_project_permissions(self):
-    #         pass
+    def add_project_permissions(self, project_id, user_capability_dict=None, group_capability_dict=None, user_id=None,
+                                group_id=None):
+        self.active_request = AddProjectPermissionsRequest(ts_connection=self, user_id=user_id, group_id=group_id,
+                                                           user_capability_dict=user_capability_dict,
+                                                           group_capability_dict=group_capability_dict).get_request()
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='project', object_id=project_id,
+                                                   add_object_permissions=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     #     def add_default_permissions(self):
     #         pass
@@ -773,8 +781,17 @@ class TableauServerConnection:
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    #     def delete_project_permission(self):
-    #         pass
+    def delete_project_permission(self, project_id, delete_permissions_object, delete_permissions_object_id,
+                                  capability_name, capability_mode):
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='project', object_id=project_id,
+                                                   delete_object_permissions=True,
+                                                   delete_permissions_object=delete_permissions_object,
+                                                   delete_permissions_object_id=delete_permissions_object_id,
+                                                   capability_name=capability_name,
+                                                   capability_mode=capability_mode).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     #     def delete_default_permission(self):
     #         pass
