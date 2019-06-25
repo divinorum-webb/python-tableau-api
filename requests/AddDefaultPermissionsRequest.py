@@ -1,6 +1,7 @@
 class AddDefaultPermissionsRequest(BaseRequest):
     """
     Add default permissions request for generating API requests to Tableau Server.
+    Note: update this class in the future to define the valid capability names based on the permissions object passed.
 
     :param ts_connection:           The Tableau Server connection object.
     :type ts_connection:            class
@@ -45,7 +46,7 @@ class AddDefaultPermissionsRequest(BaseRequest):
             'ShareView',
             'ViewComments',
             'ViewUnderlyingData',
-            'WebAuthroing',
+            'WebAuthoring',
             'Write',
             'Read',
             'Write'
@@ -107,7 +108,7 @@ class AddDefaultPermissionsRequest(BaseRequest):
     def modified_add_permissions_request(self):
         if self._user_capability_names:
             capability_dict = {}
-            capability_dict.update({'user': {'id': {self._user_id}}})
+            capability_dict.update({'user': {'id': self._user_id}})
             capability_dict.update({'capabilities': {
                 'capability': self._get_capability_parameters_list(self._user_capability_names,
                                                                    self._user_capability_modes)
@@ -116,7 +117,7 @@ class AddDefaultPermissionsRequest(BaseRequest):
 
         if self._group_capability_names:
             capability_dict = {}
-            capability_dict.update({'group': {'id': {self._group_id}}})
+            capability_dict.update({'group': {'id': self._group_id}})
             capability_dict.update({'capabilities': {
                 'capability': self._get_capability_parameters_list(self._group_capability_names,
                                                                    self._group_capability_modes)
