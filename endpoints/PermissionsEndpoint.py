@@ -92,6 +92,14 @@ class PermissionsEndpoint(BaseEndpoint):
                                              self._capability_name,
                                              self._capability_mode)
 
+    @property
+    def base_delete_default_permissions_url(self):
+        return "{0}/{1}s/{2}/{3}/{4}".format(self.base_query_default_permissions_url,
+                                             self._delete_permissions_object,
+                                             self._delete_permissions_object_id,
+                                             self._capability_name,
+                                             self._capability_mode)
+
     def get_endpoint(self):
         if self._add_object_permissions and not (self._query_object_permissions or self._delete_object_permissions):
             url = self.base_object_permissions_url
@@ -99,6 +107,8 @@ class PermissionsEndpoint(BaseEndpoint):
             url = self.base_object_permissions_url
         elif self._delete_object_permissions and not (self._add_object_permissions or self._query_object_permissions):
             url = self.base_delete_permission_url
+        elif self.base_delete_default_permissions_url and not self._delete_object_permissions:
+            url = self.base_delete_default_permissions_url
         elif self._query_default_project_permissions:
             url = self.base_query_default_permissions_url
         else:
