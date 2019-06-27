@@ -793,8 +793,20 @@ class TableauServerConnection:
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    #     def delete_default_permission(self):
-    #         pass
+    def delete_default_permission(self, project_id, project_permissions_object, delete_permissions_object,
+                                  delete_permissions_object_id,
+                                  capability_name, capability_mode):
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self,
+                                                   project_id=project_id,
+                                                   project_permissions_object=project_permissions_object,
+                                                   delete_default_project_permissions=True,
+                                                   delete_permissions_object=delete_permissions_object,
+                                                   delete_permissions_object_id=delete_permissions_object_id,
+                                                   capability_name=capability_name,
+                                                   capability_mode=capability_mode).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def delete_view_permission(self, view_id, delete_permissions_object, delete_permissions_object_id,
                                capability_name, capability_mode):
