@@ -43,6 +43,7 @@ class PermissionsEndpoint(BaseEndpoint):
                  object_type=None,
                  object_id=None,
                  query_default_project_permissions=False,
+                 delete_default_project_permissions=False,
                  project_permissions_object=None,
                  delete_permissions_object=None,
                  delete_permissions_object_id=None,
@@ -58,6 +59,7 @@ class PermissionsEndpoint(BaseEndpoint):
         self._object_type = object_type
         self._object_id = object_id
         self._query_default_project_permissions = query_default_project_permissions
+        self._delete_default_project_permissions = delete_default_project_permissions
         self._project_permissions_object = project_permissions_object
         self._delete_permissions_object = delete_permissions_object
         self._delete_permissions_object_id = delete_permissions_object_id
@@ -80,9 +82,9 @@ class PermissionsEndpoint(BaseEndpoint):
 
     @property
     def base_query_default_permissions_url(self):
-        return "{0}/projects/{1}/default-permissions/{2}".format(self.base_permissions_url,
-                                                                 self._project_id,
-                                                                 self._project_permissions_object)
+        return "{0}/projects/{1}/default-permissions/{2}s".format(self.base_permissions_url,
+                                                                  self._project_id,
+                                                                  self._project_permissions_object)
 
     @property
     def base_delete_permission_url(self):
@@ -107,7 +109,7 @@ class PermissionsEndpoint(BaseEndpoint):
             url = self.base_object_permissions_url
         elif self._delete_object_permissions and not (self._add_object_permissions or self._query_object_permissions):
             url = self.base_delete_permission_url
-        elif self.base_delete_default_permissions_url and not self._delete_object_permissions:
+        elif self._delete_default_project_permissions and not self._delete_object_permissions:
             url = self.base_delete_default_permissions_url
         elif self._query_default_project_permissions:
             url = self.base_query_default_permissions_url
