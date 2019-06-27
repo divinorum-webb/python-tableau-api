@@ -17,6 +17,12 @@ class PermissionsEndpoint(BaseEndpoint):
     :param query_default_project_permissions:   Boolean flag; True if querying default project permissions,
                                                 False otherwise.
     :type query_default_project_permissions:    boolean
+    :param add_default_project_permissions:     Boolean flag; True if adding default project permissions,
+                                                False otherwise.
+    :type add_default_project_permissions:      boolean
+    :param delete_default_project_permissions:  Boolean flag; True if deleting default project permissions,
+                                                False otherwise.
+    :type delete_default_project_permissions:   boolean
     :param project_permissions_object:          The project permissions object (workbook, etc.).
     :type project_permissions_object:           string
     :param delete_permissions_object:           The permissions object to delete (user, group, etc.).
@@ -43,6 +49,7 @@ class PermissionsEndpoint(BaseEndpoint):
                  object_type=None,
                  object_id=None,
                  query_default_project_permissions=False,
+                 add_default_project_permissions=False,
                  delete_default_project_permissions=False,
                  project_permissions_object=None,
                  delete_permissions_object=None,
@@ -59,6 +66,7 @@ class PermissionsEndpoint(BaseEndpoint):
         self._object_type = object_type
         self._object_id = object_id
         self._query_default_project_permissions = query_default_project_permissions
+        self._add_default_project_permissions = add_default_project_permissions
         self._delete_default_project_permissions = delete_default_project_permissions
         self._project_permissions_object = project_permissions_object
         self._delete_permissions_object = delete_permissions_object
@@ -112,6 +120,8 @@ class PermissionsEndpoint(BaseEndpoint):
         elif self._delete_default_project_permissions and not self._delete_object_permissions:
             url = self.base_delete_default_permissions_url
         elif self._query_default_project_permissions:
+            url = self.base_query_default_permissions_url
+        elif self._add_default_project_permissions:
             url = self.base_query_default_permissions_url
         else:
             self._invalid_parameter_exception()
