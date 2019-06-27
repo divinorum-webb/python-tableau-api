@@ -702,8 +702,20 @@ class TableauServerConnection:
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
-    #     def add_default_permissions(self):
-    #         pass
+    def add_default_permissions(self, project_id, project_permissions_object, group_id=None,
+                                user_id=None, user_capability_dict=None, group_capability_dict=None):
+        self.active_request = AddDefaultPermissionsRequest(ts_connection=self,
+                                                           group_id=group_id,
+                                                           user_id=user_id,
+                                                           group_capability_dict=group_capability_dict,
+                                                           user_capability_dict=user_capability_dict).get_request()
+        self.active_endpoint = PermissionsEndpoint(ts_connection=self,
+                                                   project_id=project_id,
+                                                   project_permissions_object=project_permissions_object,
+                                                   add_default_project_permissions=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def add_view_permissions(self, view_id, user_capability_dict=None, group_capability_dict=None, user_id=None,
                              group_id=None):
