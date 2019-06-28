@@ -43,8 +43,8 @@ class WorkbookEndpoint(BaseEndpoint):
     :type query_workbook_view_preview_img:      boolean
     :param get_workbook_revisions:              Boolean flag; True if getting all workbook revisions, False otherwise.
     :type get_workbook_revisions:               boolean
-    :param remove_workbook_revision:           Boolean flag; True if removing a workbook revision, False otherwise.
-    :type remove_workbook_revision:            boolean
+    :param remove_workbook_revision:            Boolean flag; True if removing a workbook revision, False otherwise.
+    :type remove_workbook_revision:             boolean
     :param download_workbook:                   Boolean flag; True if downloading workbook content, False otherwise.
     :type download_workbook:                    boolean
     :param download_workbook_revision:          Boolean flag; Ture if downloading a specific workbook revision,
