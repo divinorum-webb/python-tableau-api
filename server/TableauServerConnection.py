@@ -880,11 +880,20 @@ class TableauServerConnection:
     def create_schedule(self):
         pass
 
-    def query_extract_refresh_tasks(self):
-        pass
+    def query_extract_refresh_tasks(self, schedule_id, parameter_dict=None):
+        self.active_endpoint = TasksEndpoint(ts_connection=self, query_schedule_refresh_tasks=True,
+                                             schedule_id=schedule_id,
+                                             parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def query_schedules(self):
-        pass
+    def query_schedules(self, parameter_dict=None):
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, query_schedules=True,
+                                                 parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def run_extract_refresh_task(self):
         pass
