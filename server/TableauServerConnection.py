@@ -855,8 +855,11 @@ class TableauServerConnection:
     def cancel_job(self):
         pass
 
-    def query_job(self):
-        pass
+    def query_job(self, job_id):
+        self.active_endpoint = JobsEndpoint(ts_connection=self, job_id=job_id, query_job=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def query_jobs(self, parameter_dict=None):
         self.active_endpoint = JobsEndpoint(ts_connection=self, query_jobs=True,
