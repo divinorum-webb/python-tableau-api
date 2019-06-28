@@ -741,9 +741,6 @@ class TableauServerConnection:
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
-    #     def add_workbook_to_schedule(self):
-    #         pass
-
     def query_data_source_permissions(self, datasource_id):
         self.active_endpoint = PermissionsEndpoint(ts_connection=self, object_type='datasource',
                                                    object_id=datasource_id,
@@ -843,3 +840,44 @@ class TableauServerConnection:
         self.active_headers = self.default_headers
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
+
+    # jobs, tasks, and schedules
+
+    def add_data_source_to_schedule(self):
+        pass
+
+    def add_workbook_to_schedule(self):
+        pass
+
+    def cancel_job(self):
+        pass
+
+    def query_job(self):
+        pass
+
+    def query_jobs(self):
+        pass
+
+    def get_extract_refresh_task(self):
+        pass
+
+    def get_extract_refresh_tasks(self):
+        pass
+
+    def create_schedule(self):
+        pass
+
+    def query_extract_refresh_tasks(self):
+        pass
+
+    def query_schedules(self):
+        pass
+
+    def run_extract_refresh_task(self):
+        pass
+
+    def update_schedule(self):
+        pass
+
+    def delete_subscription(self):
+        pass
