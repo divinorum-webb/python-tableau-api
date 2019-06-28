@@ -843,3 +843,66 @@ class TableauServerConnection:
         self.active_headers = self.default_headers
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
+
+    # jobs, tasks, and schedules
+
+    def add_data_source_to_schedule(self):
+        pass
+
+    def add_workbook_to_schedule(self):
+        pass
+
+    def cancel_job(self):
+        pass
+
+    def query_job(self, job_id):
+        self.active_endpoint = JobsEndpoint(ts_connection=self, job_id=job_id, query_job=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_jobs(self, parameter_dict=None):
+        self.active_endpoint = JobsEndpoint(ts_connection=self, query_jobs=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def get_extract_refresh_task(self, task_id):
+        self.active_endpoint = TasksEndpoint(ts_connection=self, task_id=task_id, get_refresh_task=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def get_extract_refresh_tasks(self):
+        self.active_endpoint = TasksEndpoint(ts_connection=self, get_refresh_tasks=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def create_schedule(self):
+        pass
+
+    def query_extract_refresh_tasks(self, schedule_id, parameter_dict=None):
+        self.active_endpoint = TasksEndpoint(ts_connection=self, query_schedule_refresh_tasks=True,
+                                             schedule_id=schedule_id,
+                                             parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_schedules(self, parameter_dict=None):
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, query_schedules=True,
+                                                 parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def run_extract_refresh_task(self):
+        pass
+
+    def update_schedule(self):
+        pass
+
+    def delete_subscription(self):
+        pass
