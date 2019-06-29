@@ -846,11 +846,22 @@ class TableauServerConnection:
 
     # jobs, tasks, and schedules
 
-    def add_data_source_to_schedule(self):
-        pass
+    def add_data_source_to_schedule(self, datasource_id, schedule_id):
+        self.active_request = AddDatasourceToScheduleRequest(ts_connection=self,
+                                                             datasource_id=datasource_id).get_request()
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
+                                                 add_datasource=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def add_workbook_to_schedule(self):
-        pass
+    def add_workbook_to_schedule(self, workbook_id, schedule_id):
+        self.active_request = AddWorkbookToScheduleRequest(ts_connection=self, workbook_id=workbook_id).get_request()
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
+                                                 add_workbook=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def cancel_job(self, job_id):
         self.active_endpoint = JobsEndpoint(ts_connection=self, job_id=job_id, cancel_job=True).get_endpoint()
