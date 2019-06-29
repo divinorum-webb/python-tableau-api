@@ -22,7 +22,7 @@ class CreateScheduleRequest(BaseRequest):
     :param end_time:                    Only set this value if the schedule frequency has been set to 'Hourly'. This
                                         value indicates the hour the schedule will stop running (HH:MM:SS).
     :type end_time:                     string
-    :param interval_expression:         This value specifies the time interval between jobs associated with the
+    :param interval_expression_dict:    This list specifies the time interval(s) between jobs associated with the
                                         schedule. The value required here depends on the 'schedule_frequency' value.
                                         If 'schedule_frequency' = 'Hourly', the interval expression should be either
                                         hours="interval" (where "interval" is a number [1, 2, 4, 6, 8, 12] in quotes).
@@ -32,7 +32,7 @@ class CreateScheduleRequest(BaseRequest):
                                         If 'schedule_frequency' = 'Monthly', the interval expression is monthDay="day",
                                         where day is either the day of the month (1-31), or 'LastDay'. In both cases
                                         the value is wrapped in quotes.
-    :type interval_expression:          string
+    :type interval_expression_dict:     dict
     """
     def __init__(self,
                  ts_connection,
@@ -40,10 +40,10 @@ class CreateScheduleRequest(BaseRequest):
                  schedule_priority=50,
                  schedule_type='Extract',
                  schedule_execution_order='Parallel',
-                 schedule_frequency='Daily',
-                 start_time='12:00:00',
+                 schedule_frequency='Weekly',
+                 start_time='07:00:00',
                  end_time='23:00:00',
-                 interval_expression=None
+                 interval_expression_dict={'weekDay': 'Monday'}
                  ):
 
         super().__init__(ts_connection)
@@ -54,7 +54,9 @@ class CreateScheduleRequest(BaseRequest):
         self._schedule_frequency = schedule_frequency
         self._start_time = start_time
         self._end_time = end_time
-        self._interval_expression = interval_expression
+        self._interval_expression_dict = interval_expression_dict
+        self._interval_expression_keys, self._interval_expression_values = None, None
+        self._validate_inputs()
         self.base_create_schedule_request
 
     @property
@@ -75,6 +77,21 @@ class CreateScheduleRequest(BaseRequest):
         ]
 
     @property
+    def valid_interval_keys(self):
+        return [
+            'minutes',
+            'hours',
+            'weekDay',
+            'monthDay'
+        ]
+
+    def _validate_inputs(self):
+        if self._interval_expression_dict:
+            self._set_interval_expressions()
+        else:
+            self._invalid_parameter_exception()
+
+    @property
     def required_schedule_param_values(self):
         return [
             self._schedule_name,
@@ -91,6 +108,31 @@ class CreateScheduleRequest(BaseRequest):
             self._end_time
         ]
 
+    def _unpack_interval_expressions_dict(self, interval_dict):
+        interval_keys = []
+        interval_values = []
+        for key in interval_dict.keys():
+            if key in self.valid_interval_keys:
+                interval_keys.append(key)
+                interval_values.append(interval_dict[key])
+            else:
+                self._invalid_parameter_exception()
+        return interval_keys, interval_values
+
+    def _set_interval_expressions(self):
+        if self._interval_expression_dict:
+            if any(self._interval_expression_dict.values()):
+                self._interval_expression_keys, self._interval_expression_values = self._unpack_interval_expressions_dict(
+                    self._interval_expression_dict)
+
+    @staticmethod
+    def _get_parameters_list(param_keys, param_values):
+        params_list = []
+        for i, key in enumerate(param_keys):
+            if param_values[i]:
+                params_list.append({key: param_values[i]})
+        return params_list
+
     @property
     def base_create_schedule_request(self):
         self._request_body.update({'schedule': {'frequencyDetails': {}}})
@@ -104,10 +146,11 @@ class CreateScheduleRequest(BaseRequest):
         self._request_body['schedule']['frequencyDetails'].update(
             self._get_parameters_dict(self.required_frequency_param_keys,
                                       self.required_frequency_param_values))
-        if self._interval_expression:
+        if self._interval_expression_dict:
             self._request_body['schedule']['frequencyDetails'].update({'intervals': {}})
             self._request_body['schedule']['frequencyDetails']['intervals'].update(
-                {'interval': self._interval_expression})
+                {'interval': self._get_parameters_list(self._interval_expression_keys,
+                                                       self._interval_expression_values)})
         return self._request_body
 
     def get_request(self):
