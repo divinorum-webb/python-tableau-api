@@ -22,7 +22,7 @@ class CreateScheduleRequest(BaseRequest):
     :param end_time:                    Only set this value if the schedule frequency has been set to 'Hourly'. This
                                         value indicates the hour the schedule will stop running (HH:MM:SS).
     :type end_time:                     string
-    :param interval_expression_dict:    This list specifies the time interval(s) between jobs associated with the
+    :param interval_expression_dict:    This dict specifies the time interval(s) between jobs associated with the
                                         schedule. The value required here depends on the 'schedule_frequency' value.
                                         If 'schedule_frequency' = 'Hourly', the interval expression should be either
                                         hours="interval" (where "interval" is a number [1, 2, 4, 6, 8, 12] in quotes).
