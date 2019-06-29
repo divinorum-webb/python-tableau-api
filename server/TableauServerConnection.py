@@ -883,8 +883,19 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def create_schedule(self):
-        pass
+    def create_schedule(self, schedule_name, schedule_priority=50, schedule_type='Extract',
+                        schedule_execution_order='Parallel', schedule_frequency='Weekly',
+                        start_time='07:00:00', end_time='23:00:00', interval_expression_dict={'weekDay': 'Monday'}):
+        self.active_request = CreateScheduleRequest(ts_connection=self, schedule_name=schedule_name,
+                                                    schedule_priority=schedule_priority, schedule_type=schedule_type,
+                                                    schedule_execution_order=schedule_execution_order,
+                                                    schedule_frequency=schedule_frequency,
+                                                    start_time=start_time, end_time=end_time,
+                                                    interval_expression_dict=interval_expression_dict).get_request()
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, create_schedule=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def query_extract_refresh_tasks(self, schedule_id, parameter_dict=None):
         self.active_endpoint = TasksEndpoint(ts_connection=self, query_schedule_refresh_tasks=True,
@@ -911,5 +922,9 @@ class TableauServerConnection:
     def update_schedule(self):
         pass
 
-    def delete_subscription(self):
-        pass
+    def delete_schedule(self, schedule_id):
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
+                                                 delete_schedule=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
