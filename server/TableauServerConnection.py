@@ -852,8 +852,11 @@ class TableauServerConnection:
     def add_workbook_to_schedule(self):
         pass
 
-    def cancel_job(self):
-        pass
+    def cancel_job(self, job_id):
+        self.active_endpoint = JobsEndpoint(ts_connection=self, job_id=job_id, cancel_job=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     def query_job(self, job_id):
         self.active_endpoint = JobsEndpoint(ts_connection=self, job_id=job_id, query_job=True).get_endpoint()
@@ -898,8 +901,12 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def run_extract_refresh_task(self):
-        pass
+    def run_extract_refresh_task(self, task_id):
+        self.active_request = EmptyRequest(ts_connection=self).get_request()
+        self.active_endpoint = TasksEndpoint(ts_connection=self, task_id=task_id, run_refresh_task=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def update_schedule(self):
         pass
