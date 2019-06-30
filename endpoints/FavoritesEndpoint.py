@@ -33,11 +33,26 @@ class FavoritesEndpoint(BaseEndpoint):
         super().__init__(ts_connection)
         self._add_to_favorites = add_to_favorites
         self._delete_from_favorites = delete_from_favorites
-        self._object_type = object_type
+        self._object_type = object_type.lower() if object_type else None
         self._object_id = object_id
         self._get_user_favorites = get_user_favorites
         self._user_id = user_id
         self._parameter_dict = parameter_dict
+
+    @property
+    def valid_object_types(self):
+        return [
+            'datasource',
+            'project',
+            'workbook',
+            'view'
+        ]
+
+    def _validate_object_type(self):
+        if self._object_type.capitalize() in self.valid_object_types:
+            pass
+        else:
+            self._invalid_parameter_exception()
 
     @property
     def base_favorites_url(self):
