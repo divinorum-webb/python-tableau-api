@@ -27,10 +27,24 @@ class CreateSubscriptionRequest(BaseRequest):
 
         super().__init__(ts_connection)
         self._subscription_subject = subscription_subject
-        self._content_type = content_type
+        self._content_type = content_type.lower()
         self._content_id = content_id
         self._schedule_id = schedule_id
         self._user_id = user_id
+        self._validate_content_type()
+
+    @property
+    def valid_content_types(self):
+        return [
+            'Workbook',
+            'View'
+        ]
+
+    def _validate_content_type(self):
+        if self._content_type.capitalize() in self.valid_content_types:
+            pass
+        else:
+            self._invalid_parameter_exception()
 
     @property
     def base_create_subscription_request(self):
