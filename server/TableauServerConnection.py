@@ -993,3 +993,76 @@ class TableauServerConnection:
         self.active_headers = self.default_headers
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
+
+    # favorites
+
+    def add_data_source_to_favorites(self, datasource_id, user_id, favorite_label):
+        self.active_request = AddDatasourceToFavoritesRequest(ts_connection=self, datasource_id=datasource_id,
+                                                              favorite_label=favorite_label).get_request()
+        self.active_endpoint = FavoritesEndpoint(ts_connection=self, add_to_favorites=True,
+                                                 user_id=user_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def add_project_to_favorites(self, project_id, user_id, favorite_label):
+        self.active_request = AddProjectToFavoritesRequest(ts_connection=self, project_id=project_id,
+                                                           favorite_label=favorite_label).get_request()
+        self.active_endpoint = FavoritesEndpoint(ts_connection=self, add_to_favorites=True,
+                                                 user_id=user_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def add_view_to_favorites(self, view_id, user_id, favorite_label):
+        self.active_request = AddViewToFavoritesRequest(ts_connection=self, view_id=view_id,
+                                                        favorite_label=favorite_label).get_request()
+        self.active_endpoint = FavoritesEndpoint(ts_connection=self, add_to_favorites=True,
+                                                 user_id=user_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def add_workbook_to_favorites(self, workbook_id, user_id, favorite_label):
+        self.active_request = AddWorkbookToFavoritesRequest(ts_connection=self, workbook_id=workbook_id,
+                                                            favorite_label=favorite_label).get_request()
+        self.active_endpoint = FavoritesEndpoint(ts_connection=self, add_to_favorites=True,
+                                                 user_id=user_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def delete_data_source_from_favorites(self, datasource_id, user_id):
+        self.active_endpoint = FavoritesEndpoint(ts_connection=self, object_type='datasource', object_id=datasource_id,
+                                                 user_id=user_id, delete_from_favorites=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def delete_project_from_favorites(self, project_id, user_id):
+        self.active_endpoint = FavoritesEndpoint(ts_connection=self, object_type='project', object_id=project_id,
+                                                 user_id=user_id, delete_from_favorites=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def delete_view_from_favorites(self, view_id, user_id):
+        self.active_endpoint = FavoritesEndpoint(ts_connection=self, object_type='view', object_id=view_id,
+                                                 user_id=user_id, delete_from_favorites=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def delete_workbook_from_favorites(self, workbook_id, user_id):
+        self.active_endpoint = FavoritesEndpoint(ts_connection=self, object_type='workbook', object_id=workbook_id,
+                                                 user_id=user_id, delete_from_favorites=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def get_favorites_for_user(self, user_id):
+        self.active_endpoint = FavoritesEndpoint(ts_connection=self, get_user_favorites=True,
+                                                 user_id=user_id).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
