@@ -964,14 +964,32 @@ class TableauServerConnection:
         response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
-    def query_subscription(self):
-        pass
+    def query_subscription(self, subscription_id):
+        self.active_endpoint = SubscriptionsEndpoint(ts_connection=self, subscription_id=subscription_id,
+                                                     query_subscription=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def query_subscriptions(self):
-        pass
+    def query_subscriptions(self, parameter_dict=None):
+        self.active_endpoint = SubscriptionsEndpoint(ts_connection=self, query_subscriptions=True,
+                                                     parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def update_subscription(self):
-        pass
+    def update_subscription(self, subscription_id, new_subscription_subject=None, new_schedule_id=None):
+        self.active_request = UpdateSubscriptionRequest(ts_connection=self, new_schedule_id=new_schedule_id,
+                                                        new_subscription_subject=new_subscription_subject).get_request()
+        self.active_endpoint = SubscriptionsEndpoint(ts_connection=self, subscription_id=subscription_id,
+                                                     update_subscription=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def delete_subscription(self):
-        pass
+    def delete_subscription(self, subscription_id):
+        self.active_endpoint = SubscriptionsEndpoint(ts_connection=self, subscription_id=subscription_id,
+                                                     delete_subscription=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
