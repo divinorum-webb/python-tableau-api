@@ -49,17 +49,24 @@ class SchedulesEndpoint(BaseEndpoint):
                                               self._connection.api_version)
 
     @property
+    def base_site_schedule_id_url(self):
+        return "{0}/api/{1}/sites/{2}/schedules/{3}".format(self._connection.server,
+                                                            self._connection.api_version,
+                                                            self._connection.site_id,
+                                                            self._schedule_id)
+
+    @property
     def base_schedule_id_url(self):
         return "{0}/{1}".format(self.base_schedule_url,
                                 self._schedule_id)
 
     @property
     def base_schedule_datasource_url(self):
-        return "{0}/datasources".format(self.base_schedule_id_url)
+        return "{0}/datasources".format(self.base_site_schedule_id_url)
 
     @property
     def base_schedule_workbook_url(self):
-        return "{0}/workbooks".format(self.base_schedule_id_url)
+        return "{0}/workbooks".format(self.base_site_schedule_id_url)
 
     def get_endpoint(self):
         if self._schedule_id:

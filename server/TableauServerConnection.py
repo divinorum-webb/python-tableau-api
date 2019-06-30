@@ -846,11 +846,22 @@ class TableauServerConnection:
 
     # jobs, tasks, and schedules
 
-    def add_data_source_to_schedule(self):
-        pass
+    def add_data_source_to_schedule(self, datasource_id, schedule_id):
+        self.active_request = AddDatasourceToScheduleRequest(ts_connection=self,
+                                                             datasource_id=datasource_id).get_request()
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
+                                                 add_datasource=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
-    def add_workbook_to_schedule(self):
-        pass
+    def add_workbook_to_schedule(self, workbook_id, schedule_id):
+        self.active_request = AddWorkbookToScheduleRequest(ts_connection=self, workbook_id=workbook_id).get_request()
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
+                                                 add_workbook=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def cancel_job(self, job_id):
         self.active_endpoint = JobsEndpoint(ts_connection=self, job_id=job_id, cancel_job=True).get_endpoint()
@@ -919,12 +930,66 @@ class TableauServerConnection:
         response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
-    def update_schedule(self):
-        pass
+    def update_schedule(self, schedule_id, schedule_name=None, schedule_priority=None, schedule_type=None,
+                        schedule_execution_order=None,
+                        schedule_frequency=None, start_time=None, end_time=None, interval_expression_dict=None):
+        self.active_request = UpdateScheduleRequest(ts_connection=self, schedule_name=schedule_name,
+                                                    schedule_priority=schedule_priority, schedule_type=schedule_type,
+                                                    schedule_execution_order=schedule_execution_order,
+                                                    schedule_frequency=schedule_frequency,
+                                                    start_time=start_time, end_time=end_time,
+                                                    interval_expression_dict=interval_expression_dict).get_request()
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
+                                                 update_schedule=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def delete_schedule(self, schedule_id):
         self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
                                                  delete_schedule=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    # subscriptions
+
+    def create_subscription(self, subscription_subject, content_type, content_id, schedule_id, user_id):
+        self.active_request = CreateSubscriptionRequest(ts_connection=self, subscription_subject=subscription_subject,
+                                                        content_type=content_type,
+                                                        content_id=content_id, schedule_id=schedule_id,
+                                                        user_id=user_id).get_request()
+        self.active_endpoint = SubscriptionsEndpoint(ts_connection=self, create_subscription=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def query_subscription(self, subscription_id):
+        self.active_endpoint = SubscriptionsEndpoint(ts_connection=self, subscription_id=subscription_id,
+                                                     query_subscription=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_subscriptions(self, parameter_dict=None):
+        self.active_endpoint = SubscriptionsEndpoint(ts_connection=self, query_subscriptions=True,
+                                                     parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def update_subscription(self, subscription_id, new_subscription_subject=None, new_schedule_id=None):
+        self.active_request = UpdateSubscriptionRequest(ts_connection=self, new_schedule_id=new_schedule_id,
+                                                        new_subscription_subject=new_subscription_subject).get_request()
+        self.active_endpoint = SubscriptionsEndpoint(ts_connection=self, subscription_id=subscription_id,
+                                                     update_subscription=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def delete_subscription(self, subscription_id):
+        self.active_endpoint = SubscriptionsEndpoint(ts_connection=self, subscription_id=subscription_id,
+                                                     delete_subscription=True).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.delete(url=self.active_endpoint, headers=self.active_headers)
         return response
