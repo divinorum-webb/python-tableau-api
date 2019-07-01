@@ -189,10 +189,13 @@ class PublishWorkbookRequest(BaseRequest):
     def _make_multipart(self, workbook_file_path):
         """
         Creates one "chunk" for a multi-part file upload to apply to a POST request.
+        'parts' is a dictionary that provides key-value pairs of the
+        format name: (filename, body, content_type).
 
-        :param parts:                       'parts' is a dictionary that provides key-value pairs of the
-                                            format name: (filename, body, content_type).
-        :returns post_body, content_type:   Returns the post body and the content type string.
+        :param workbook_file_path:                          The file path for the workbook.
+        :type workbook_file_path:                           string
+        :returns payload, content_type, workbook_type:      Returns the post request body, the content-type header, and
+                                                            the type of the workbook being published.
         """
         workbook_file, workbook_bytes, workbook_type = self.get_workbook(workbook_file_path)
         parts = {'request_payload': (None, json.dumps(self.get_request()), 'application/json'),
@@ -207,6 +210,16 @@ class PublishWorkbookRequest(BaseRequest):
         payload, content_type = encode_multipart_formdata(mime_multipart_parts)
         content_type = ''.join(('multipart/mixed',) + content_type.partition(';')[1:])
         return payload, content_type, workbook_type
+
+    def _add_multipart(parts):
+        mime_multipart_parts = list()
+        for name, (filename, data, content_type) in parts.items():
+            multipart_part = RequestField(name=name, data=data, filename=filename)
+            multipart_part.make_multipart(content_type=content_type)
+            mime_multipart_parts.append(multipart_part)
+        xml_request, content_type = encode_multipart_formdata(mime_multipart_parts)
+        content_type = ''.join(('multipart/mixed',) + content_type.partition(';')[1:])
+        return xml_request, content_type
 
     def get_headers(self, new_content_type):
         headers = self._connection.default_headers.copy()
