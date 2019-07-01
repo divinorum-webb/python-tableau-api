@@ -1,3 +1,6 @@
+CHUNK_SIZE = 1024 * 1024 * 5  # 5MB
+
+
 class PublishWorkbookRequest(BaseRequest):
     """
     Publish workbook request for API requests to Tableau Server.
@@ -72,6 +75,7 @@ class PublishWorkbookRequest(BaseRequest):
         self._hide_view_flag = hide_view_flag
         self.payload = None
         self.content_type = None
+        self.file_is_chunked = False
         self.base_publish_workbook_request
 
     @property
@@ -186,45 +190,64 @@ class PublishWorkbookRequest(BaseRequest):
             raise Exception('Invalid workbook type provided. Workbook must be a twbx or twb file.')
         return workbook_file, workbook_bytes, workbook_type
 
-    def _make_multipart(self, workbook_file_path):
-        """
-        Creates one "chunk" for a multi-part file upload to apply to a POST request.
-        'parts' is a dictionary that provides key-value pairs of the
-        format name: (filename, body, content_type).
+    # testing for chunk upload
+    def publish_prep(self, file_path):
+        filename = os.path.basename(file_path)
+        file_extension = os.path.split('.')[1]
 
-        :param workbook_file_path:                          The file path for the workbook.
-        :type workbook_file_path:                           string
-        :returns payload, content_type, workbook_type:      Returns the post request body, the content-type header, and
-                                                            the type of the workbook being published.
-        """
-        workbook_file, workbook_bytes, workbook_type = self.get_workbook(workbook_file_path)
-        parts = {'request_payload': (None, json.dumps(self.get_request()), 'application/json'),
-                 'tableau_workbook': (workbook_file, workbook_bytes, 'application/octet-stream')}
+        file_size = os.path.getsize(file_path)
+        self.file_is_chunked = True
 
-        mime_multipart_parts = []
-        for name, (filename, blob, content_type) in parts.items():
-            multipart_part = RequestField(name=name, data=blob, filename=filename)
-            multipart_part.make_multipart(content_type=content_type)
-            mime_multipart_parts.append(multipart_part)
+        upload_session_id = self._connection.initiate_file_upload().json()['fileUpload']['uploadSessionId']
+        chunks = self.read_chunks(file_path)
+        for chunk in chunks:
+            request, content_type = self.chunk_req(chunk)
+            file_upload = self._connection.append_to_file_upload(upload_session_id=upload_session_id,
+                                                                 payload=request,
+                                                                 content_type=content_type)
+        return filename, file_extension, upload_session_id
 
-        payload, content_type = encode_multipart_formdata(mime_multipart_parts)
-        content_type = ''.join(('multipart/mixed',) + content_type.partition(';')[1:])
-        return payload, content_type, workbook_type
 
+    @staticmethod
+    def read_chunks(file_path):
+        with open(file_path, 'rb') as f:
+            while True:
+                chunked_content = f.read(CHUNK_SIZE)
+                if not chunked_content:
+                    break
+                yield chunked_content
+
+    def chunk_req(self, chunk):
+        parts = {'request_payload': (None, '', 'application/json'),
+                 'tableau_file': ('file', chunk, 'application/octet-stream')}
+        return self._add_multipart(parts)
+
+    @staticmethod
     def _add_multipart(parts):
         mime_multipart_parts = list()
         for name, (filename, data, content_type) in parts.items():
             multipart_part = RequestField(name=name, data=data, filename=filename)
             multipart_part.make_multipart(content_type=content_type)
             mime_multipart_parts.append(multipart_part)
-        xml_request, content_type = encode_multipart_formdata(mime_multipart_parts)
+        request, content_type = encode_multipart_formdata(mime_multipart_parts)
         content_type = ''.join(('multipart/mixed',) + content_type.partition(';')[1:])
-        return xml_request, content_type
+        return request, content_type
 
-    def get_headers(self, new_content_type):
-        headers = self._connection.default_headers.copy()
-        headers['Content-Type'] = new_content_type
-        return headers
+    def _publish_chunked_file_request(self):
+        request = self.modified_publish_workbook_request
+        parts = {'request_payload': (None, json.dumps(request), 'application/json')}
+        return self._add_multipart(parts)
+
+    def _publish_single_file_request(self):
+        request = self.modified_publish_workbook_request
+        parts = {'request_payload': (None, json.dumps(request), 'application/json'),
+                 'tableau_workbook': (workbook_file, workbook_bytes, 'application/octet-stream')}
+        return self._add_mutlipart(parts)
 
     def get_request(self):
-        return self.modified_publish_workbook_request
+        if self.file_is_chunked:
+            print('publishing chunked file')
+            return self._publish_chunked_file_request()
+        else:
+            print('publishing single file')
+            return self._publish_single_file_request()
