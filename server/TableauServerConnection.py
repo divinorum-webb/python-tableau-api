@@ -265,32 +265,6 @@ class TableauServerConnection:
 
     # workbooks and views
 
-    def publish_workbook(self, workbook_file_path, workbook_name, project_id, show_tabs_flag=False,
-                         user_id=None, server_address=None, port_number=None, connection_username=None,
-                         connection_password=None,
-                         embed_credentials_flag=False, oauth_flag=False, workbook_views_to_hide=None,
-                         hide_view_flag=False, parameter_dict={}):
-        self.active_request = PublishWorkbookRequest(ts_connection=self,
-                                                     workbook_name=workbook_name,
-                                                     project_id=project_id,
-                                                     show_tabs_flag=show_tabs_flag,
-                                                     user_id=user_id,
-                                                     server_address=server_address,
-                                                     port_number=port_number,
-                                                     connection_username=connection_username,
-                                                     connection_password=connection_password,
-                                                     embed_credentials_flag=embed_credentials_flag,
-                                                     oauth_flag=oauth_flag,
-                                                     workbook_views_to_hide=workbook_views_to_hide,
-                                                     hide_view_flag=hide_view_flag)
-        payload, content_type, workbook_type = self.active_request._make_multipart(workbook_file_path)
-        parameter_dict.update({'workbookType': 'workbookType={}'.format(workbook_type)})
-        self.active_endpoint = WorkbookEndpoint(ts_connection=self, publish_workbook=True,
-                                                parameter_dict=parameter_dict).get_endpoint()
-        self.active_headers = self.active_request.get_headers(content_type)
-        response = requests.post(url=self.active_endpoint, data=payload, headers=self.active_headers)
-        return response
-
     def add_tags_to_view(self, view_id, tags):
         self.active_request = AddTagsRequest(ts_connection=self, tags=tags).get_request()
         self.active_endpoint = ViewEndpoint(ts_connection=self, view_id=view_id, add_tags=True).get_endpoint()
@@ -479,9 +453,6 @@ class TableauServerConnection:
         return response
 
     # data sources
-
-    def publish_data_source(self):
-        pass
 
     def add_tags_to_data_source(self, datasource_id, tags):
         self.active_request = AddTagsRequest(ts_connection=self, tags=tags).get_request()
@@ -1092,4 +1063,52 @@ class TableauServerConnection:
         self.active_headers = self.default_headers.copy()
         self.active_headers.update({'content-type': content_type})
         response = requests.put(url=self.active_endpoint, data=payload, headers=self.active_headers)
+        return response
+
+    def publish_data_source(self, datasource_file_path, datasource_name, project_id, connection_username=None,
+                            connection_password=None,
+                            embed_credentials_flag=False, oauth_flag=False, parameter_dict={}):
+        publish_request = PublishDatasourceRequest(ts_connection=self,
+                                                   datasource_name=datasource_name,
+                                                   project_id=project_id,
+                                                   connection_username=connection_username,
+                                                   connection_password=connection_password,
+                                                   embed_credentials_flag=embed_credentials_flag,
+                                                   oauth_flag=oauth_flag)
+        filename, file_extension, upload_session_id = publish_request.publish_prep(datasource_file_path)
+        parameter_dict.update({'param': 'uploadSessionId={}'.format(upload_session_id)})
+        self.active_request, content_type = publish_request.get_request()
+        self.active_endpoint = DatasourceEndpoint(ts_connection=self, publish_datasource=True,
+                                                  parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers.copy()
+        self.active_headers.update({'content-type': content_type})
+        response = requests.post(url=self.active_endpoint, data=self.active_request, headers=self.active_headers)
+        return response
+
+    def publish_workbook(self, workbook_file_path, workbook_name, project_id, show_tabs_flag=False,
+                         user_id=None, server_address=None, port_number=None, connection_username=None,
+                         connection_password=None,
+                         embed_credentials_flag=False, oauth_flag=False, workbook_views_to_hide=None,
+                         hide_view_flag=False, parameter_dict={}):
+        publish_request = PublishWorkbookRequest(ts_connection=self,
+                                                 workbook_name=workbook_name,
+                                                 project_id=project_id,
+                                                 show_tabs_flag=show_tabs_flag,
+                                                 user_id=user_id,
+                                                 server_address=server_address,
+                                                 port_number=port_number,
+                                                 connection_username=connection_username,
+                                                 connection_password=connection_password,
+                                                 embed_credentials_flag=embed_credentials_flag,
+                                                 oauth_flag=oauth_flag,
+                                                 workbook_views_to_hide=workbook_views_to_hide,
+                                                 hide_view_flag=hide_view_flag)
+        filename, file_extension, upload_session_id = publish_request.publish_prep(workbook_file_path)
+        parameter_dict.update({'param': 'uploadSessionId={}'.format(upload_session_id)})
+        self.active_request, content_type = publish_request.get_request()
+        self.active_endpoint = WorkbookEndpoint(ts_connection=self, publish_workbook=True,
+                                                parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers.copy()
+        self.active_headers.update({'content-type': content_type})
+        response = requests.post(url=self.active_endpoint, data=self.active_request, headers=self.active_headers)
         return response

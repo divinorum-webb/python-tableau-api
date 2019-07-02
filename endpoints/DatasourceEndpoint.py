@@ -8,6 +8,8 @@ class DatasourceEndpoint(BaseEndpoint):
     :type query_datasources:                boolean
     :param query_datasource:                Boolean flag; True if querying a specific datasource, False otherwise.
     :type query_datasource:                 boolean
+    :param publish_datasource:              Boolean flag; True if publishing a specific datasource, False otherwise.
+    :type publish_datasource:               boolean
     :param datasource_id:                   The datasource ID.
     :type datasource_id:                    string
     :param query_datasource_connections:    Boolean flag; True if querying a specific datasource's connections,
@@ -51,6 +53,7 @@ class DatasourceEndpoint(BaseEndpoint):
                  ts_connection,
                  query_datasources=False,
                  query_datasource=False,
+                 publish_datasource=False,
                  datasource_id=None,
                  query_datasource_connections=False,
                  connection_id=None,
@@ -69,6 +72,9 @@ class DatasourceEndpoint(BaseEndpoint):
                  parameter_dict=None):
 
         super().__init__(ts_connection)
+        self._query_datasource = query_datasource
+        self._query_datasources = query_datasources
+        self._publish_datasource = publish_datasource
         self._datasource_id = datasource_id
         self._connection_id = connection_id
         self._add_tags = add_tags
@@ -77,8 +83,6 @@ class DatasourceEndpoint(BaseEndpoint):
         self._update_datasource = update_datasource
         self._update_datasource_connection = update_datasource_connection
         self._tag_name = tag_name
-        self._query_datasource = query_datasource
-        self._query_datasources = query_datasources
         self._query_datasource_connections = query_datasource_connections
         self._download_datasource = download_datasource
         self._delete_datasource = delete_datasource
@@ -143,6 +147,8 @@ class DatasourceEndpoint(BaseEndpoint):
         if self._datasource_id:
             if self._query_datasource:
                 url = self.base_datasource_id_url
+            elif self._publish_datasource and not (self._delete_datasource or self._update_datasource):
+                url = self.base_datasource_url
             elif self._add_tags:
                 url = self.base_datasource_tags_url
             elif self._delete_tag and self._tag_name:

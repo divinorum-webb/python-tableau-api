@@ -2,22 +2,24 @@ class PublishDatasourceRequest(BaseRequest):
     """
     Update site request for generating API request URLs to Tableau Server.
 
-    :param ts_connection:       The Tableau Server connection object.
-    :type ts_connection:        class
-    :param datasource_name:     The name for the datasource being published.
-    :type datasource_name:      string
-    :param project_id:          The project ID for the project the datasource belongs to.
-    :type project_id:           string
-    :param connection_username: If the datasource requires credentials, this value specifies the connection username.
-    :type connection_username:  string
-    :param connection_password: If the datasource requires credentials, this value specifies the connection password.
-    :type connection_password:  string
-    :param embed_flag:          Boolean flag; True if credentials are to be stored for when the connection is used,
-                                False otherwise.
-    :type embed_flag:           boolean
-    :param oauth_flag:          Boolean flag; True if the data connection username is an OAuth username,
-                                False otherwise.
-    :type oauth_flag:           boolean
+    :param ts_connection:           The Tableau Server connection object.
+    :type ts_connection:            class
+    :param datasource_name:         The name for the datasource being published.
+    :type datasource_name:          string
+    :param project_id:              The project ID for the project the datasource belongs to.
+    :type project_id:               string
+    :param connection_username:     If the datasource requires credentials, this value specifies
+                                    the connection username.
+    :type connection_username:      string
+    :param connection_password:     If the datasource requires credentials, this value specifies
+                                    the connection password.
+    :type connection_password:      string
+    :param embed_credentials_flag:  Boolean flag; True if credentials are to be stored for when the connection is used,
+                                    False otherwise.
+    :type embed_credentials_flag:   boolean
+    :param oauth_flag:              Boolean flag; True if the data connection username is an OAuth username,
+                                    False otherwise.
+    :type oauth_flag:               boolean
     """
     def __init__(self,
                  ts_connection,
@@ -25,7 +27,7 @@ class PublishDatasourceRequest(BaseRequest):
                  project_id,
                  connection_username=None,
                  connection_password=None,
-                 embed_flag=False,
+                 embed_credentials_flag=False,
                  oauth_flag=False
                  ):
         super().__init__(ts_connection)
@@ -33,7 +35,7 @@ class PublishDatasourceRequest(BaseRequest):
         self._project_id = project_id
         self._connection_username = connection_username
         self._connection_password = connection_password
-        self._embed_flag = embed_flag
+        self._embed_credentials_flag = embed_credentials_flag
         self._oauth_flag = oauth_flag
         self.base_publish_datasource_request
 
@@ -51,7 +53,7 @@ class PublishDatasourceRequest(BaseRequest):
         return [
             self._connection_username,
             self._connection_password,
-            'true' if self._embed_flag is True else 'false' if self._embed_flag is False else None,
+            'true' if self._embed_credentials_flag is True else 'false' if self._embed_credentials_flag is False else None,
             'true' if self._oauth_flag is True else 'false' if self._oauth_flag is False else None
         ]
 
@@ -89,35 +91,64 @@ class PublishDatasourceRequest(BaseRequest):
             raise Exception('Invalid datasource type provided. Datasource must be a tdsx, tds, or tde file.')
         return datasource_file, datasource_bytes, datasource_type
 
-    def _make_multipart(self, datasource_file_path):
-        """
-        Creates one "chunk" for a multi-part file upload to apply to a POST request.
-        'parts' is a dictionary that provides key-value pairs of the
-        format name: (filename, body, content_type).
+    # testing for chunk upload
+    def publish_prep(self, file_path):
+        filename = os.path.basename(file_path)
+        file_extension = os.path.split('.')[1]
 
-        :param datasource_file_path:                            The file path for the datasource.
-        :type datasource_file_path:                             string
-        :returns payload, content_type, datasource_type:        Returns the post request body, the content-type header,
-                                                                and the type of the datasource being published.
-        """
-        datasource_file, datasource_bytes, datasource_type = self.get_datasource(datasource_file_path)
-        parts = {'request_payload': (None, json.dumps(self.get_request()), 'application/json'),
-                 'tableau_datasource': (datasource_file, datasource_bytes, 'application/octet-stream')}
+        file_size = os.path.getsize(file_path)
+        self.file_is_chunked = True
 
-        mime_multipart_parts = []
-        for name, (filename, blob, content_type) in parts.items():
-            multipart_part = RequestField(name=name, data=blob, filename=filename)
+        upload_session_id = self._connection.initiate_file_upload().json()['fileUpload']['uploadSessionId']
+        chunks = self.read_chunks(file_path)
+        for chunk in chunks:
+            request, content_type = self.chunk_req(chunk)
+            file_upload = self._connection.append_to_file_upload(upload_session_id=upload_session_id,
+                                                                 payload=request,
+                                                                 content_type=content_type)
+        return filename, file_extension, upload_session_id
+
+
+    @staticmethod
+    def read_chunks(file_path):
+        with open(file_path, 'rb') as f:
+            while True:
+                chunked_content = f.read(CHUNK_SIZE)
+                if not chunked_content:
+                    break
+                yield chunked_content
+
+    def chunk_req(self, chunk):
+        parts = {'request_payload': (None, '', 'application/json'),
+                 'tableau_file': ('file', chunk, 'application/octet-stream')}
+        return self._add_multipart(parts)
+
+    @staticmethod
+    def _add_multipart(parts):
+        mime_multipart_parts = list()
+        for name, (filename, data, content_type) in parts.items():
+            multipart_part = RequestField(name=name, data=data, filename=filename)
             multipart_part.make_multipart(content_type=content_type)
             mime_multipart_parts.append(multipart_part)
-
-        payload, content_type = encode_multipart_formdata(mime_multipart_parts)
+        request, content_type = encode_multipart_formdata(mime_multipart_parts)
         content_type = ''.join(('multipart/mixed',) + content_type.partition(';')[1:])
-        return payload, content_type, datasource_type
+        return request, content_type
 
-    def get_headers(self, new_content_type):
-        headers = self._connection.default_headers.copy()
-        headers['Content-Type'] = new_content_type
-        return headers
+    def _publish_chunked_file_request(self):
+        request = self.modified_publish_datasource_request
+        parts = {'request_payload': (None, json.dumps(request), 'application/json')}
+        return self._add_multipart(parts)
+
+    def _publish_single_file_request(self):
+        request = self.modified_publish_datasource_request
+        parts = {'request_payload': (None, json.dumps(request), 'application/json'),
+                 'tableau_datasource': (datasource_file, datasource_bytes, 'application/octet-stream')}
+        return self._add_mutlipart(parts)
 
     def get_request(self):
-        return self.modified_publish_datasource_request
+        if self.file_is_chunked:
+            print('publishing chunked file')
+            return self._publish_chunked_file_request()
+        else:
+            print('publishing single file')
+            return self._publish_single_file_request()
