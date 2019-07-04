@@ -1,5 +1,5 @@
 CHUNK_SIZE = 1024 * 1024 * 5  # 5MB
-FILESIZE_LIMIT = 1024*1024 * 60  # 60MB
+FILESIZE_LIMIT = 1024 * 1024 * 60  # 60MB
 
 
 class PublishWorkbookRequest(BaseRequest):
@@ -191,9 +191,9 @@ class PublishWorkbookRequest(BaseRequest):
         workbook_file = os.path.basename(self._workbook_file_path)
         with open(self._workbook_file_path, 'rb') as f:
             workbook_bytes = f.read()
-        if 'twbx' in self._workbook_file_path.split('.'):
+        if 'twbx' in workbook_file.split('.'):
             pass
-        elif 'twb' in self._workbook_file_path.split('.'):
+        elif 'twb' in workbook_filesplit('.'):
             pass
         else:
             raise Exception('Invalid workbook type provided. Workbook must be a twbx or twb file.')
