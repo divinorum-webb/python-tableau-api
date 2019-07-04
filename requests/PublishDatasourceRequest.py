@@ -164,8 +164,6 @@ class PublishDatasourceRequest(BaseRequest):
 
     def get_request(self):
         if self._file_is_chunked:
-            print('publishing chunked file')
             return self._publish_chunked_file_request()
         else:
-            print('publishing single file')
             return self._publish_single_file_request()
