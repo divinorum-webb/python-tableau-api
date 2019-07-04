@@ -1,4 +1,5 @@
 CHUNK_SIZE = 1024 * 1024 * 5  # 5MB
+FILESIZE_LIMIT = 1024 * 1024 * 60  # 60MB
 
 
 class PublishWorkbookRequest(BaseRequest):
@@ -9,6 +10,8 @@ class PublishWorkbookRequest(BaseRequest):
     :type ts_connection:                class
     :param workbook_name:               The name the published workbook will have on Tableau Server.
     :type workbook_name:                string
+    :param workbook_file_path:          The file path for the workbook being published.
+    :type workbook_file_path:           string
     :param project_id:                  The project ID of the project the workbook is being published to.
     :type project_id:                   string
     :param show_tabs_flag:              Boolean flag; True if the workbook will show views as tabs, false otherwise.
@@ -48,6 +51,7 @@ class PublishWorkbookRequest(BaseRequest):
     def __init__(self,
                  ts_connection,
                  workbook_name,
+                 workbook_file_path,
                  project_id,
                  show_tabs_flag=False,
                  user_id=None,
@@ -62,6 +66,7 @@ class PublishWorkbookRequest(BaseRequest):
 
         super().__init__(ts_connection)
         self._workbook_name = workbook_name
+        self._workbook_file_path = workbook_file_path
         self._project_id = project_id
         self._show_tabs_flag = show_tabs_flag
         self._user_id = user_id
@@ -75,7 +80,7 @@ class PublishWorkbookRequest(BaseRequest):
         self._hide_view_flag = hide_view_flag
         self.payload = None
         self.content_type = None
-        self.file_is_chunked = False
+        self._file_is_chunked = self._file_requires_chunking()
         self.base_publish_workbook_request
 
     @property
@@ -177,36 +182,42 @@ class PublishWorkbookRequest(BaseRequest):
                 })
         return self._request_body
 
-    @staticmethod
-    def get_workbook(workbook_file_path):
-        workbook_file = os.path.basename(workbook_file_path)
-        with open(workbook_file_path, 'rb') as f:
+    def _file_requires_chunking(self):
+        file_size = os.path.getsize(self._workbook_file_path)
+        if file_size > FILESIZE_LIMIT:
+            return True
+
+    def get_workbook(self):
+        workbook_file = os.path.basename(self._workbook_file_path)
+        with open(self._workbook_file_path, 'rb') as f:
             workbook_bytes = f.read()
-        if 'twbx' in workbook_file_path.split('.'):
-            workbook_type = 'twbx'
-        elif 'twb' in workbook_file_path.split('.'):
-            workbook_type = 'twb'
+        if 'twbx' in workbook_file.split('.'):
+            pass
+        elif 'twb' in workbook_filesplit('.'):
+            pass
         else:
             raise Exception('Invalid workbook type provided. Workbook must be a twbx or twb file.')
-        return workbook_file, workbook_bytes, workbook_type
+        return workbook_file, workbook_bytes
 
     # testing for chunk upload
-    def publish_prep(self, file_path):
-        filename = os.path.basename(file_path)
-        file_extension = os.path.split('.')[1]
+    def publish_prep(self, publish_content_type, parameter_dict):
+        filename = os.path.basename(self._workbook_file_path)
+        file_extension = filename.split('.')[1]
 
-        file_size = os.path.getsize(file_path)
-        self.file_is_chunked = True
+        if self._file_is_chunked:
+            upload_session_id = self._connection.initiate_file_upload().json()['fileUpload']['uploadSessionId']
+            parameter_dict.update({'param': 'uploadSessionId={}'.format(upload_session_id)})
+            chunks = self.read_chunks(self._workbook_file_path)
+            for chunk in chunks:
+                request, append_content_type = self.chunk_req(chunk)
+                file_upload = self._connection.append_to_file_upload(upload_session_id=upload_session_id,
+                                                                     payload=request,
+                                                                     content_type=append_content_type)
 
-        upload_session_id = self._connection.initiate_file_upload().json()['fileUpload']['uploadSessionId']
-        chunks = self.read_chunks(file_path)
-        for chunk in chunks:
-            request, content_type = self.chunk_req(chunk)
-            file_upload = self._connection.append_to_file_upload(upload_session_id=upload_session_id,
-                                                                 payload=request,
-                                                                 content_type=content_type)
-        return filename, file_extension, upload_session_id
-
+        publishing_headers = self._connection.default_headers.copy()
+        publishing_headers.update({'content-type': publish_content_type})
+        parameter_dict.update({'workbookType': 'workbookType={}'.format(file_extension)})
+        return publishing_headers, parameter_dict
 
     @staticmethod
     def read_chunks(file_path):
@@ -240,14 +251,13 @@ class PublishWorkbookRequest(BaseRequest):
 
     def _publish_single_file_request(self):
         request = self.modified_publish_workbook_request
+        workbook_file, workbook_bytes = self.get_workbook()
         parts = {'request_payload': (None, json.dumps(request), 'application/json'),
                  'tableau_workbook': (workbook_file, workbook_bytes, 'application/octet-stream')}
-        return self._add_mutlipart(parts)
+        return self._add_multipart(parts)
 
     def get_request(self):
-        if self.file_is_chunked:
-            print('publishing chunked file')
+        if self._file_is_chunked:
             return self._publish_chunked_file_request()
         else:
-            print('publishing single file')
             return self._publish_single_file_request()

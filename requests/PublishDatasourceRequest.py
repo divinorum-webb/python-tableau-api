@@ -1,3 +1,7 @@
+CHUNK_SIZE = 1024 * 1024 * 5  # 5MB
+FILESIZE_LIMIT = 1024 * 1024 * 60  # 60MB
+
+
 class PublishDatasourceRequest(BaseRequest):
     """
     Update site request for generating API request URLs to Tableau Server.
@@ -6,6 +10,8 @@ class PublishDatasourceRequest(BaseRequest):
     :type ts_connection:            class
     :param datasource_name:         The name for the datasource being published.
     :type datasource_name:          string
+    :param datasource_file_path:    The file path for the datasource being published.
+    :type datasource_file_path:     string
     :param project_id:              The project ID for the project the datasource belongs to.
     :type project_id:               string
     :param connection_username:     If the datasource requires credentials, this value specifies
@@ -24,6 +30,7 @@ class PublishDatasourceRequest(BaseRequest):
     def __init__(self,
                  ts_connection,
                  datasource_name,
+                 datasource_file_path,
                  project_id,
                  connection_username=None,
                  connection_password=None,
@@ -32,11 +39,13 @@ class PublishDatasourceRequest(BaseRequest):
                  ):
         super().__init__(ts_connection)
         self._datasource_name = datasource_name
+        self._datasource_file_path = datasource_file_path
         self._project_id = project_id
         self._connection_username = connection_username
         self._connection_password = connection_password
         self._embed_credentials_flag = embed_credentials_flag
         self._oauth_flag = oauth_flag
+        self._file_is_chunked = self._file_requires_chunking()
         self.base_publish_datasource_request
 
     @property
@@ -76,37 +85,44 @@ class PublishDatasourceRequest(BaseRequest):
                                           self.optional_credentials_param_values))
         return self._request_body
 
-    @staticmethod
-    def get_datasource(datasource_file_path):
-        datasource_file = os.path.basename(datasource_file_path)
-        with open(datasource_file_path, 'rb') as f:
+    def _file_requires_chunking(self):
+        file_size = os.path.getsize(self._datasource_file_path)
+        if file_size > FILESIZE_LIMIT:
+            return True
+
+    def get_datasource(self):
+        datasource_file = os.path.basename(self._datasource_file_path)
+        with open(self._datasource_file_path, 'rb') as f:
             datasource_bytes = f.read()
-        if 'tdsx' in datasource_file_path.split('.'):
-            datasource_type = 'tdsx'
-        elif 'tds' in datasource_file_path.split('.'):
-            datasource_type = 'tds'
-        elif 'tde' in datasource_file_path.split('.'):
-            datasource_type = 'tde'
+        if 'tdsx' in datasource_file.split('.'):
+            pass
+        elif 'tds' in datasource_file.split('.'):
+            pass
+        elif 'tde' in datasource_file.split('.'):
+            pass
         else:
             raise Exception('Invalid datasource type provided. Datasource must be a tdsx, tds, or tde file.')
-        return datasource_file, datasource_bytes, datasource_type
+        return datasource_file, datasource_bytes
 
     # testing for chunk upload
-    def publish_prep(self, file_path):
-        filename = os.path.basename(file_path)
-        file_extension = os.path.split('.')[1]
+    def publish_prep(self, publish_content_type, parameter_dict):
+        filename = os.path.basename(self._datasource_file_path)
+        file_extension = filename.split('.')[1]
 
-        file_size = os.path.getsize(file_path)
-        self.file_is_chunked = True
+        if self._file_is_chunked:
+            upload_session_id = self._connection.initiate_file_upload().json()['fileUpload']['uploadSessionId']
+            parameter_dict.update({'param': 'uploadSessionId={}'.format(upload_session_id)})
+            chunks = self.read_chunks(self._datasource_file_path)
+            for chunk in chunks:
+                request, append_content_type = self.chunk_req(chunk)
+                file_upload = self._connection.append_to_file_upload(upload_session_id=upload_session_id,
+                                                                     payload=request,
+                                                                     content_type=append_content_type)
 
-        upload_session_id = self._connection.initiate_file_upload().json()['fileUpload']['uploadSessionId']
-        chunks = self.read_chunks(file_path)
-        for chunk in chunks:
-            request, content_type = self.chunk_req(chunk)
-            file_upload = self._connection.append_to_file_upload(upload_session_id=upload_session_id,
-                                                                 payload=request,
-                                                                 content_type=content_type)
-        return filename, file_extension, upload_session_id
+        publishing_headers = self._connection.default_headers.copy()
+        publishing_headers.update({'content-type': publish_content_type})
+        parameter_dict.update({'datasourceType': 'datasourceType={}'.format(file_extension)})
+        return publishing_headers, parameter_dict
 
 
     @staticmethod
@@ -141,14 +157,13 @@ class PublishDatasourceRequest(BaseRequest):
 
     def _publish_single_file_request(self):
         request = self.modified_publish_datasource_request
+        datasource_file, datasource_bytes = self.get_datasource()
         parts = {'request_payload': (None, json.dumps(request), 'application/json'),
                  'tableau_datasource': (datasource_file, datasource_bytes, 'application/octet-stream')}
-        return self._add_mutlipart(parts)
+        return self._add_multipart(parts)
 
     def get_request(self):
-        if self.file_is_chunked:
-            print('publishing chunked file')
+        if self._file_is_chunked:
             return self._publish_chunked_file_request()
         else:
-            print('publishing single file')
             return self._publish_single_file_request()

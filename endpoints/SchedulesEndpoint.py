@@ -31,6 +31,7 @@ class SchedulesEndpoint(BaseEndpoint):
                  delete_schedule=False,
                  add_datasource=False,
                  add_workbook=False,
+                 add_flow=False,
                  parameter_dict=None):
 
         super().__init__(ts_connection)
@@ -41,6 +42,7 @@ class SchedulesEndpoint(BaseEndpoint):
         self._delete_schedule = delete_schedule
         self._add_datasource = add_datasource
         self._add_workbook = add_workbook
+        self._add_flow = add_flow
         self._parameter_dict = parameter_dict
 
     @property
@@ -68,12 +70,18 @@ class SchedulesEndpoint(BaseEndpoint):
     def base_schedule_workbook_url(self):
         return "{0}/workbooks".format(self.base_site_schedule_id_url)
 
+    @property
+    def base_schedule_flow_url(self):
+        return "{0}/flows".format(self.base_site_schedule_id_url)
+
     def get_endpoint(self):
         if self._schedule_id:
-            if self._add_datasource and not self._add_workbook:
+            if self._add_datasource and not (self._add_workbook or self._add_flow):
                 url = self.base_schedule_datasource_url
-            elif self._add_workbook and not self._add_datasource:
+            elif self._add_workbook and not (self._add_datasource or self._add_flow):
                 url = self.base_schedule_workbook_url
+            elif self._add_flow and not (self._add_datasource or self._add_workbook):
+                url = self.base_schedule_flow_url
             elif self._update_schedule or self._delete_schedule:
                 url = self.base_schedule_id_url
             else:
