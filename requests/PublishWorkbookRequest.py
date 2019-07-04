@@ -10,7 +10,7 @@ class PublishWorkbookRequest(BaseRequest):
     :type ts_connection:                class
     :param workbook_name:               The name the published workbook will have on Tableau Server.
     :type workbook_name:                string
-    :param workbook_file_path:          The name the published workbook will have on Tableau Server.
+    :param workbook_file_path:          The file path for the workbook being published.
     :type workbook_file_path:           string
     :param project_id:                  The project ID of the project the workbook is being published to.
     :type project_id:                   string
