@@ -264,8 +264,13 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def update_flow(self):
-        pass
+    def update_flow(self, flow_id, new_project_id=None, new_owner_id=None):
+        self.active_request = UpdateFlowRequest(ts_connection=self, new_project_id=new_project_id,
+                                                new_owner_id=new_owner_id).get_request()
+        self.active_endpoint = FlowEndpoint(ts_connection=self, flow_id=flow_id, update_flow=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
 
     def update_flow_connection(self, flow_id, connection_id, server_address=None, port=None, connection_username=None,
                                connection_password=None, embed_password_flag=None):
