@@ -232,6 +232,59 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
+    def delete_flow(self, flow_id):
+        self.active_endpoint = FlowEndpoint(ts_connection=self, flow_id=flow_id, delete_flow=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def download_flow(self, flow_id):
+        self.active_endpoint = FlowEndpoint(ts_connection=self, flow_id=flow_id, download_flow=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_flow_connections(self, flow_id):
+        self.active_endpoint = FlowEndpoint(ts_connection=self, flow_id=flow_id,
+                                            query_flow_connections=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_flows_for_site(self):
+        self.active_endpoint = FlowEndpoint(ts_connection=self, query_flows_for_site=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_flows_for_user(self, user_id, parameter_dict=None):
+        self.active_endpoint = FlowEndpoint(ts_connection=self, user_id=user_id, query_flows_for_user=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def update_flow(self, flow_id, new_project_id=None, new_owner_id=None):
+        self.active_request = UpdateFlowRequest(ts_connection=self, new_project_id=new_project_id,
+                                                new_owner_id=new_owner_id).get_request()
+        self.active_endpoint = FlowEndpoint(ts_connection=self, flow_id=flow_id, update_flow=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def update_flow_connection(self, flow_id, connection_id, server_address=None, port=None, connection_username=None,
+                               connection_password=None, embed_password_flag=None):
+        """Note that you must set the connection_password='' if changing the embed_password_flag from True to False"""
+        self.active_request = UpdateFlowConnectionRequest(ts_connection=self, server_address=server_address, port=port,
+                                                          connection_username=connection_username,
+                                                          connection_password=connection_password,
+                                                          embed_password_flag=embed_password_flag).get_request()
+        self.active_endpoint = FlowEndpoint(ts_connection=self, flow_id=flow_id, connection_id=connection_id,
+                                            update_flow_connection=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
     # projects
 
     def create_project(self, project_name, project_description=None, content_permissions='ManagedByOwner',
@@ -871,6 +924,14 @@ class TableauServerConnection:
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
+    def add_flow_task_to_schedule(self, flow_id, schedule_id):
+        self.active_request = AddFlowToScheduleRequest(ts_connection=self, flow_id=flow_id).get_request()
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
+                                                 add_flow=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
     def add_workbook_to_schedule(self, workbook_id, schedule_id):
         self.active_request = AddWorkbookToScheduleRequest(ts_connection=self, workbook_id=workbook_id).get_request()
         self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
@@ -910,6 +971,18 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
+    def get_flow_run_task(self, task_id):
+        self.active_endpoint = TasksEndpoint(ts_connection=self, task_id=task_id, get_flow_run_task=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def get_flow_run_tasks(self):
+        self.active_endpoint = TasksEndpoint(ts_connection=self, get_flow_run_tasks=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
     def create_schedule(self, schedule_name, schedule_priority=50, schedule_type='Extract',
                         schedule_execution_order='Parallel', schedule_frequency='Weekly',
                         start_time='07:00:00', end_time='23:00:00', interval_expression_dict={'weekDay': 'Monday'}):
@@ -942,6 +1015,13 @@ class TableauServerConnection:
     def run_extract_refresh_task(self, task_id):
         self.active_request = EmptyRequest(ts_connection=self).get_request()
         self.active_endpoint = TasksEndpoint(ts_connection=self, task_id=task_id, run_refresh_task=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def run_flow_task(self, task_id):
+        self.active_request = EmptyRequest(ts_connection=self).get_request()
+        self.active_endpoint = TasksEndpoint(ts_connection=self, task_id=task_id, run_flow_task=True).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response

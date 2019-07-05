@@ -18,6 +18,8 @@ class SchedulesEndpoint(BaseEndpoint):
     :type add_datasource:       boolean
     :param add_workbook:        Boolean flag; True if adding a workbook, False otherwise.
     :type add_workbook:         boolean
+    :param add_flow:            Boolean flag; True if adding a flow, False otherwise.
+    :type add_flow:             boolean
     :param parameter_dict:      Dictionary of URL parameters to append. The value in each key-value pair
                                 is the literal text that will be appended to the URL endpoint.
     :type parameter_dict:       dict

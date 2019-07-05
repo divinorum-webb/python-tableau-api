@@ -108,10 +108,10 @@ class FlowEndpoint(BaseEndpoint):
 
     @property
     def base_flow_user_url(self):
-        return "{0}/api/{1}/sites{2}/users/{3}/flows".format(self._connection.server,
-                                                             self._connection.api_version,
-                                                             self._connection.site_id,
-                                                             self._user_id)
+        return "{0}/api/{1}/sites/{2}/users/{3}/flows".format(self._connection.server,
+                                                              self._connection.api_version,
+                                                              self._connection.site_id,
+                                                              self._user_id)
 
     def get_endpoint(self):
         if self._flow_id:
@@ -131,6 +131,8 @@ class FlowEndpoint(BaseEndpoint):
                 url = self.base_flow_connection_id_url
             else:
                 self._invalid_parameter_exception()
+        elif self._user_id:
+            url = self.base_flow_user_url
         else:
             url = self.base_flow_url
 
