@@ -264,6 +264,22 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
+    def update_flow(self):
+        pass
+
+    def update_flow_connection(self, flow_id, connection_id, server_address=None, port=None, connection_username=None,
+                               connection_password=None, embed_password_flag=None):
+        """Note that you must set the connection_password='' if changing the embed_password_flag from True to False"""
+        self.active_request = UpdateFlowConnectionRequest(ts_connection=self, server_address=server_address, port=port,
+                                                          connection_username=connection_username,
+                                                          connection_password=connection_password,
+                                                          embed_password_flag=embed_password_flag).get_request()
+        self.active_endpoint = FlowEndpoint(ts_connection=self, flow_id=flow_id, connection_id=connection_id,
+                                            update_flow_connection=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
     # projects
 
     def create_project(self, project_name, project_description=None, content_permissions='ManagedByOwner',
@@ -994,6 +1010,13 @@ class TableauServerConnection:
     def run_extract_refresh_task(self, task_id):
         self.active_request = EmptyRequest(ts_connection=self).get_request()
         self.active_endpoint = TasksEndpoint(ts_connection=self, task_id=task_id, run_refresh_task=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
+    def run_flow_task(self, task_id):
+        self.active_request = EmptyRequest(ts_connection=self).get_request()
+        self.active_endpoint = TasksEndpoint(ts_connection=self, task_id=task_id, run_flow_task=True).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.post(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
