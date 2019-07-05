@@ -232,14 +232,37 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
-    def delete_flow(self):
-        pass
+    def delete_flow(self, flow_id):
+        self.active_endpoint = FlowEndpoint(ts_connection=self, flow_id=flow_id, delete_flow=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.post(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def download_flow(self):
-        pass
+    def download_flow(self, flow_id):
+        self.active_endpoint = FlowEndpoint(ts_connection=self, flow_id=flow_id, download_flow=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
-    def get_flow_run_task(self):
-        pass
+    def query_flow_connections(self, flow_id):
+        self.active_endpoint = FlowEndpoint(ts_connection=self, flow_id=flow_id,
+                                            query_flow_connections=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_flows_for_site(self):
+        self.active_endpoint = FlowEndpoint(ts_connection=self, query_flows_for_site=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def query_flows_for_user(self, user_id, parameter_dict=None):
+        self.active_endpoint = FlowEndpoint(ts_connection=self, user_id=user_id, query_flows_for_user=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
 
     # projects
 
