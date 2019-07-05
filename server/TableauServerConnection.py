@@ -232,6 +232,15 @@ class TableauServerConnection:
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
 
+    def delete_flow(self):
+        pass
+
+    def download_flow(self):
+        pass
+
+    def get_flow_run_task(self):
+        pass
+
     # projects
 
     def create_project(self, project_name, project_description=None, content_permissions='ManagedByOwner',
@@ -914,6 +923,18 @@ class TableauServerConnection:
 
     def get_extract_refresh_tasks(self):
         self.active_endpoint = TasksEndpoint(ts_connection=self, get_refresh_tasks=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def get_flow_run_task(self, task_id):
+        self.active_endpoint = TasksEndpoint(ts_connection=self, task_id=task_id, get_flow_run_task=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.get(url=self.active_endpoint, headers=self.active_headers)
+        return response
+
+    def get_flow_run_tasks(self):
+        self.active_endpoint = TasksEndpoint(ts_connection=self, get_flow_run_tasks=True).get_endpoint()
         self.active_headers = self.default_headers
         response = requests.get(url=self.active_endpoint, headers=self.active_headers)
         return response
