@@ -871,6 +871,14 @@ class TableauServerConnection:
         response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
         return response
 
+    def add_flow_task_to_schedule(self, flow_id, schedule_id):
+        self.active_request = AddFlowToScheduleRequest(ts_connection=self, flow_id=flow_id).get_request()
+        self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
+                                                 add_flow=True).get_endpoint()
+        self.active_headers = self.default_headers
+        response = requests.put(url=self.active_endpoint, json=self.active_request, headers=self.active_headers)
+        return response
+
     def add_workbook_to_schedule(self, workbook_id, schedule_id):
         self.active_request = AddWorkbookToScheduleRequest(ts_connection=self, workbook_id=workbook_id).get_request()
         self.active_endpoint = SchedulesEndpoint(ts_connection=self, schedule_id=schedule_id,
