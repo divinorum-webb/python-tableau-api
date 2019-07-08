@@ -193,7 +193,7 @@ class PublishWorkbookRequest(BaseRequest):
             workbook_bytes = f.read()
         if 'twbx' in workbook_file.split('.'):
             pass
-        elif 'twb' in workbook_filesplit('.'):
+        elif 'twb' in workbook_file.split('.'):
             pass
         else:
             raise Exception('Invalid workbook type provided. Workbook must be a twbx or twb file.')
