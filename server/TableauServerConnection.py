@@ -1172,7 +1172,6 @@ class TableauServerConnection:
         return response
 
     def append_to_file_upload(self, upload_session_id, payload, content_type):
-        self.active_request = payload
         self.active_endpoint = FileUploadEndpoint(ts_connection=self, append_to_file_upload=True,
                                                   upload_session_id=upload_session_id).get_endpoint()
         self.active_headers = self.default_headers.copy()
@@ -1185,18 +1184,16 @@ class TableauServerConnection:
                             embed_credentials_flag=False, oauth_flag=False, parameter_dict={}):
         publish_request = PublishDatasourceRequest(ts_connection=self,
                                                    datasource_name=datasource_name,
+                                                   datasource_file_path=datasource_file_path,
                                                    project_id=project_id,
                                                    connection_username=connection_username,
                                                    connection_password=connection_password,
                                                    embed_credentials_flag=embed_credentials_flag,
                                                    oauth_flag=oauth_flag)
-        filename, file_extension, upload_session_id = publish_request.publish_prep(datasource_file_path)
-        parameter_dict.update({'param': 'uploadSessionId={}'.format(upload_session_id)})
         self.active_request, content_type = publish_request.get_request()
+        self.active_headers, parameter_dict = publish_request.publish_prep(content_type, parameter_dict=parameter_dict)
         self.active_endpoint = DatasourceEndpoint(ts_connection=self, publish_datasource=True,
                                                   parameter_dict=parameter_dict).get_endpoint()
-        self.active_headers = self.default_headers.copy()
-        self.active_headers.update({'content-type': content_type})
         response = requests.post(url=self.active_endpoint, data=self.active_request, headers=self.active_headers)
         return response
 
@@ -1207,6 +1204,7 @@ class TableauServerConnection:
                          hide_view_flag=False, parameter_dict={}):
         publish_request = PublishWorkbookRequest(ts_connection=self,
                                                  workbook_name=workbook_name,
+                                                 workbook_file_path=workbook_file_path,
                                                  project_id=project_id,
                                                  show_tabs_flag=show_tabs_flag,
                                                  user_id=user_id,
@@ -1218,12 +1216,9 @@ class TableauServerConnection:
                                                  oauth_flag=oauth_flag,
                                                  workbook_views_to_hide=workbook_views_to_hide,
                                                  hide_view_flag=hide_view_flag)
-        filename, file_extension, upload_session_id = publish_request.publish_prep(workbook_file_path)
-        parameter_dict.update({'param': 'uploadSessionId={}'.format(upload_session_id)})
         self.active_request, content_type = publish_request.get_request()
+        self.active_headers, parameter_dict = publish_request.publish_prep(content_type, parameter_dict=parameter_dict)
         self.active_endpoint = WorkbookEndpoint(ts_connection=self, publish_workbook=True,
                                                 parameter_dict=parameter_dict).get_endpoint()
-        self.active_headers = self.default_headers.copy()
-        self.active_headers.update({'content-type': content_type})
         response = requests.post(url=self.active_endpoint, data=self.active_request, headers=self.active_headers)
         return response

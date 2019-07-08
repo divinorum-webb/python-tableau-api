@@ -18,12 +18,12 @@ class PublishWorkbookRequest(BaseRequest):
     :type show_tabs_flag:               boolean
     :param user_id:                     If generating thumbnails as a specific user, specify the user ID here.
     :type user_id:                      string
-    :param server_address:              Specify the server address for a data source connection if that data source
-                                        does not use OAuth.
+    :param server_address:              (Optional) Specify the server address for a data source connection if that
+                                        data source does not use OAuth.
     :type server_address:               string
-    :param port_number:                 Specify the port number for a data source connection if that data source does
-                                        not use OAuth.
-    :type port_number:                  string
+    :param port_number:                 (Optional) Specify the port number for a data source connection if that data
+                                        source does not use OAuth.
+    :type port_number:                  list
     :param connection_username:         (Optional) If the workbook's data source connections require credentials, the
                                         <connectionCredentials> elements are included and this attribute specifies the
                                         connection username. If the element is included but is not required
@@ -36,17 +36,18 @@ class PublishWorkbookRequest(BaseRequest):
                                         example, if the data source uses OAuth), the server ignores the element
                                         and its attributes.
     :type connection_password:          string
-    :param embed_credentials_flag:      Boolean flag; True if embedding credentials in the published workbook,
+    :param embed_credentials_flag:      List of boolean flags;; True if embedding credentials in the published workbook,
                                         False otherwise.
-    :type embed_credentials_flag:       boolean
-    :param oauth_flag:                  Boolean flag; True if OAuth is used for the credentials, False otherwise.
-    :type oauth_flag:                   boolean
+    :type embed_credentials_flag:       list
+    :param oauth_flag:                  List of boolean flags;; True if OAuth is used for the credentials,
+                                        False otherwise.
+    :type oauth_flag:                   list
     :param workbook_views_to_hide:      A list of the views to hide for the workbook being published. The list should
                                         contain the view names, not view IDs.
     :type workbook_views_to_hide:       list
-    :param hide_view_flag:              Boolean flag; True if the published workbook will hide any of its views,
-                                        False otherwise.
-    :type hide_view_flag:               boolean
+    :param hide_view_flag:              List of boolean flags; True if the published workbook will hide any of its
+                                        views, False otherwise.
+    :type hide_view_flag:               list
     """
     def __init__(self,
                  ts_connection,
@@ -159,19 +160,20 @@ class PublishWorkbookRequest(BaseRequest):
     def modified_publish_workbook_request(self):
         self._request_body['workbook'].update(self._get_parameters_dict(self.optional_workbook_param_keys,
                                                                         self.optional_workbook_param_values))
-        if any(self.optional_connection_param_values):
-            self._request_body['workbook'].update({'connections': {}})
-            self._request_body['workbook']['connections'].update(
-                self._get_parameters_dict(
-                    self.optional_connection_param_keys,
-                    self.optional_connection_param_values))
 
-        if any(self.optional_connection_param_values) and any(self.optional_credentials_param_values):
-            self._request_body['workbook']['connections'].update({'connectionCredentials': {}})
-            self._request_body['workbook']['connections']['connectionCredentials'].update(
-                self._get_parameters_dict(
-                    self.optional_credentials_param_keys,
-                    self.optional_credentials_param_values))
+        if any(self.optional_connection_param_values):
+            self._request_body['workbook'].update({'connections': {'connection': []}})
+            for i, connection in enumerate(list(self._connection_username)):
+                self._request_body['workbook']['connections']['connection'].append({
+                    'serverAddress': self._server_address[i],
+                    'serverPort': self._port_number[i] if self._port_number else None,
+                    'connectionCredentials': {
+                        'name': self._connection_username[i],
+                        'password': self._connection_password[i],
+                        'embed': self._embed_credentials_flag[i] if self._embed_credentials_flag else None,
+                        'oAuth': self._oauth_flag[i] if self._oauth_flag else None
+                    }
+                })
 
         if any(self.optional_view_param_values):
             self._request_body['workbook'].update({'views': {'view': []}})
@@ -193,7 +195,7 @@ class PublishWorkbookRequest(BaseRequest):
             workbook_bytes = f.read()
         if 'twbx' in workbook_file.split('.'):
             pass
-        elif 'twb' in workbook_filesplit('.'):
+        elif 'twb' in workbook_file.split('.'):
             pass
         else:
             raise Exception('Invalid workbook type provided. Workbook must be a twbx or twb file.')
