@@ -1222,3 +1222,25 @@ class TableauServerConnection:
                                                 parameter_dict=parameter_dict).get_endpoint()
         response = requests.post(url=self.active_endpoint, data=self.active_request, headers=self.active_headers)
         return response
+
+    def publish_flow(self, flow_file_path, flow_name, project_id, flow_description=None, server_address=None,
+                     port_number=None,
+                     connection_username=None, connection_password=None, embed_credentials_flag=False, oauth_flag=False,
+                     parameter_dict={}):
+        publish_request = PublishFlowRequest(ts_connection=self,
+                                             flow_file_path=flow_file_path,
+                                             flow_name=flow_name,
+                                             project_id=project_id,
+                                             flow_description=flow_description,
+                                             server_address=server_address,
+                                             port_number=port_number,
+                                             connection_username=connection_username,
+                                             connection_password=connection_password,
+                                             embed_credentials_flag=embed_credentials_flag,
+                                             oauth_flag=oauth_flag)
+        self.active_request, content_type = publish_request.get_request()
+        self.active_headers, parameter_dict = publish_request.publish_prep(content_type, parameter_dict=parameter_dict)
+        self.active_endpoint = FlowEndpoint(ts_connection=self, publish_flow=True,
+                                            parameter_dict=parameter_dict).get_endpoint()
+        response = requests.post(url=self.active_endpoint, data=self.active_request, headers=self.active_headers)
+        return response
